@@ -100,23 +100,29 @@ public class ServicioDAOimp implements ServicioDAO {
 
     @Override
     public Servicio mostrar_servicio(int id_servicio) throws SQLException {
-        try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL mostrar_servicio( ? )}");){
 
-            cs.setInt(1 , id_servicio);
-            ResultSet rs = cs.executeQuery();
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs =
+                     connection.prepareCall("{CALL mostrar_servicio(?)}")) {
 
-            Servicio s = new Servicio(
-                    rs.getInt("id"),
-                    rs.getString("nombre"),
-                    rs.getString("descripcion"),
-                    rs.getBigDecimal("precio_referencial"),
-                    rs.getInt("duracion_minutos"),
-                    rs.getBoolean("activo")
-            );
-            return s;
+            cs.setInt(1, id_servicio);
+
+            try (ResultSet rs = cs.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Servicio(
+                            id_servicio,
+                            rs.getString("nombre"),
+                            rs.getString("descripcion"),
+                            rs.getBigDecimal("precio_referencial"),
+                            rs.getInt("duracion_minutos"),
+                            rs.getBoolean("activo")
+                    );
+                }
+            }
         }
 
-
+        return null;
     }
 }

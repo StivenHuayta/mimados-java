@@ -12,9 +12,18 @@ public class PuestoServicio {
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
 
-    public PuestoServicio(Integer id, int id_servicio, int id_puesto, Boolean activo, String usuarioCreacion, String usuarioModificacion, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
+    public PuestoServicio(Integer id,
+                          int id_servicio,
+                          int id_puesto,
+                          Boolean activo,
+                          String usuarioCreacion,
+                          String usuarioModificacion,
+                          LocalDateTime fechaCreacion,
+                          LocalDateTime fechaModificacion) {
         this.id = id;
+        this.servicio = new Servicio();
         this.servicio.setId(id_servicio);
+        this.puesto = new Puesto();
         this.puesto.setId(id_puesto);
         this.activo = activo;
         this.usuarioCreacion = usuarioCreacion;

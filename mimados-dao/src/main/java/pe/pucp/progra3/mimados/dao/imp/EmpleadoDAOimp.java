@@ -25,6 +25,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
             while(rs.next()){
 
                 Empleado empleado = new Empleado(
+                        rs.getInt("usuario_id"),
                        rs.getString("dni"),
                        rs.getString("nombres"),
                         rs.getString("apellidos"),
@@ -78,31 +79,40 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
 
     }
 
+
     @Override
     public Empleado mostrar_empleado(int id_empleado) throws SQLException {
 
-        try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL mostrar_empleado( ? )}");){
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs =
+                     connection.prepareCall("{CALL mostrar_empleado(?)}")) {
 
-            cs.setInt(1 , id_empleado);
-            ResultSet rs = cs.executeQuery();
+            cs.setInt(1, id_empleado);
 
-            Empleado emp = new Empleado(
-                    rs.getString("dni"),
-                    rs.getString("nombres"),
-                    rs.getString("apellidos"),
-                    rs.getString("email"),
-                    rs.getString("telefono"),
+            try (ResultSet rs = cs.executeQuery()) {
 
-                    rs.getInt("sede_id"),
-                    rs.getString("codigo_cmvp"),
-                    rs.getBoolean("activo"),
-                    rs.getBoolean("es_admin")
-            );
-            return emp;
+                if (rs.next()) {
+
+                    Empleado emp = new Empleado(
+                            rs.getString("dni"),
+                            rs.getString("nombres"),
+                            rs.getString("apellidos"),
+                            rs.getString("email"),
+                            rs.getString("telefono"),
+                            rs.getInt("sede_id"),
+                            rs.getString("codigo_cmvp"),
+                            rs.getBoolean("activo"),
+                            rs.getBoolean("es_admin")
+                    );
+
+                    emp.getUsuario().setId(id_empleado);
+
+                    return emp;
+                }
+            }
         }
 
-
+        return null;
     }
 
     @Override
