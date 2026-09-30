@@ -12,4 +12,5 @@ public interface UsuarioDAO {
     public Usuario mostrar_usuario(int id) throws SQLException;
     public void actualizar_telefono_usuario(int id, String telefono) throws SQLException;
 
+
 }
