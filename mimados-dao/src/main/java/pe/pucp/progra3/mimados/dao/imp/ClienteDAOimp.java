@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteDAOimp implements ClienteDAO {
+public class    ClienteDAOimp implements ClienteDAO {
 
     @Override
     public void insertar_cliente(Cliente cliente) throws SQLException {
