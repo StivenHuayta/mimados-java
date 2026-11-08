@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pe.pucp.prog3.mimados</groupId>
+    <groupId>pe.pucp.progra3.mimados</groupId>
     <artifactId>mimados-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -14,11 +14,12 @@
         <module>mimados-bl</module>
         <module>mimados-db-manager</module>
         <module>mimados-model</module>
+        <module>mimados-rs</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>26</maven.compiler.source>
-        <maven.compiler.target>26</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
