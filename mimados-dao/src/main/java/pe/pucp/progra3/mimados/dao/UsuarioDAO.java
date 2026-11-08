@@ -11,6 +11,7 @@ public interface UsuarioDAO {
     public List<Usuario> listar_usuarios() throws SQLException;
     public Usuario mostrar_usuario(int id) throws SQLException;
     public void actualizar_telefono_usuario(int id, String telefono) throws SQLException;
+    public Usuario buscar_por_email(String email) throws SQLException;
 
 
 }
