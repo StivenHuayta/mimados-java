@@ -47,6 +47,37 @@ public class UsuarioRS {
         }
     }
 
+    public static class RegistroClienteRequest implements Serializable {
+        private String dni;
+        private String nombres;
+        private String apellidos;
+        private String email;
+        private String password;
+        private String telefono;
+        private String direccion;
+        private String contactoEmergencia;
+
+        public RegistroClienteRequest() {
+        }
+
+        public String getDni() { return dni; }
+        public void setDni(String dni) { this.dni = dni; }
+        public String getNombres() { return nombres; }
+        public void setNombres(String nombres) { this.nombres = nombres; }
+        public String getApellidos() { return apellidos; }
+        public void setApellidos(String apellidos) { this.apellidos = apellidos; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+        public String getTelefono() { return telefono; }
+        public void setTelefono(String telefono) { this.telefono = telefono; }
+        public String getDireccion() { return direccion; }
+        public void setDireccion(String direccion) { this.direccion = direccion; }
+        public String getContactoEmergencia() { return contactoEmergencia; }
+        public void setContactoEmergencia(String contactoEmergencia) { this.contactoEmergencia = contactoEmergencia; }
+    }
+
     public static class ApiResponse implements Serializable {
         private boolean success;
         private String message;
@@ -113,5 +144,32 @@ public class UsuarioRS {
     @Path("login")
     public Response login(LoginRequest request) {
         return autenticar(request);
+    }
+
+    @POST
+    @Path("registrarCliente")
+    public Response registrarCliente(RegistroClienteRequest req) {
+        if (req == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "Datos de registro no proporcionados", null))
+                    .build();
+        }
+
+        try {
+            AuthResultado resultado = usuarioBO.registrarCliente(
+                    req.getDni(), req.getNombres(), req.getApellidos(),
+                    req.getEmail(), req.getPassword(), req.getTelefono(),
+                    req.getDireccion(), req.getContactoEmergencia()
+            );
+            return Response.ok(new ApiResponse(true, "Cliente registrado exitosamente", resultado)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
+                    .build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
+                    .build();
+        }
     }
 }

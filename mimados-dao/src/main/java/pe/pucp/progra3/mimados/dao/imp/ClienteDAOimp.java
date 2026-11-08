@@ -8,6 +8,7 @@ import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,23 +25,26 @@ public class ClienteDAOimp implements ClienteDAO {
             IN p_contacto_emergencia VARCHAR(9)
         )
         */
-        Connection connection = TransactionContext.getConnection();
+        Connection connection = DBManager.getInstance().getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL insertar_cliente(?, ?, ?)}")) {
             cs.setInt(1, cliente.getUsuario().getId());
             cs.setString(2, cliente.getDireccion());
             cs.setString(3, cliente.getTelefonoEmergencia());
 
             cs.execute();
+        } catch (SQLException ex) {
+            String sql = "INSERT INTO cliente (usuario_id, direccion, telefono_emergencia, activo) VALUES (?, ?, ?, 1)";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, cliente.getUsuario().getId());
+                ps.setString(2, cliente.getDireccion());
+                ps.setString(3, cliente.getTelefonoEmergencia());
+                ps.executeUpdate();
+            }
         }
     }
 
     @Override
     public List<Cliente> listar_clientes() throws SQLException {
-        /*
-        CREATE PROCEDURE listar_clientes()
-        SELECT a.usuario_id, b.dni, b.nombres, b.apellidos, b.email, b.telefono, a.direccion, a.telefono_emergencia, a.activo
-        FROM cliente a, usuario b WHERE b.usuario_id = a.usuario_id;
-        */
         List<Cliente> clientes = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_clientes()}");
@@ -70,11 +74,6 @@ public class ClienteDAOimp implements ClienteDAO {
 
     @Override
     public Cliente mostrar_cliente(int id) throws SQLException {
-        /*
-        CREATE PROCEDURE mostrar_cliente(IN id INT)
-        SELECT b.dni, b.nombres, b.apellidos, b.email, b.telefono, a.direccion, a.telefono_emergencia, a.activo
-        FROM cliente a, usuario b WHERE id = b.usuario_id AND b.usuario_id = a.usuario_id;
-        */
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL mostrar_cliente(?)}")) {
 
@@ -98,18 +97,39 @@ public class ClienteDAOimp implements ClienteDAO {
                     );
                 }
             }
+        } catch (SQLException ex) {
+            // Fallback con consulta directa si no existe el procedimiento
+            String sql = "SELECT b.dni, b.nombres, b.apellidos, b.email, b.telefono, a.direccion, a.telefono_emergencia, a.activo " +
+                         "FROM cliente a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
+            try (Connection connection = DBManager.getInstance().getConnection();
+                 PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Usuario usuario = new Usuario(
+                                id,
+                                rs.getString("dni"),
+                                rs.getString("nombres"),
+                                rs.getString("apellidos"),
+                                rs.getString("email"),
+                                rs.getString("telefono")
+                        );
+
+                        return new Cliente(
+                                usuario,
+                                rs.getString("direccion"),
+                                rs.getString("telefono_emergencia"),
+                                rs.getBoolean("activo")
+                        );
+                    }
+                }
+            }
         }
         return null;
     }
 
     @Override
     public void actualizar_telefono_cliente(int id, String contactoEmergencia) throws SQLException {
-        /*
-        CREATE PROCEDURE actualizar_telefono_cliente(
-            IN p_cliente_id INT,
-            IN p_contacto_emergencia VARCHAR(9)
-        )
-        */
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL actualizar_telefono_cliente(?, ?)}")) {
             cs.setInt(1, id);
@@ -124,11 +144,6 @@ public class ClienteDAOimp implements ClienteDAO {
 
     @Override
     public void eliminar_cliente(int id) throws SQLException {
-        /*
-        CREATE PROCEDURE eliminar_cliente(
-            IN p_cliente_id INT
-        )
-        */
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL eliminar_cliente(?)}")) {
             cs.setInt(1, id);

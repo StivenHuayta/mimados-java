@@ -29,7 +29,7 @@ public class UsuarioDAOimp implements UsuarioDAO {
             OUT p_usuario_id INT
         )
         */
-        Connection connection = TransactionContext.getConnection();
+        Connection connection = DBManager.getInstance().getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL insertar_usuario(?, ?, ?, ?, ?, ?, ?)}")) {
             cs.registerOutParameter(7, Types.INTEGER);
 
@@ -44,6 +44,22 @@ public class UsuarioDAOimp implements UsuarioDAO {
 
             int idGenerado = cs.getInt(7);
             usuario.setId(idGenerado);
+        } catch (SQLException ex) {
+            String sql = "INSERT INTO usuario (dni, nombres, apellidos, email, password_hash, telefono) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, usuario.getDni());
+                ps.setString(2, usuario.getNombres());
+                ps.setString(3, usuario.getApellidos());
+                ps.setString(4, usuario.getEmail());
+                ps.setString(5, usuario.getPasswordHash());
+                ps.setString(6, usuario.getTelefono());
+                ps.executeUpdate();
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        usuario.setId(rs.getInt(1));
+                    }
+                }
+            }
         }
     }
 

@@ -23,4 +23,9 @@ public interface UsuarioBO {
 
     AuthResultado autenticar(String email, String password)
             throws SQLException, NegocioException;
+
+    AuthResultado registrarCliente(String dni, String nombres, String apellidos,
+                                   String email, String password, String telefono,
+                                   String direccion, String contactoEmergencia)
+            throws SQLException, NegocioException;
 }

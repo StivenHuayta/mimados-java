@@ -151,6 +151,68 @@ public class UsuarioBOImpl implements UsuarioBO {
         throw new NegocioException("El usuario no tiene un rol activo asignado.");
     }
 
+    @Override
+    public AuthResultado registrarCliente(String dni, String nombres, String apellidos,
+                                           String email, String password, String telefono,
+                                           String direccion, String contactoEmergencia)
+            throws SQLException, NegocioException {
+
+        if (dni == null || dni.trim().length() != 8) {
+            throw new NegocioException("El DNI debe tener 8 dígitos.");
+        }
+        if (nombres == null || nombres.trim().isBlank()) {
+            throw new NegocioException("Los nombres son obligatorios.");
+        }
+        if (apellidos == null || apellidos.trim().isBlank()) {
+            throw new NegocioException("Los apellidos son obligatorios.");
+        }
+        if (email == null || email.trim().isBlank() || !email.contains("@")) {
+            throw new NegocioException("El correo electrónico no es válido.");
+        }
+        if (password == null || password.trim().isBlank()) {
+            throw new NegocioException("La contraseña es obligatoria.");
+        }
+        if (telefono == null || telefono.trim().length() != 9) {
+            throw new NegocioException("El teléfono debe tener 9 dígitos.");
+        }
+
+        Usuario usuarioExistente = usuarioDAO.buscar_por_email(email.trim());
+        if (usuarioExistente != null) {
+            throw new NegocioException("Ya existe una cuenta registrada con este correo electrónico.");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setDni(dni.trim());
+        usuario.setNombres(nombres.trim());
+        usuario.setApellidos(apellidos.trim());
+        usuario.setEmail(email.trim());
+        usuario.setPasswordHash(password.trim());
+        usuario.setTelefono(telefono.trim());
+
+        usuarioDAO.insertar_usuario(usuario);
+
+        if (usuario.getId() <= 0) {
+            Usuario uCreado = usuarioDAO.buscar_por_email(email.trim());
+            if (uCreado != null) {
+                usuario.setId(uCreado.getId());
+            }
+        }
+
+        ClienteDAO clienteDAO = new ClienteDAOimp();
+        Cliente cliente = new Cliente(
+                usuario,
+                direccion != null ? direccion.trim() : "",
+                contactoEmergencia != null ? contactoEmergencia.trim() : "",
+                true
+        );
+        clienteDAO.insertar_cliente(cliente);
+
+        return new AuthResultado(
+                usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
+                usuario.getEmail(), "Cliente", false, true
+        );
+    }
+
     private void validarUsuario(Usuario usuario)
             throws NegocioException {
 
