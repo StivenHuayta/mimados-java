@@ -3,8 +3,15 @@ package pe.pucp.progra3.mimados.bo.impl;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
+import pe.pucp.progra3.mimados.dao.ClienteDAO;
+import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
 import pe.pucp.progra3.mimados.dao.UsuarioDAO;
+import pe.pucp.progra3.mimados.dao.imp.ClienteDAOimp;
+import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
 import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
+import pe.pucp.progra3.mimados.model.AuthResultado;
+import pe.pucp.progra3.mimados.model.Cliente;
+import pe.pucp.progra3.mimados.model.Empleado;
 import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.SQLException;
@@ -80,6 +87,68 @@ public class UsuarioBOImpl implements UsuarioBO {
         validarId(id);
 
         return usuarioDAO.mostrar_usuario(id);
+    }
+
+    @Override
+    public AuthResultado autenticar(String email, String password) throws SQLException, NegocioException {
+        if (email == null || email.isBlank()) {
+            throw new NegocioException("El correo o usuario es obligatorio.");
+        }
+        if (password == null || password.isBlank()) {
+            throw new NegocioException("La contraseña es obligatoria.");
+        }
+
+        Usuario usuario = usuarioDAO.buscar_por_email(email.trim());
+        if (usuario == null) {
+            throw new NegocioException("Usuario o contraseña incorrectos.");
+        }
+
+        if (usuario.getPasswordHash() != null && !usuario.getPasswordHash().equals(password)) {
+            throw new NegocioException("Usuario o contraseña incorrectos.");
+        }
+
+        EmpleadoDAO empleadoDAO = new EmpleadoDAOimp();
+        Empleado emp = empleadoDAO.mostrar_empleado(usuario.getId());
+        if (emp != null) {
+            // Regla 2: "el admin si es que hay un veterinario con ese correo, con atributo es admin 1 y es activo"
+            if (emp.getEsAdmin() && emp.getActivo()) {
+                AuthResultado auth = new AuthResultado(
+                        usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
+                        usuario.getEmail(), "Admin", true, true
+                );
+                auth.setCodigoCmvp(emp.getCodigoCmvp());
+                auth.setSedeId(emp.getSede() != null ? emp.getSede().getId() : null);
+                return auth;
+            }
+
+            // Regla 3: "y veterinario si hay un veterinario activo con ese correo"
+            if (emp.getActivo()) {
+                AuthResultado auth = new AuthResultado(
+                        usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
+                        usuario.getEmail(), "Veterinario", false, true
+                );
+                auth.setCodigoCmvp(emp.getCodigoCmvp());
+                auth.setSedeId(emp.getSede() != null ? emp.getSede().getId() : null);
+                return auth;
+            }
+
+            throw new NegocioException("El veterinario asociado a este correo se encuentra inactivo.");
+        }
+
+        ClienteDAO clienteDAO = new ClienteDAOimp();
+        Cliente cli = clienteDAO.mostrar_cliente(usuario.getId());
+        if (cli != null) {
+            // Regla 1: "el cliente puede entrar si en la bd hay ese cliente activo"
+            if (cli.getActivo()) {
+                return new AuthResultado(
+                        usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
+                        usuario.getEmail(), "Cliente", false, true
+                );
+            }
+            throw new NegocioException("La cuenta de cliente asociada a este correo se encuentra inactiva.");
+        }
+
+        throw new NegocioException("El usuario no tiene un rol activo asignado.");
     }
 
     private void validarUsuario(Usuario usuario)

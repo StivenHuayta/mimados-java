@@ -7,6 +7,7 @@ import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -116,5 +117,29 @@ public class UsuarioDAOimp implements UsuarioDAO {
                 System.out.println("Advertencia: No se encontró el usuario con ID " + id);
             }
         }
+    }
+
+    @Override
+    public Usuario buscar_por_email(String email) throws SQLException {
+        String sql = "SELECT usuario_id, dni, nombres, apellidos, email, password_hash, telefono FROM usuario WHERE email = ?";
+        try (Connection connection = DBManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Usuario usuario = new Usuario(
+                            rs.getInt("usuario_id"),
+                            rs.getString("dni"),
+                            rs.getString("nombres"),
+                            rs.getString("apellidos"),
+                            rs.getString("email"),
+                            rs.getString("telefono")
+                    );
+                    usuario.setPasswordHash(rs.getString("password_hash"));
+                    return usuario;
+                }
+            }
+        }
+        return null;
     }
 }
