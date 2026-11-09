@@ -113,6 +113,27 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                 }
             }
         }
+
+
+    @Override
+    public void actualizar_empleado(Empleado empleado) throws SQLException {
+        //nombres 
+        String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
+                     "WHERE usuario_id = ?";
+        
+        try (java.sql.Connection conexion = pe.pucp.progra3.mimados.DBManager.DBManager.getInstance().getConnection();
+             java.sql.PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, empleado.getSede().getId());
+            pstmt.setString(2, empleado.getCodigoCmvp());
+            pstmt.setBoolean(3, empleado.getEsAdmin());
+            pstmt.setBoolean(4, empleado.getActivo());
+            pstmt.setInt(5, empleado.getUsuario().getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+        
         return null;
     }
 }
