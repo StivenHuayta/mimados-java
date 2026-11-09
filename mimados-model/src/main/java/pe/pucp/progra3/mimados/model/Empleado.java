@@ -64,6 +64,27 @@ public class Empleado {
         this.esAdmin = esAdmin;
         this.activo = activo;
     }
+    public Empleado(int usuario_id,String dni, String nombre, String apellido,
+                    String email, String telefono,
+                    int sede_id, String codigoCmvp,
+                    boolean activo, Boolean esAdmin) {
+
+        this.usuario = new Usuario();
+        this.sede = new Sede();
+
+        this.usuario.setId(usuario_id);
+        this.usuario.setDni(dni);
+        this.usuario.setNombres(nombre);
+        this.usuario.setApellidos(apellido);
+        this.usuario.setEmail(email);
+        this.usuario.setTelefono(telefono);
+
+        this.sede.setId(sede_id);
+
+        this.codigoCmvp = codigoCmvp;
+        this.esAdmin = esAdmin;
+        this.activo = activo;
+    }
 
 
 

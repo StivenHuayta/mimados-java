@@ -14,6 +14,25 @@ import java.util.List;
 public class PuestoServicioDAOimp implements PuestoServicioDAO {
 
     @Override
+    public List<PuestoServicio> listar_servicio_puesto_general() throws SQLException {
+        List<PuestoServicio> servicios_de_puesto = new ArrayList<>();
+        try(Connection connection = DBManager.getInstance().getConnection();
+            CallableStatement cs = connection.prepareCall(" {CALL listar_puesto_servicio()}");){
+            ResultSet rs = cs.executeQuery();
+            while(rs.next()){
+                PuestoServicio ps = new PuestoServicio(
+                        rs.getInt("id"),
+                        rs.getInt("servicio_id"),
+                        rs.getInt("puesto_id"),
+                        rs.getBoolean("activo")
+                );
+                servicios_de_puesto.add(ps);
+            }
+        }
+        return servicios_de_puesto;
+    }
+
+    @Override
     public List<PuestoServicio> listar_servicios_puesto(int id_puesto) throws SQLException {
 
         List<PuestoServicio> servicios_de_puesto = new ArrayList<>();
@@ -86,7 +105,7 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
     public PuestoServicio mostrar_puesto_servicio(int id_puesto_servicio) throws SQLException {
 
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL mostrar_puesto_servicio( ? )}");){
+            CallableStatement cs = connection.prepareCall(" {CALL mostrar_puesto_servicio_por_id( ? )}");){
 
             cs.setInt(1 , id_puesto_servicio);
             ResultSet rs = cs.executeQuery();
@@ -95,16 +114,32 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
                     rs.getInt("id"),
                     rs.getInt("servicio_id"),
                     rs.getInt("puesto_id"),
-                    rs.getBoolean("activo"),
-
-                    rs.getString("usuario_creacion"),
-                    rs.getString("usuario_ultima_actualizacion"),
-                    rs.getObject("fecha_ultima_actualizacion" , LocalDateTime.class),
-                    rs.getObject("fecha_creacion" , LocalDateTime.class)
+                    rs.getBoolean("activo")
             );
             return ps;
         }
+    }
 
+
+    @Override
+    public void actualizar_puesto_servicio(PuestoServicio ps) throws SQLException {
+
+        Connection connection = TransactionContext.getConnection();
+
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_puesto_servicio(?,?,?,?)}")) {
+
+            cs.setInt(1 , ps.getId());
+            cs.setInt(2, ps.getServicio().getId());
+            cs.setInt(3, ps.getPuesto().getId());
+            cs.setBoolean(4, ps.getActivo());
+
+            int filasAfectadas = cs.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                System.out.println("Advertencia: No se encontró el puesto-servicio con ID " + ps.getId());
+            }
+
+        }
 
 
 

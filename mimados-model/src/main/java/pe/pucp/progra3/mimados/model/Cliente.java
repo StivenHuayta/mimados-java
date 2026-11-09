@@ -1,5 +1,4 @@
 package pe.pucp.progra3.mimados.model;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,8 @@ public class Cliente {
     private String usuarioModificacion;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
+
+
     private List<Mascota> mascotas;
 
     public Cliente() {
