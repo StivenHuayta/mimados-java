@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.impl.MascotaBOImpl;
+import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.Mascota;
 
 import java.util.List;
@@ -47,6 +48,26 @@ public class MascotaWebService {
         }
 
     }
+
+    @GET
+    @Path("/historial/{id}")
+    public Response obtenerHistorialPorMascota(@PathParam("id") int mascotaId) {
+        try {
+            // Llamamos al BO que acabas de actualizar
+            List<RegistroMedicoDTO> historial = mascotaBO.listarHistorialPorMascota(mascotaId);
+
+            return Response.ok(historial).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error interno al obtener el historial médico\"}")
+                    .build();
+        }
+    }
+
+
+
+
+
 
     @POST
     public Response insertar(Mascota mascota) {
