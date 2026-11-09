@@ -23,7 +23,7 @@ public class SedeDAOimp implements SedeDAO {
             while(rs.next()){
 
                 Sede sede = new Sede(
-                        rs.getInt("id"),
+                        rs.getInt("sede_id"),
                         rs.getString("nombre"),
                         rs.getString("direccion"),
                         rs.getString("telefono"),

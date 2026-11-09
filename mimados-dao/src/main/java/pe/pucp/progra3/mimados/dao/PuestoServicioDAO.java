@@ -13,5 +13,8 @@ public interface PuestoServicioDAO {
     public void insertar_puesto_servicio(PuestoServicio ps) throws SQLException;
     public void eliminar_puesto_servicio(int id_puesto_servicio) throws SQLException;
 
+    public PuestoServicio mostrar_puesto_servicio(int id_puesto_servicio) throws SQLException;
+
+
 
 }

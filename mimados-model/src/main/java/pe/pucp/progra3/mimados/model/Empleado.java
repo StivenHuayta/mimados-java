@@ -23,9 +23,18 @@ public class Empleado {
 
     public Empleado() {}
 
-    public Empleado(int sede_id, int usuario_id, String codigoCmvp , Boolean esAdmin, Boolean activo, String usuarioCreacion, String usuarioModificacion, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
-        this.getSede().setId(sede_id);
-        this.getUsuario().setId(usuario_id);
+    public Empleado(int sede_id, int usuario_id, String codigoCmvp,
+                    Boolean esAdmin, Boolean activo,
+                    String usuarioCreacion, String usuarioModificacion,
+                    LocalDateTime fechaCreacion,
+                    LocalDateTime fechaModificacion) {
+
+        this.usuario = new Usuario();
+        this.sede = new Sede();
+
+        this.usuario.setId(usuario_id);
+        this.sede.setId(sede_id);
+
         this.codigoCmvp = codigoCmvp;
         this.esAdmin = esAdmin;
         this.activo = activo;
@@ -35,21 +44,25 @@ public class Empleado {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public Empleado(String dni, String nombre, String apellido , String email , String telefono ,
-                    int sede_id , String codigoCmvp , boolean activo , Boolean esAdmin){
+    public Empleado(String dni, String nombre, String apellido,
+                    String email, String telefono,
+                    int sede_id, String codigoCmvp,
+                    boolean activo, Boolean esAdmin) {
 
-        this.getUsuario().setDni(dni);
-        this.getUsuario().setNombres(nombre);
-        this.getUsuario().setApellidos(apellido);
-        this.getUsuario().setEmail(email);
-        this.getUsuario().setTelefono(telefono);
+        this.usuario = new Usuario();
+        this.sede = new Sede();
 
-        this.getSede().setId(sede_id);
+        this.usuario.setDni(dni);
+        this.usuario.setNombres(nombre);
+        this.usuario.setApellidos(apellido);
+        this.usuario.setEmail(email);
+        this.usuario.setTelefono(telefono);
+
+        this.sede.setId(sede_id);
+
         this.codigoCmvp = codigoCmvp;
         this.esAdmin = esAdmin;
         this.activo = activo;
-
-
     }
 
 

@@ -11,6 +11,8 @@
     <file url="file://$PROJECT_DIR$/mimados-db-manager/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mimados-model/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mimados-model/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mimados-rs/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mimados-rs/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

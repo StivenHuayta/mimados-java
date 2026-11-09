@@ -16,9 +16,21 @@ public class CitaServicio {
     public CitaServicio() {}
 
 
-    public CitaServicio(int id_cita, int  id_sedeServicio, BigDecimal precioAplicado, String notas, String usuarioCreacion, String usuarioModificacion, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
+    public CitaServicio(int id_cita,
+                        int id_sedeServicio,
+                        BigDecimal precioAplicado,
+                        String notas,
+                        String usuarioCreacion,
+                        String usuarioModificacion,
+                        LocalDateTime fechaCreacion,
+                        LocalDateTime fechaModificacion) {
+
+        this.cita = new Cita();
         this.cita.setId(id_cita);
+
+        this.sedeServicio = new SedeServicio();
         this.sedeServicio.setId(id_sedeServicio);
+
         this.precioAplicado = precioAplicado;
         this.notas = notas;
         this.usuarioCreacion = usuarioCreacion;

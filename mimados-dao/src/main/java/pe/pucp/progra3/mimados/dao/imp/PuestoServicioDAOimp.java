@@ -81,4 +81,32 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
         }
 
     }
+
+    @Override
+    public PuestoServicio mostrar_puesto_servicio(int id_puesto_servicio) throws SQLException {
+
+        try(Connection connection = DBManager.getInstance().getConnection();
+            CallableStatement cs = connection.prepareCall(" {CALL mostrar_puesto_servicio( ? )}");){
+
+            cs.setInt(1 , id_puesto_servicio);
+            ResultSet rs = cs.executeQuery();
+
+            PuestoServicio ps = new PuestoServicio(
+                    rs.getInt("id"),
+                    rs.getInt("servicio_id"),
+                    rs.getInt("puesto_id"),
+                    rs.getBoolean("activo"),
+
+                    rs.getString("usuario_creacion"),
+                    rs.getString("usuario_ultima_actualizacion"),
+                    rs.getObject("fecha_ultima_actualizacion" , LocalDateTime.class),
+                    rs.getObject("fecha_creacion" , LocalDateTime.class)
+            );
+            return ps;
+        }
+
+
+
+
+    }
 }
