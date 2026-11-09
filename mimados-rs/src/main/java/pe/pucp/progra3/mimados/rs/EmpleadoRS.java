@@ -76,7 +76,6 @@ public class EmpleadoRS {
         if (req == null) return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, "Datos vacíos", null)).build();
 
         try {
-            // 1. Crear el Usuario base
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setDni(req.getDni());
             nuevoUsuario.setNombres(req.getNombres());
