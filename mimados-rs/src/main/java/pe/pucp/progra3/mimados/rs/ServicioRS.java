@@ -3,12 +3,9 @@ package pe.pucp.progra3.mimados.rs;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pe.pucp.progra3.mimados.bo.SedeBO;
 import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.bo.impl.SedeBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.ServicioBOImpl;
-import pe.pucp.progra3.mimados.model.Sede;
 import pe.pucp.progra3.mimados.model.Servicio;
 
 import java.io.Serializable;
