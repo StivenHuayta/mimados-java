@@ -43,13 +43,17 @@ public class SedeDAOimp implements SedeDAO {
 
             cs.setInt(1 , id_sede);
             ResultSet rs = cs.executeQuery();
-
-                Sede sede = new Sede(
+            Sede sede=new Sede();
+            //faltaba inicializar el rs.next, sino sale error
+            if(rs.next()){
+                sede= new Sede(
                         rs.getString("nombre"),
                         rs.getString("direccion"),
                         rs.getString("telefono"),
                         rs.getBoolean("activo")
                 );
+            }
+
             return sede;
         }
     }

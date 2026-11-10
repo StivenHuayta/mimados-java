@@ -59,6 +59,26 @@ public class SedeRS {
         public Object getData() { return data; }
     }
 
+    @POST
+    @Path("registrar")
+    public Response registrarSede(SedeRequest req){
+        try{
+            Sede nueva=new Sede(req.getNombre(), req.getDireccion(), req.getTelefono());
+            sedeBO.insertar(nueva);
+            return Response.ok(new ApiResponse(true, "Sede registrada correctamente", nueva)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
+                    .build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
+                    .build();
+
+        }
+    }
+
+
     private SedeBO sedeBO= new SedeBOImpl();
     @GET
     @Path("listarSede")
@@ -82,6 +102,21 @@ public class SedeRS {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response eliminarSede(@PathParam("id") int id){
+        try{
+            sedeBO.eliminar(id);
+            return Response.noContent().build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new ApiResponse(false,e.getMessage(),null ))
+                    .build();
         }
     }
 
