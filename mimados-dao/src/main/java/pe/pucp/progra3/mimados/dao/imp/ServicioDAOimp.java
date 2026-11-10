@@ -102,13 +102,14 @@ public class ServicioDAOimp implements ServicioDAO {
     public void actualizar_servicio(Servicio servicio) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
-        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?)}")) {
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?,?)}")) {
 
             cs.setInt(1 , servicio.getId());
             cs.setString(2,servicio.getNombre());
             cs.setString(3,servicio.getDescripcion());
             cs.setBigDecimal(4,servicio.getPrecioReferencial());
             cs.setInt(5 , servicio.getDuracionMinutos());
+            cs.setBoolean(6 , servicio.getActivo());
 
             int filasAfectadas = cs.executeUpdate();
 
