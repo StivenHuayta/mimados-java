@@ -7,6 +7,7 @@ import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
 import pe.pucp.progra3.mimados.model.AuthResultado;
+import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ import java.sql.SQLException;
 public class UsuarioRS {
 
     private final UsuarioBO usuarioBO = new UsuarioBOImpl();
+
+
 
     public static class LoginRequest implements Serializable {
         private String email;
@@ -172,4 +175,7 @@ public class UsuarioRS {
                     .build();
         }
     }
+
+
+
 }

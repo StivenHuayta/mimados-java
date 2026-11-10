@@ -11,6 +11,7 @@ import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
 import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
 import pe.pucp.progra3.mimados.model.AuthResultado;
 import pe.pucp.progra3.mimados.model.Cliente;
+import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
 import pe.pucp.progra3.mimados.model.Empleado;
 import pe.pucp.progra3.mimados.model.Usuario;
 
@@ -316,5 +317,36 @@ public class UsuarioBOImpl implements UsuarioBO {
                     "El ID del usuario debe ser mayor que cero."
             );
         }
+    }
+
+    //PARA PERFIL DE USUARIO
+
+    @Override
+    public UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws NegocioException, SQLException {
+        if (idUsuario == null || idUsuario <= 0) {
+            throw new NegocioException("El ID del usuario no es válido.");
+        }
+
+        UsuarioPerfilDTO perfil = usuarioDAO.obtenerPerfil(idUsuario);
+
+        if (perfil == null) {
+            throw new NegocioException("No se encontró el perfil del usuario solicitado.");
+        }
+
+        return perfil;
+    }
+
+    @Override
+    public boolean actualizarPerfil(UsuarioPerfilDTO perfil) throws NegocioException, SQLException {
+        if (perfil == null || perfil.getId() == null || perfil.getId() <= 0) {
+            throw new NegocioException("Datos de perfil inválidos o ID faltante.");
+        }
+
+
+        if (perfil.getNombres() == null || perfil.getNombres().trim().isEmpty()) {
+            throw new NegocioException("El nombre no puede estar vacío.");
+        }
+
+        return usuarioDAO.actualizarPerfil(perfil);
     }
 }
