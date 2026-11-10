@@ -22,4 +22,7 @@ public interface CitaBO {
 
     void atender(int idCita)
             throws SQLException, NegocioException;
+
+    void modificar(Cita cita)
+            throws SQLException, NegocioException;
 }
