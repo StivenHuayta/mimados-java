@@ -58,6 +58,8 @@ public class SedeRS {
         public String getMessage() { return message; }
         public Object getData() { return data; }
     }
+    private SedeBO sedeBO= new SedeBOImpl();
+
 
     @POST
     @Path("registrar")
@@ -79,7 +81,6 @@ public class SedeRS {
     }
 
 
-    private SedeBO sedeBO= new SedeBOImpl();
     @GET
     @Path("listarSede")
     public Response listarSedes(){
@@ -99,9 +100,13 @@ public class SedeRS {
             return Response.ok(new ApiResponse(true,"Solicitud correcta",sede)).build();
         } catch (SQLException e) {
             //lanza error averiguar
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
+                    .build();
         } catch (NegocioException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
+                    .build();
         }
     }
 
@@ -112,11 +117,24 @@ public class SedeRS {
             sedeBO.eliminar(id);
             return Response.noContent().build();
         } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
+                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ApiResponse(false,e.getMessage(),null ))
                     .build();
+        }
+    }
+
+    @PUT
+    public Response actualizar(Sede sede) {
+        try {
+            sedeBO.modificar(sede);
+
+            return Response.ok().build(); // 200 OK
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
         }
     }
 

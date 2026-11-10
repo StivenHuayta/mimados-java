@@ -27,7 +27,7 @@ public class ServicioDAOimp implements ServicioDAO {
             while(rs.next()){
 
                 Servicio servicio = new Servicio(
-                        rs.getInt("id"),
+                        rs.getInt("servicio_id"),
                         rs.getString("nombre"),
                         rs.getString("descripcion"),
                         rs.getBigDecimal("precio_referencial"),
