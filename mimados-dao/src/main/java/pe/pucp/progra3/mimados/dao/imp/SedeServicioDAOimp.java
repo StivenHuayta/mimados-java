@@ -3,6 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
+import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.Sede;
 import pe.pucp.progra3.mimados.model.SedeServicio;
 import pe.pucp.progra3.mimados.model.Servicio;
@@ -41,20 +42,22 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
     }
 
     @Override
-    public List<Servicio> listar_servicios_por_sede(int idSede) throws SQLException {
+    public List<SedeServicioDTO> listar_servicios_por_sede(int idSede) throws SQLException {
         /*
         CREATE PROCEDURE listar_servicios_por_sede(IN p_sede_id INT)
         SELECT b.servicio_id, b.nombre, b.descripcion, b.precio_referencial, b.duracion_minutos, a.activo as activo_sede
         FROM sede_servicio a, servicio b WHERE a.servicio_id=b.servicio_id and a.sede_id=p_sede_id;
         */
-        List<Servicio> servicios = new ArrayList<>();
+        List<SedeServicioDTO> servicios = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_servicios_por_sede(?)}")) {
 
             cs.setInt(1, idSede);
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
-                    Servicio servicio = new Servicio(
+                    SedeServicioDTO ser = new SedeServicioDTO(
+                            rs.getInt("sede_servicio_id"),
+                            idSede,
                             rs.getInt("servicio_id"),
                             rs.getString("nombre"),
                             rs.getString("descripcion"),
@@ -62,7 +65,7 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
                             rs.getInt("duracion_minutos"),
                             rs.getBoolean("activo_sede")
                     );
-                    servicios.add(servicio);
+                    servicios.add(ser);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
+import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.SedeServicio;
 import pe.pucp.progra3.mimados.model.Servicio;
 
@@ -15,6 +16,6 @@ public interface SedeServicioBO {
     void eliminar(int idSedeServicio)
             throws SQLException, NegocioException;
 
-    List<Servicio> listarPorSede(int idSede)
+    List<SedeServicioDTO> listarPorSede(int idSede)
             throws SQLException, NegocioException;
 }
