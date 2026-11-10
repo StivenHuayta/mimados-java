@@ -99,6 +99,27 @@ public class ServicioDAOimp implements ServicioDAO {
     }
 
     @Override
+    public void actualizar_servicio(Servicio servicio) throws SQLException {
+        Connection connection = TransactionContext.getConnection();
+
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?)}")) {
+
+            cs.setInt(1 , servicio.getId());
+            cs.setString(2,servicio.getNombre());
+            cs.setString(3,servicio.getDescripcion());
+            cs.setBigDecimal(4,servicio.getPrecioReferencial());
+            cs.setInt(5 , servicio.getDuracionMinutos());
+
+            int filasAfectadas = cs.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                System.out.println("Advertencia: No se encontró el servicio con ID " + servicio.getId());
+            }
+
+        }
+    }
+
+    @Override
     public Servicio mostrar_servicio(int id_servicio) throws SQLException {
 
         try (Connection connection = DBManager.getInstance().getConnection();

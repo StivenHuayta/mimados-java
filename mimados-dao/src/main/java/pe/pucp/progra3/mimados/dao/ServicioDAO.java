@@ -13,6 +13,9 @@ public interface ServicioDAO {
     public void eliminar_servicio(int id_servicio) throws SQLException;
 
     public void actualizar_servicio_precio(int id_servicio , BigDecimal precio) throws SQLException;
+    public void actualizar_servicio(Servicio servicio) throws SQLException;
+
+
     public Servicio mostrar_servicio(int id_servicio) throws SQLException;
 
 

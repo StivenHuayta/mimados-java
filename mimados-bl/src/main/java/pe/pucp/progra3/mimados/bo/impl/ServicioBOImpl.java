@@ -49,13 +49,16 @@ public class ServicioBOImpl implements ServicioBO {
         }
 
         validarId(servicio.getId());
-        validarPrecio(servicio.getPrecioReferencial());
+
+        validarServicio(servicio);
+
 
         try {
-            servicioDAO.actualizar_servicio_precio(
-                    servicio.getId(),
-                    servicio.getPrecioReferencial()
-            );
+//            servicioDAO.actualizar_servicio_precio(
+//                    servicio.getId(),
+//                    servicio.getPrecioReferencial()
+//            );
+            servicioDAO.actualizar_servicio(servicio);
 
             TransactionContext.commit();
 

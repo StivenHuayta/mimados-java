@@ -79,6 +79,25 @@ public class SedeDAOimp implements SedeDAO {
 
     }
 
+    @Override
+    public void modificar_sede(Sede sede) throws SQLException {
+        Connection connection = TransactionContext.getConnection();
+
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_sede(?,?,?,?)}")) {
+
+            cs.setInt(1 , sede.getId());
+            cs.setString(2,sede.getNombre());
+            cs.setString(3,sede.getDireccion());
+            cs.setString(4,sede.getTelefono());
+
+            int filasAfectadas = cs.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                System.out.println("Advertencia: No se encontró la sede con ID " + sede.getId());
+            }
+
+        }
+    }
 
     @Override
     public void agregar_sede(Sede sede) throws SQLException {
