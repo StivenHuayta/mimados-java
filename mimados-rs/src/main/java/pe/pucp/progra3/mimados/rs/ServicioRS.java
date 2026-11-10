@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.ServicioBOImpl;
+import pe.pucp.progra3.mimados.model.Sede;
 import pe.pucp.progra3.mimados.model.Servicio;
 
 import java.io.Serializable;
@@ -133,6 +134,16 @@ public class ServicioRS {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ApiResponse(false,e.getMessage(),null ))
                     .build();
+        }
+    }
+    @PUT
+    public Response actualizar(Servicio servicio) {
+        try {
+            servicioBO.modificar(servicio);
+
+            return Response.ok().build(); // 200 OK
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
         }
     }
 }
