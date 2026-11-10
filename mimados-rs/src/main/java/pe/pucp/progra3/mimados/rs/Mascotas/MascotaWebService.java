@@ -1,15 +1,24 @@
 package pe.pucp.progra3.mimados.rs.Mascotas;
 
 
+import jakarta.servlet.ServletContext;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.impl.MascotaBOImpl;
 import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.Mascota;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/mascotas")
 @Produces(MediaType.APPLICATION_JSON)
@@ -65,6 +74,41 @@ public class MascotaWebService {
     }
 
 
+    @Context
+    private ServletContext context;
+
+    @GET
+    @Path("/historial/{id}/pdf")
+    @Produces("application/pdf")
+    public Response generarPdfHistorial(@PathParam("id") int mascotaId) {
+        try {
+            List<RegistroMedicoDTO> historial = mascotaBO.listarHistorialPorMascota(mascotaId);
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(historial);
+
+            InputStream reporteStream = this.getClass().getResourceAsStream("/REPORTES/HistorialMascota.jasper");
+            if (reporteStream == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Plantilla Jasper no encontrada").build();
+            }
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("MIMADOS", "Historial Clínico Veterinario");
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporteStream, parametros, dataSource);
+
+            byte[] pdfBytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            return Response.ok(pdfBytes)
+                    .header("Content-Disposition", "attachment; filename=\"Historial_Mascota_" + mascotaId + ".pdf\"")
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al generar el PDF: " + e.getMessage())
+                    .build();
+        }
+    }
 
 
 
