@@ -32,6 +32,17 @@ public class PuestoServicio {
         this.fechaModificacion = fechaModificacion;
     }
 
+
+    public PuestoServicio(Integer id, int id_servicio, int id_puesto, Boolean activo) {
+        this.id = id;
+        this.servicio.setId(id_servicio);
+        this.puesto.setId(id_puesto);
+        this.activo = activo;
+    }
+
+
+
+
     public PuestoServicio() {
         this.activo = true;
     }

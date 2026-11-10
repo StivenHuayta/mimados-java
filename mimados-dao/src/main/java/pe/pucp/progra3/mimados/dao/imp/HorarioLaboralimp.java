@@ -20,7 +20,7 @@ public class HorarioLaboralimp implements HorarioLaboralDAO {
 
         List<HorarioLaboral> horarios = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL listar_horarios()}");
+            CallableStatement cs = connection.prepareCall(" {CALL listar_horario_laboral()}");
             ResultSet rs = cs.executeQuery()){
 
             while(rs.next()){
@@ -31,11 +31,8 @@ public class HorarioLaboralimp implements HorarioLaboralDAO {
                         rs.getObject("dia_semana" , DiaSemana.class),
                         rs.getObject("hora_inicio", LocalTime.class),
                         rs.getObject("hora_fin", LocalTime.class),
-                        rs.getBoolean("activo"),
-                        rs.getString("usuario_creacion"),
-                        rs.getString("usuario_ultima_actualizacion"),
-                        rs.getObject("fecha_ultima_actualizacion" , LocalDateTime.class),
-                        rs.getObject("fecha_creacion" , LocalDateTime.class)
+                        rs.getBoolean("activo")
+
                 );
                 horarios.add(horarioLaboral);
             }

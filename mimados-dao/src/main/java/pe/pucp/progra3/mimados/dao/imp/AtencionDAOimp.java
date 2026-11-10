@@ -39,6 +39,7 @@ public class AtencionDAOimp implements AtencionDAO {
             cs.setInt(1, atencion.getCita().getId());
             cs.setInt(2, atencion.getEmpleado().getUsuario().getId());
 
+
             if (atencion.getPesoActual() != null) {
                 cs.setBigDecimal(3, BigDecimal.valueOf(atencion.getPesoActual()));
             } else {

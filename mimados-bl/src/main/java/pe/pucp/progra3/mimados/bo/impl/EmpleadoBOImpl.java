@@ -115,4 +115,20 @@ public class EmpleadoBOImpl implements EmpleadoBO {
             );
         }
     }
+
+    @Override
+    public void modificar(Empleado empleado) throws SQLException, NegocioException {
+        // Reutilizamos tus validaciones existentes
+        validarEmpleado(empleado);
+
+        try {
+            empleadoDAO.actualizar_empleado(empleado);
+            TransactionContext.commit();
+        } catch (SQLException e) {
+            TransactionContext.rollback();
+            throw e;
+        } finally {
+            TransactionContext.close();
+        }
+    }
 }

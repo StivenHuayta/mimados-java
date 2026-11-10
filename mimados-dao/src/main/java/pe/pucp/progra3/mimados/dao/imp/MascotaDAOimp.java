@@ -4,6 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
 import pe.pucp.progra3.mimados.model.Cliente;
+import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.Especie;
 import pe.pucp.progra3.mimados.model.Mascota;
 import pe.pucp.progra3.mimados.model.Sexo;
@@ -240,4 +241,40 @@ public class MascotaDAOimp implements MascotaDAO {
             }
         }
     }
+
+
+    @Override
+    public List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId) {
+        List<RegistroMedicoDTO> historial = new ArrayList<>();
+
+        // Sintaxis estándar de JDBC para llamar a un procedimiento almacenado
+        String sql = "{CALL sp_obtener_historial_mascota(?)}";
+
+        try (Connection conn = DBManager.getInstance().getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            // Le pasamos el ID de la mascota al procedimiento
+            cs.setInt(1, mascotaId);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    RegistroMedicoDTO reg = new RegistroMedicoDTO();
+
+                    reg.setFecha(rs.getString("Fecha"));
+                    reg.setVeterinario(rs.getString("Veterinario"));
+                    reg.setServicio(rs.getString("Servicio"));
+                    reg.setNotas(rs.getString("Notas"));
+                    reg.setPeso(rs.getBigDecimal("Peso"));
+
+                    historial.add(reg);
+                }
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al invocar SP de historial: " + ex.getMessage());
+        }
+
+        return historial;
+    }
+
+
 }
