@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.20.6  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HistorialMascota" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f30f201-0238-4c03-b830-5dd09de69e6e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="Fecha" class="java.lang.String"/>
+	<field name="Veterinario" class="java.lang.String"/>
+	<field name="Servicio" class="java.lang.String"/>
+	<field name="Notas" class="java.lang.String"/>
+	<field name="Peso" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="171" y="20" width="213" height="30" uuid="077b4748-dc8e-485a-98f6-aba88938aa85"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Historial Clínico]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="30" uuid="8bd672ae-5335-4756-b074-673be26ab32d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="51096220-9ca8-4c74-8923-f0dbd9c4c4e6"/>
+				</reportElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="142" height="30" uuid="5e39cf1d-a892-4cb2-a5fb-d7636cee4a36">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d9af8b31-7196-4e4e-b01a-0965ddf1b6ef"/>
+				</reportElement>
+				<text><![CDATA[Veterinario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="0" width="111" height="30" uuid="5957eed6-395e-4886-a37c-f1d75b2374f9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4cc713e2-da4f-45ec-afb8-706e4e8f4773"/>
+				</reportElement>
+				<text><![CDATA[Servicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="0" width="167" height="30" uuid="cb2c322a-2889-4447-a871-782a6d644121">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1d99648c-9b09-4c2b-986e-924c0ea30aca"/>
+				</reportElement>
+				<text><![CDATA[Notas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="55" height="30" uuid="9faf7501-15a4-4217-9369-d943b9176fac">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7c74db0-aaae-4dad-b728-89a88623d99a"/>
+				</reportElement>
+				<text><![CDATA[Peso]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="30" uuid="b6627a91-aa70-4f71-90ac-57da03295d0b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="51096220-9ca8-4c74-8923-f0dbd9c4c4e6"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="0" width="142" height="30" uuid="31897df5-f50c-496f-9e89-8dc9b033bc64">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d9af8b31-7196-4e4e-b01a-0965ddf1b6ef"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Veterinario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="0" width="111" height="30" uuid="484eb68e-4aff-4b64-9574-1c36e132f7c4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4cc713e2-da4f-45ec-afb8-706e4e8f4773"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Servicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="0" width="167" height="30" uuid="452f7131-e8a6-4ed9-8fdb-521a12042799">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1d99648c-9b09-4c2b-986e-924c0ea30aca"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Notas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="55" height="30" uuid="9fc030e0-e5e6-4d65-9c26-fa28dee81722">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7c74db0-aaae-4dad-b728-89a88623d99a"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Peso}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

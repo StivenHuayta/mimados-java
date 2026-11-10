@@ -1,6 +1,7 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
+import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.Mascota;
 
 import java.sql.SQLException;
@@ -25,4 +26,10 @@ public interface MascotaBO {
 
     List<Mascota> listarPorDueno(int idCliente)
             throws SQLException, NegocioException;
+
+    List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId)
+            throws SQLException, NegocioException;
+
+
+
 }
