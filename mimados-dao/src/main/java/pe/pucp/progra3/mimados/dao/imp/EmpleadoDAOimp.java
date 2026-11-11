@@ -88,7 +88,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
             }
         } catch (SQLException ex) {
             String sql = "SELECT b.dni, b.nombres, b.apellidos, b.email, b.telefono, a.sede_id, a.codigo_cmvp, a.activo, a.es_admin " +
-                         "FROM empleado a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
+                    "FROM empleado a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
             try (Connection connection = DBManager.getInstance().getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setInt(1, id_empleado);
@@ -107,12 +107,12 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                         );
                         emp.getUsuario().setId(id_empleado);
                         return emp;
-                        }
                     }
                 }
-
             }
-            return null;
+
+        }
+        return null;
         }
 
         @Override
