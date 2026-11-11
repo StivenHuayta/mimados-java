@@ -39,6 +39,16 @@ public class HorarioLaboral {
         this.activo = activo;
     }
 
+    public HorarioLaboral(Integer id, Integer id_empleado ,  DiaSemana diaSemana, LocalTime horaInicio, LocalTime horaFin, Boolean activo) {
+        this.id = id;
+        this.getEmpleado().getUsuario().setId(id_empleado);
+        this.diaSemana = diaSemana;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.activo = activo;
+    }
+
+
     public Integer getId() {
             return id;
         }

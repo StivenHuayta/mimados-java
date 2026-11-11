@@ -48,13 +48,17 @@ public class SedeBOImpl implements SedeBO {
         }
 
         validarId(sede.getId());
+        validarNombre(sede.getNombre());
         validarDireccion(sede.getDireccion());
 
+        validarTelefono(sede.getTelefono());
+
         try {
-            sedeDAO.modificar_direccion(
-                    sede.getId(),
-                    sede.getDireccion()
-            );
+//            sedeDAO.modificar_direccion(
+//                    sede.getId(),
+//                    sede.getDireccion()
+//            );
+            sedeDAO.modificar_sede(sede);
 
             TransactionContext.commit();
 
@@ -110,35 +114,11 @@ public class SedeBOImpl implements SedeBO {
             );
         }
 
-        if (sede.getNombre() == null ||
-                sede.getNombre().isBlank()) {
 
-            throw new NegocioException(
-                    "El nombre de la sede es obligatorio."
-            );
-        }
-
-        if (sede.getNombre().length() > 60) {
-            throw new NegocioException(
-                    "El nombre de la sede no puede superar los 60 caracteres."
-            );
-        }
-
+        validarNombre(sede.getNombre());
         validarDireccion(sede.getDireccion());
 
-        if (sede.getTelefono() == null ||
-                sede.getTelefono().isBlank()) {
-
-            throw new NegocioException(
-                    "El teléfono de la sede es obligatorio."
-            );
-        }
-
-        if (sede.getTelefono().length() > 9) {
-            throw new NegocioException(
-                    "El teléfono de la sede no puede superar los 9 caracteres."
-            );
-        }
+        validarTelefono(sede.getTelefono());
     }
 
     private void validarDireccion(String direccion)
@@ -158,6 +138,42 @@ public class SedeBOImpl implements SedeBO {
             );
         }
     }
+    private void validarNombre(String nombre)
+            throws NegocioException {
+
+        if (nombre == null ||
+                nombre.isBlank()) {
+
+            throw new NegocioException(
+                    "El nombre de la sede es obligatorio."
+            );
+        }
+
+        if (nombre.length() > 60) {
+            throw new NegocioException(
+                    "El nombre de la sede no puede superar los 60 caracteres."
+            );
+        }
+    }
+
+    private void validarTelefono(String telefono)
+            throws NegocioException {
+
+        if (telefono == null ||
+                telefono.isBlank()) {
+
+            throw new NegocioException(
+                    "El teléfono de la sede es obligatorio."
+            );
+        }
+
+        if (telefono.length() > 9) {
+            throw new NegocioException(
+                    "El teléfono de la sede no puede superar los 9 caracteres."
+            );
+        }
+    }
+
 
     private void validarId(Integer id)
             throws NegocioException {

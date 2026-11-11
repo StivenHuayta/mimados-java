@@ -8,7 +8,7 @@ public interface EmpleadoDAO {
     void eliminar_empleado(int id) throws SQLException;
     List<Empleado> listar_empleados() throws SQLException;
     Empleado mostrar_empleado(int id) throws SQLException;
-    
+
     // NUEVO MÉTODO PARA MODIFICAR
     void actualizar_empleado(Empleado empleado) throws SQLException;
 }

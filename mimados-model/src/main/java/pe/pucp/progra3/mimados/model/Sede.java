@@ -41,8 +41,9 @@ public class Sede {
         this.activo = activo;
     }
 
-
-
+    public Sede(Integer id) {
+        this.id = id;
+    }
 
     public Sede() {
         this.activo = true;

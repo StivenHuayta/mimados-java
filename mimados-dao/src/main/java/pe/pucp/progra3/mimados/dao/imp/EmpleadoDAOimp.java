@@ -1,11 +1,9 @@
 package pe.pucp.progra3.mimados.dao.imp;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
-import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
+import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
 import pe.pucp.progra3.mimados.model.Empleado;
-
-
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
             }
         } catch (SQLException ex) {
             String sql = "SELECT b.dni, b.nombres, b.apellidos, b.email, b.telefono, a.sede_id, a.codigo_cmvp, a.activo, a.es_admin " +
-                    "FROM empleado a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
+                         "FROM empleado a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
             try (Connection connection = DBManager.getInstance().getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setInt(1, id_empleado);
@@ -109,32 +107,31 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                         );
                         emp.getUsuario().setId(id_empleado);
                         return emp;
+                        }
                     }
                 }
+
+            }
+            return null;
+        }
+
+        @Override
+        public void actualizar_empleado(Empleado empleado) throws SQLException {
+            String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
+                    "WHERE usuario_id = ?";
+
+            Connection connection = TransactionContext.getConnection();
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, empleado.getSede().getId());
+                pstmt.setString(2, empleado.getCodigoCmvp());
+                pstmt.setBoolean(3, empleado.getEsAdmin());
+                pstmt.setBoolean(4, empleado.getActivo());
+                pstmt.setInt(5, empleado.getUsuario().getId());
+
+                pstmt.executeUpdate();
             }
         }
-        return null;
-    }
-
-    @Override
-    public void actualizar_empleado(Empleado empleado) throws SQLException {
-        //nombres 
-        String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
-                     "WHERE usuario_id = ?";
-        
-        try (java.sql.Connection conexion = pe.pucp.progra3.mimados.DBManager.DBManager.getInstance().getConnection();
-             java.sql.PreparedStatement pstmt = conexion.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, empleado.getSede().getId());
-            pstmt.setString(2, empleado.getCodigoCmvp());
-            pstmt.setBoolean(3, empleado.getEsAdmin());
-            pstmt.setBoolean(4, empleado.getActivo());
-            pstmt.setInt(5, empleado.getUsuario().getId());
-            
-            pstmt.executeUpdate();
-        }
-    }
-        
 
 
 }

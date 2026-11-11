@@ -5,9 +5,11 @@ import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
 import pe.pucp.progra3.mimados.dao.imp.MascotaDAOimp;
+import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.Mascota;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MascotaBOImpl implements MascotaBO {
@@ -109,6 +111,20 @@ public class MascotaBOImpl implements MascotaBO {
 
         return mascotaDAO.mostrar_mascotas_dueno(idCliente);
     }
+
+    public List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId)throws SQLException, NegocioException  {
+        // Validación de negocio básica para evitar consultas innecesarias a la BD
+        if (mascotaId <= 0) {
+            System.out.println("BO Error: El ID de la mascota debe ser mayor a cero.");
+            return new ArrayList<>();
+        }
+        // Llamada directa a la capa de datos
+        return mascotaDAO.listarHistorialPorMascota(mascotaId);
+
+    }
+
+
+
 
     private void validarMascota(Mascota mascota)
             throws NegocioException {

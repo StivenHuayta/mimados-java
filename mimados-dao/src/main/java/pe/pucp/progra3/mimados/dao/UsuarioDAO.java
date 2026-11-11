@@ -1,5 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
+import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
 import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.SQLException;
@@ -13,4 +14,7 @@ public interface UsuarioDAO {
     public void actualizar_telefono_usuario(int id, String telefono) throws SQLException;
     public Usuario buscar_por_email(String email) throws SQLException;
 
+
+    UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws SQLException;
+    boolean actualizarPerfil(UsuarioPerfilDTO perfil) throws SQLException;
 }

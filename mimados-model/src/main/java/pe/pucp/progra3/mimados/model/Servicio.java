@@ -32,6 +32,17 @@ public class Servicio {
         this.activo = true;
     }
 
+    public Servicio(Integer id) {
+        this.id = id;
+    }
+
+    public Servicio(String nombre, String descripcion, BigDecimal precioReferencial, Integer duracionMinutos) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioReferencial = precioReferencial;
+        this.duracionMinutos = duracionMinutos;
+    }
+
     public Servicio(String nombre, BigDecimal precioReferencial, Integer duracionMinutos) {
         this();
         this.nombre = nombre;

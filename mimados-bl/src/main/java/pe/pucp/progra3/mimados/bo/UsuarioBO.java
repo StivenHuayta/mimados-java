@@ -2,6 +2,7 @@ package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.model.AuthResultado;
+import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
 import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.SQLException;
@@ -28,4 +29,11 @@ public interface UsuarioBO {
                                    String email, String password, String telefono,
                                    String direccion, String contactoEmergencia)
             throws SQLException, NegocioException;
+
+
+    //PARA PERFIL
+    UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws NegocioException, SQLException;
+
+    boolean actualizarPerfil(UsuarioPerfilDTO perfil) throws NegocioException, SQLException;
+
 }
