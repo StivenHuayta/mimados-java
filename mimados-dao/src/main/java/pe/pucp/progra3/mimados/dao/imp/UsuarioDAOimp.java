@@ -3,6 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.UsuarioDAO;
+import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
 import pe.pucp.progra3.mimados.model.Usuario;
 
 import java.sql.CallableStatement;
@@ -158,4 +159,59 @@ public class UsuarioDAOimp implements UsuarioDAO {
         }
         return null;
     }
+
+    //PARA PERFIL DE USUARIO
+    @Override
+    public UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws SQLException {
+        UsuarioPerfilDTO perfil = null;
+        String sql = "{CALL SP_OBTENER_PERFIL_USUARIO(?)}";
+
+        // Asume que usas una clase de conexión tipo DBManager
+        try (Connection conn = DBManager.getInstance().getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setInt(1, idUsuario);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    perfil = new UsuarioPerfilDTO();
+                    perfil.setId(rs.getInt("id"));
+                    perfil.setDni(rs.getString("dni"));
+                    perfil.setEmail(rs.getString("email"));
+                    perfil.setNombres(rs.getString("nombres"));
+                    perfil.setApellidos(rs.getString("apellidos"));
+                    perfil.setTelefono(rs.getString("telefono"));
+                    perfil.setDireccion(rs.getString("direccion"));
+                    perfil.setContactoEmergencia(rs.getString("contactoEmergencia"));
+                }
+            }
+        }
+        return perfil;
+    }
+
+    @Override
+    public boolean actualizarPerfil(UsuarioPerfilDTO perfil) throws SQLException {
+        boolean exito = false;
+        String sql = "{CALL SP_ACTUALIZAR_PERFIL_USUARIO(?, ?, ?, ?, ?, ?)}";
+
+        try (Connection conn = DBManager.getInstance().getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setInt(1, perfil.getId());
+            cs.setString(2, perfil.getNombres());
+            cs.setString(3, perfil.getApellidos());
+            cs.setString(4, perfil.getTelefono());
+            cs.setString(5, perfil.getDireccion());
+            cs.setString(6, perfil.getContactoEmergencia());
+
+            // executeUpdate devuelve el número de filas afectadas.
+            // Ojo: En un SP con múltiples UPDATEs, a veces devuelve 0 aunque haya sido exitoso.
+            // Por seguridad, validamos que no lance excepción y asumimos éxito.
+            cs.executeUpdate();
+            exito = true;
+        }
+        return exito;
+    }
+
+
 }
