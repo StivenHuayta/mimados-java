@@ -5,6 +5,7 @@ import pe.pucp.progra3.mimados.bo.SedeServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
 import pe.pucp.progra3.mimados.dao.imp.SedeServicioDAOimp;
+import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.SedeServicio;
 import pe.pucp.progra3.mimados.model.Servicio;
 
@@ -63,7 +64,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     }
 
     @Override
-    public List<Servicio> listarPorSede(int idSede)
+    public List<SedeServicioDTO> listarPorSede(int idSede)
             throws SQLException, NegocioException {
 
         validarId(idSede);
@@ -100,13 +101,13 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     private void validarNoDuplicado(int idSede, int idServicio)
             throws SQLException, NegocioException {
 
-        List<Servicio> servicios =
+        List<SedeServicioDTO> servicios =
                 sedeServicioDAO.listar_servicios_por_sede(idSede);
 
-        for (Servicio servicio : servicios) {
+        for (SedeServicioDTO servicio : servicios) {
 
-            if (servicio.getId() != null &&
-                    servicio.getId() == idServicio) {
+            if (servicio.getIdSedeServicio() != null &&
+                    servicio.getIdSedeServicio() == idServicio) {
 
                 throw new NegocioException(
                         "El servicio ya está asociado a la sede."

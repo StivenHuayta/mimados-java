@@ -9,6 +9,7 @@ import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.SedeServicioBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.ServicioBOImpl;
+import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.Sede;
 import pe.pucp.progra3.mimados.model.SedeServicio;
 import pe.pucp.progra3.mimados.model.Servicio;
@@ -70,7 +71,7 @@ public class SedeServicioRS {
     public Response listarServicios(@PathParam("id") int id){
 
         try {
-            List<Servicio> servicios=sedeServicioBO.listarPorSede(id);
+            List<SedeServicioDTO> servicios=sedeServicioBO.listarPorSede(id);
             return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

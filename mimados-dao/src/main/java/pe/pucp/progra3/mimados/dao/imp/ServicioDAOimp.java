@@ -3,15 +3,12 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.ServicioDAO;
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
-import pe.pucp.progra3.mimados.model.Sede;
+
 import pe.pucp.progra3.mimados.model.Servicio;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,13 +99,14 @@ public class ServicioDAOimp implements ServicioDAO {
     public void actualizar_servicio(Servicio servicio) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
-        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?)}")) {
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?,?)}")) {
 
             cs.setInt(1 , servicio.getId());
             cs.setString(2,servicio.getNombre());
             cs.setString(3,servicio.getDescripcion());
             cs.setBigDecimal(4,servicio.getPrecioReferencial());
             cs.setInt(5 , servicio.getDuracionMinutos());
+            cs.setBoolean(6 , servicio.getActivo());
 
             int filasAfectadas = cs.executeUpdate();
 

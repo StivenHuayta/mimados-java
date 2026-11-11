@@ -82,12 +82,13 @@ public class SedeDAOimp implements SedeDAO {
     public void modificar_sede(Sede sede) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
-        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_sede(?,?,?,?)}")) {
+        try(CallableStatement cs = connection.prepareCall("{CALL actualizar_sede(?,?,?,?,?)}")) {
 
             cs.setInt(1 , sede.getId());
             cs.setString(2,sede.getNombre());
             cs.setString(3,sede.getDireccion());
             cs.setString(4,sede.getTelefono());
+            cs.setBoolean(5,sede.getActivo());
 
             int filasAfectadas = cs.executeUpdate();
 
