@@ -72,6 +72,13 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         return sedeServicioDAO.listar_servicios_por_sede(idSede);
     }
 
+    @Override
+    public List<Servicio> listar_servicios_disponibles(int idSede) throws SQLException, NegocioException {
+        validarId(idSede);
+
+        return sedeServicioDAO.listar_servicios_disponibles(idSede);
+    }
+
     private void validarSedeServicio(SedeServicio sedeServicio)
             throws NegocioException {
 

@@ -18,4 +18,7 @@ public interface SedeServicioBO {
 
     List<SedeServicioDTO> listarPorSede(int idSede)
             throws SQLException, NegocioException;
+
+    List<Servicio> listar_servicios_disponibles(int idSede)
+            throws SQLException, NegocioException;
 }
