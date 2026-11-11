@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 
 import pe.pucp.progra3.mimados.bo.VeterinarioBO;
 import pe.pucp.progra3.mimados.bo.impl.VeterinarioBOImpl;
-import pe.pucp.progra3.mimados.model.VeterinarioResumen;
+import pe.pucp.progra3.mimados.model.dto.response.VeterinarioResumen;
 
 import java.io.Serializable;
 import java.sql.SQLException;

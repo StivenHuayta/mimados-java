@@ -7,7 +7,7 @@ import pe.pucp.progra3.mimados.dao.AtencionDAO;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.imp.AtencionDAOimp;
 import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Atencion;
+import pe.pucp.progra3.mimados.model.entity.Atencion;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

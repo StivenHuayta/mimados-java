@@ -1,7 +1,7 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.sql.SQLException;
 import java.util.List;

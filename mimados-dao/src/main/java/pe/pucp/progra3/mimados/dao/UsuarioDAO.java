@@ -1,7 +1,7 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;

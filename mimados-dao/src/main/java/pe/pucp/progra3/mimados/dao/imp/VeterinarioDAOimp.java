@@ -3,7 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.dao.VeterinarioDAO;
-import pe.pucp.progra3.mimados.model.VeterinarioResumen;
+import pe.pucp.progra3.mimados.model.dto.response.VeterinarioResumen;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

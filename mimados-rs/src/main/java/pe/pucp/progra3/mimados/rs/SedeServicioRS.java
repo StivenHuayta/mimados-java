@@ -9,10 +9,10 @@ import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.SedeServicioBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.ServicioBOImpl;
-import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
-import pe.pucp.progra3.mimados.model.Sede;
-import pe.pucp.progra3.mimados.model.SedeServicio;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
+import pe.pucp.progra3.mimados.model.entity.Sede;
+import pe.pucp.progra3.mimados.model.entity.SedeServicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

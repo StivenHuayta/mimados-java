@@ -1,5 +1,6 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
+import pe.pucp.progra3.mimados.model.enums.Estado;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,3 +140,4 @@ public class Cita {
         this.citasServicio = citasServicio;
     }
 }
+

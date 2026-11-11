@@ -1,6 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.EmpleadoPuesto;
+import pe.pucp.progra3.mimados.model.entity.EmpleadoPuesto;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

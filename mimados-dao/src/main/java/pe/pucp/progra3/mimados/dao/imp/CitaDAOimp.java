@@ -4,11 +4,11 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.model.Cita;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.Estado;
-import pe.pucp.progra3.mimados.model.Mascota;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.enums.Estado;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

@@ -5,7 +5,7 @@ import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.HorarioLaboralDAO;
 import pe.pucp.progra3.mimados.dao.imp.HorarioLaboralimp;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
 
 import java.sql.SQLException;
 import java.util.List;

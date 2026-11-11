@@ -10,9 +10,9 @@ import pe.pucp.progra3.mimados.bo.impl.EmpleadoBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
 import pe.pucp.progra3.mimados.dao.UsuarioDAO;
 import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.Sede;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Sede;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
 import java.sql.SQLException;

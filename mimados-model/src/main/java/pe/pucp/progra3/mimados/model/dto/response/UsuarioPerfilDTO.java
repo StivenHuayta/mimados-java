@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model.DTO;
+package pe.pucp.progra3.mimados.model.dto.response;
 
 import java.io.Serializable;
 

@@ -5,8 +5,8 @@ import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Cita;
-import pe.pucp.progra3.mimados.model.Estado;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.SQLException;
 import java.util.List;

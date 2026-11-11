@@ -3,10 +3,10 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
-import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
-import pe.pucp.progra3.mimados.model.Sede;
-import pe.pucp.progra3.mimados.model.SedeServicio;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
+import pe.pucp.progra3.mimados.model.entity.Sede;
+import pe.pucp.progra3.mimados.model.entity.SedeServicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

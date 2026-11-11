@@ -1,6 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

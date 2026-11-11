@@ -3,8 +3,8 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.ClienteDAO;
-import pe.pucp.progra3.mimados.model.Cliente;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.entity.Cliente;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

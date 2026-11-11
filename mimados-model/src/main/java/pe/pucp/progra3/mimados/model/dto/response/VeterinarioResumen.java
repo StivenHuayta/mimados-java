@@ -1,5 +1,4 @@
-
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.dto.response;
 
 public class VeterinarioResumen {
 

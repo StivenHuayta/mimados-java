@@ -1,8 +1,8 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
-import pe.pucp.progra3.mimados.model.Mascota;
+import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
 
 import java.sql.SQLException;
 import java.util.List;

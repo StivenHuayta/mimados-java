@@ -1,5 +1,6 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
+import pe.pucp.progra3.mimados.model.enums.DiaSemana;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -15,7 +16,7 @@ public class HorarioLaboral {
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
 
-        HorarioLaboral(){}
+    public HorarioLaboral(){}
 
 
     public HorarioLaboral(Integer id, Integer empleado_id, DiaSemana diaSemana, LocalTime horaInicio, LocalTime horaFin, Boolean activo, String usuarioCreacion, String usuarioModificacion, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
@@ -129,3 +130,4 @@ public class HorarioLaboral {
         this.fechaModificacion = fechaModificacion;
     }
 }
+

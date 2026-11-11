@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
 import java.time.LocalDateTime;
 
@@ -117,3 +117,4 @@ public class PuestoServicio {
         this.fechaModificacion = fechaModificacion;
     }
 }
+

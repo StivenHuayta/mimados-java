@@ -1,7 +1,7 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.model.EmpleadoPuesto;
+import pe.pucp.progra3.mimados.model.entity.EmpleadoPuesto;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
-package pe.pucp.progra3.mimados.model.DTO;
+package pe.pucp.progra3.mimados.model.dto.response;
 
-import pe.pucp.progra3.mimados.model.Sede;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.entity.Sede;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.math.BigDecimal;
 

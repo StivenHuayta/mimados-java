@@ -9,10 +9,10 @@ import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.CitaBOImpl;
 
-import pe.pucp.progra3.mimados.model.Cita;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.Mascota;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
 import java.sql.SQLException;

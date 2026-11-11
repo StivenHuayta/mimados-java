@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,3 +101,4 @@ public class Cliente {
         this.mascotas = mascotas;
     }
 }
+

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -145,3 +145,4 @@ public class Servicio {
         this.puestoServicios = puestoServicios;
     }
 }
+

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -40,7 +40,7 @@ public class Horario {
         }
 
         public Horario(int id, Empleado empleado, DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFin, boolean activo , Sede sede) {
-            this(empleado, diaSemana, horaInicio, horaFin , sede); // Reutiliza la validación de horas
+            this(empleado, diaSemana, horaInicio, horaFin , sede); // Reutiliza la validaciÃ³n de horas
             this.id = id;
             this.activo = activo;
         }
@@ -49,7 +49,7 @@ public class Horario {
         public boolean cubreLaHora(LocalTime horaSolicitada) {
             if (!this.activo) return false;
 
-            // Retorna true si la hora solicitada es igual o después del inicio, Y antes del fin
+            // Retorna true si la hora solicitada es igual o despuÃ©s del inicio, Y antes del fin
             return !horaSolicitada.isBefore(this.horaInicio) && horaSolicitada.isBefore(this.horaFin);
         }
 
@@ -78,3 +78,4 @@ public class Horario {
 
 
 }
+

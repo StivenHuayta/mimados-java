@@ -12,8 +12,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.impl.MascotaBOImpl;
-import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
-import pe.pucp.progra3.mimados.model.Mascota;
+import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
 
 import java.io.InputStream;
 import java.util.HashMap;

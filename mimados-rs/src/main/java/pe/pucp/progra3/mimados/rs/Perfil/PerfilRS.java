@@ -7,7 +7,7 @@ import pe.pucp.progra3.mimados.bo.ClienteBO;
 import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.impl.ClienteBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
-import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
 import pe.pucp.progra3.mimados.rs.UsuarioRS;
 
 

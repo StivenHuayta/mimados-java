@@ -6,9 +6,9 @@ import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Cita;
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.enums.DiaSemana;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

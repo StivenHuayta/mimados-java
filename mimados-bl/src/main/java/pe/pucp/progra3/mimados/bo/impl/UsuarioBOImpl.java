@@ -9,11 +9,11 @@ import pe.pucp.progra3.mimados.dao.UsuarioDAO;
 import pe.pucp.progra3.mimados.dao.imp.ClienteDAOimp;
 import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
 import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
-import pe.pucp.progra3.mimados.model.AuthResultado;
-import pe.pucp.progra3.mimados.model.Cliente;
-import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
+import pe.pucp.progra3.mimados.model.entity.Cliente;
+import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;

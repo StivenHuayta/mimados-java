@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
 import java.time.LocalDateTime;
 
@@ -60,7 +60,7 @@ public class Usuario {
 
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException(
-                    "El formato del correo es inválido."
+                    "El formato del correo es invÃ¡lido."
             );
         }
 
@@ -72,7 +72,7 @@ public class Usuario {
 
         if (passwordHash == null || passwordHash.isBlank()) {
             throw new IllegalArgumentException(
-                    "La contraseña es obligatoria."
+                    "La contraseÃ±a es obligatoria."
             );
         }
 
@@ -106,7 +106,7 @@ public class Usuario {
         if (nuevoEmail != null) {
             if (!nuevoEmail.contains("@")) {
                 throw new IllegalArgumentException(
-                        "El formato del correo es inválido."
+                        "El formato del correo es invÃ¡lido."
                 );
             }
 
@@ -124,7 +124,7 @@ public class Usuario {
                 nuevoPasswordHash.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "La contraseña no puede estar vacía."
+                    "La contraseÃ±a no puede estar vacÃ­a."
             );
         }
 
@@ -171,3 +171,4 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 }
+

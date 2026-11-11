@@ -1,9 +1,9 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.model.AuthResultado;
-import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
+import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;

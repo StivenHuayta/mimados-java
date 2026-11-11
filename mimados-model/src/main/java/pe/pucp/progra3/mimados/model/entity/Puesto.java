@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -95,3 +95,4 @@ public class Puesto {
         this.puestoServicios = puestoServicios;
     }
 }
+

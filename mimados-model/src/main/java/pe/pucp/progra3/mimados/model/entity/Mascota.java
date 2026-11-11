@@ -1,5 +1,7 @@
-package pe.pucp.progra3.mimados.model;
+package pe.pucp.progra3.mimados.model.entity;
 
+import pe.pucp.progra3.mimados.model.enums.Especie;
+import pe.pucp.progra3.mimados.model.enums.Sexo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -151,3 +153,4 @@ public class Mascota {
         this.citas = citas;
     }
 }
+

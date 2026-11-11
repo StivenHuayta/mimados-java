@@ -3,7 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
-import pe.pucp.progra3.mimados.model.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
 
 import java.sql.*;
 import java.util.ArrayList;
