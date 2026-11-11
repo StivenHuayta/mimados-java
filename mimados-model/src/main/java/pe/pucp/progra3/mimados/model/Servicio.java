@@ -36,6 +36,13 @@ public class Servicio {
         this.id = id;
     }
 
+    public Servicio(Integer id, String nombre, BigDecimal precioReferencial, Integer duracionMinutos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precioReferencial = precioReferencial;
+        this.duracionMinutos = duracionMinutos;
+    }
+
     public Servicio(String nombre, String descripcion, BigDecimal precioReferencial, Integer duracionMinutos) {
         this.nombre = nombre;
         this.descripcion = descripcion;

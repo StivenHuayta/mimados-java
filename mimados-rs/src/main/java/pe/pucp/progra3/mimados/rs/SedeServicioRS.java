@@ -83,6 +83,23 @@ public class SedeServicioRS {
                     .build();
         }
     }
+    @GET
+    @Path("listarServiciosDisponibles/{id}")
+    public Response listarServiciosDisponibles(@PathParam("id") int id){
+
+        try {
+            List<Servicio> servicios=sedeServicioBO.listar_servicios_disponibles(id);
+            return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ServicioRS.ApiResponse(false, "Error BD: " + e.getMessage(), null))
+                    .build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ServicioRS.ApiResponse(false, e.getMessage(), null))
+                    .build();
+        }
+    }
 
     @DELETE
     @Path("{id}")

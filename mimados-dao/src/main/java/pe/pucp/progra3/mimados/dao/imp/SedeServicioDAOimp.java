@@ -89,4 +89,26 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
             }
         }
     }
+
+    @Override
+    public List<Servicio> listar_servicios_disponibles(int idSede) throws SQLException {
+        List<Servicio> servicios = new ArrayList<>();
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs = connection.prepareCall("{CALL listar_servicios_no_asignados_o_inactivos(?)}")) {
+
+            cs.setInt(1, idSede);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Servicio ser = new Servicio(
+                            rs.getInt("servicio_id"),
+                            rs.getString("nombre"),
+                            rs.getBigDecimal("precio_referencial"),
+                            rs.getInt("duracion_minutos")
+                    );
+                    servicios.add(ser);
+                }
+            }
+        }
+        return servicios;
+    }
 }
