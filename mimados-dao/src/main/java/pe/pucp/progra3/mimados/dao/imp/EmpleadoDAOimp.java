@@ -45,7 +45,6 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
             cs.setString(3, empleado.getCodigoCmvp());
 
             cs.execute();
-
         }
     }
 
@@ -111,24 +110,28 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                     }
                 }
             }
+
         }
         return null;
-    }
-
-    @Override
-    public void actualizar_empleado(Empleado empleado) throws SQLException {
-        String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
-                     "WHERE usuario_id = ?";
-
-        Connection conexion = TransactionContext.getConnection();
-        try (PreparedStatement pstmt = conexion.prepareStatement(sql)) {
-            pstmt.setInt(1, empleado.getSede().getId());
-            pstmt.setString(2, empleado.getCodigoCmvp());
-            pstmt.setBoolean(3, empleado.getEsAdmin());
-            pstmt.setBoolean(4, empleado.getActivo());
-            pstmt.setInt(5, empleado.getUsuario().getId());
-
-            pstmt.executeUpdate();
         }
-    }
+
+        @Override
+        public void actualizar_empleado(Empleado empleado) throws SQLException {
+            String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
+                    "WHERE usuario_id = ?";
+
+            Connection connection = TransactionContext.getConnection();
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, empleado.getSede().getId());
+                pstmt.setString(2, empleado.getCodigoCmvp());
+                pstmt.setBoolean(3, empleado.getEsAdmin());
+                pstmt.setBoolean(4, empleado.getActivo());
+                pstmt.setInt(5, empleado.getUsuario().getId());
+
+                pstmt.executeUpdate();
+            }
+        }
+
+
 }

@@ -26,9 +26,9 @@ public class HorarioLaboralimp implements HorarioLaboralDAO {
             while(rs.next()){
 
                 HorarioLaboral horarioLaboral = new HorarioLaboral(
-                        rs.getInt("id"),
+                        rs.getInt("horario_id"),
                         rs.getInt("empleado_id"),
-                        rs.getObject("dia_semana" , DiaSemana.class),
+                        DiaSemana.values()[rs.getInt("dia_semana") - 1],
                         rs.getObject("hora_inicio", LocalTime.class),
                         rs.getObject("hora_fin", LocalTime.class),
                         rs.getBoolean("activo")
@@ -53,8 +53,8 @@ public class HorarioLaboralimp implements HorarioLaboralDAO {
             while(rs.next()){
 
                 HorarioLaboral horarioLaboral = new HorarioLaboral(
-                        rs.getInt("id"),
-                        rs.getObject("dia_semana" , DiaSemana.class),
+                        rs.getInt("horario_id"),
+                        DiaSemana.values()[rs.getInt("dia_semana") - 1],
                         rs.getObject("hora_inicio", LocalTime.class),
                         rs.getObject("hora_fin", LocalTime.class),
                         rs.getBoolean("activo")
