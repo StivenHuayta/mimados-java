@@ -3,9 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.ServicioDAO;
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
-import pe.pucp.progra3.mimados.model.Sede;
+
 import pe.pucp.progra3.mimados.model.Servicio;
 
 import java.math.BigDecimal;
