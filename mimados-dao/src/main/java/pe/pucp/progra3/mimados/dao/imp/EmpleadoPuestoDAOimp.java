@@ -2,7 +2,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.EmpleadoPuestoDAO;
-import pe.pucp.progra3.mimados.model.EmpleadoPuesto;
+import pe.pucp.progra3.mimados.model.entity.EmpleadoPuesto;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.ServicioDAO;
 
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.math.BigDecimal;
 import java.sql.*;

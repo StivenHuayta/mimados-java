@@ -5,9 +5,9 @@ import pe.pucp.progra3.mimados.bo.SedeServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
 import pe.pucp.progra3.mimados.dao.imp.SedeServicioDAOimp;
-import pe.pucp.progra3.mimados.model.DTO.SedeServicioDTO;
-import pe.pucp.progra3.mimados.model.SedeServicio;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
+import pe.pucp.progra3.mimados.model.entity.SedeServicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.sql.SQLException;
 import java.util.List;

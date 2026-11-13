@@ -5,7 +5,7 @@ import pe.pucp.progra3.mimados.bo.SedeBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeDAO;
 import pe.pucp.progra3.mimados.dao.imp.SedeDAOimp;
-import pe.pucp.progra3.mimados.model.Sede;
+import pe.pucp.progra3.mimados.model.entity.Sede;
 
 import java.sql.SQLException;
 import java.util.List;

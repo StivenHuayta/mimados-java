@@ -5,7 +5,7 @@ import pe.pucp.progra3.mimados.bo.EmpleadoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
 import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
-import pe.pucp.progra3.mimados.model.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
 
 import java.sql.SQLException;
 import java.util.List;

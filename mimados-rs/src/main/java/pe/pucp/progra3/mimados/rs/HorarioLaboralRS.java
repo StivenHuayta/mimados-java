@@ -6,10 +6,10 @@ import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.HorarioLaboralBOImpl;
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.enums.DiaSemana;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
 import java.sql.SQLException;

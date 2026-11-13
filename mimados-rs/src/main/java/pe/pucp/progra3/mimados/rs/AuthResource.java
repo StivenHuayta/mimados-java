@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
-import pe.pucp.progra3.mimados.model.AuthResultado;
+import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 
 import java.io.Serializable;
 import java.sql.SQLException;

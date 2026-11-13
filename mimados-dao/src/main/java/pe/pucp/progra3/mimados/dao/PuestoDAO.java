@@ -1,6 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.Puesto;
+import pe.pucp.progra3.mimados.model.entity.Puesto;
 
 import java.sql.SQLException;
 import java.util.List;

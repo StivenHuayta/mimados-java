@@ -1,6 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.Atencion;
+import pe.pucp.progra3.mimados.model.entity.Atencion;
 
 import java.sql.SQLException;
 

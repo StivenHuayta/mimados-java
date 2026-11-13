@@ -5,7 +5,8 @@ import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Cita;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -156,4 +157,54 @@ public class CitaBOImpl implements CitaBO {
             );
         }
     }
+
+    @Override
+    public void modificar(Cita cita)
+            throws SQLException, NegocioException {
+
+        if (cita == null) {
+            throw new NegocioException(
+                    "La cita no puede ser nula."
+            );
+        }
+
+        validarId(cita.getId());
+        validarCita(cita);
+
+        Cita existente = citaDAO.mostrar_cita(cita.getId());
+
+        if (existente == null) {
+            throw new NegocioException(
+                    "La cita no existe."
+            );
+        }
+
+        if (existente.getEstado() != Estado.PROGRAMADA &&
+                existente.getEstado() != Estado.CONFIRMADA) {
+            throw new NegocioException(
+                    "La cita no puede modificarse en su estado actual."
+            );
+        }
+
+        if (!existente.getMascota().getId()
+                .equals(cita.getMascota().getId())) {
+            throw new NegocioException(
+                    "No se puede cambiar la mascota de la cita."
+            );
+        }
+
+        try {
+            citaDAO.actualizar_cita(cita);
+
+            TransactionContext.commit();
+
+        } catch (SQLException e) {
+            TransactionContext.rollback();
+            throw e;
+
+        } finally {
+            TransactionContext.close();
+        }
+    }
+
 }

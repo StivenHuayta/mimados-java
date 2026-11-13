@@ -1,7 +1,7 @@
 package pe.pucp.progra3.mimados.dao;
 
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
+import pe.pucp.progra3.mimados.model.enums.DiaSemana;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
 
 import java.sql.SQLException;
 import java.time.LocalTime;

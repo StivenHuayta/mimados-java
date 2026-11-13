@@ -5,7 +5,7 @@ import pe.pucp.progra3.mimados.bo.CitaServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaServicioDAO;
 import pe.pucp.progra3.mimados.dao.imp.CitaServicioDAOimp;
-import pe.pucp.progra3.mimados.model.CitaServicio;
+import pe.pucp.progra3.mimados.model.entity.CitaServicio;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;

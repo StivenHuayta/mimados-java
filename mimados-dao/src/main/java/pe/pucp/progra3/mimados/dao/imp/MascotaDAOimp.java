@@ -3,12 +3,12 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
-import pe.pucp.progra3.mimados.model.Cliente;
-import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
-import pe.pucp.progra3.mimados.model.Especie;
-import pe.pucp.progra3.mimados.model.Mascota;
-import pe.pucp.progra3.mimados.model.Sexo;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.entity.Cliente;
+import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
+import pe.pucp.progra3.mimados.model.enums.Especie;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
+import pe.pucp.progra3.mimados.model.enums.Sexo;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.math.BigDecimal;
 import java.sql.CallableStatement;

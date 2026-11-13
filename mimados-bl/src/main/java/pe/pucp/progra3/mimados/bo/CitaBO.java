@@ -1,7 +1,7 @@
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
-import pe.pucp.progra3.mimados.model.Cita;
+import pe.pucp.progra3.mimados.model.entity.Cita;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,5 +21,8 @@ public interface CitaBO {
             throws SQLException, NegocioException;
 
     void atender(int idCita)
+            throws SQLException, NegocioException;
+
+    void modificar(Cita cita)
             throws SQLException, NegocioException;
 }
