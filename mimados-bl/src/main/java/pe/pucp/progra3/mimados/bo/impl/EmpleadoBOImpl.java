@@ -19,8 +19,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     }
 
     @Override
-    public void insertar(Empleado empleado)
-            throws SQLException, NegocioException {
+    public void insertar(Empleado empleado) {
 
         validarEmpleado(empleado);
 
@@ -31,15 +30,14 @@ public class EmpleadoBOImpl implements EmpleadoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el empleado.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
@@ -50,30 +48,35 @@ public class EmpleadoBOImpl implements EmpleadoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el empleado.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Empleado> listarTodos()
-            throws SQLException {
+    public List<Empleado> listarTodos() {
 
-        return empleadoDAO.listar_empleados();
+        try {
+            return empleadoDAO.listar_empleados();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los empleados.", e);
+        }
     }
 
     @Override
-    public Empleado obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Empleado obtenerPorId(int id) {
 
         validarId(id);
 
-        return empleadoDAO.mostrar_empleado(id);
+        try {
+            return empleadoDAO.mostrar_empleado(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el empleado.", e);
+        }
     }
 
-    private void validarEmpleado(Empleado empleado)
-            throws NegocioException {
+    private void validarEmpleado(Empleado empleado) {
 
         if (empleado == null) {
             throw new NegocioException(
@@ -106,8 +109,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
@@ -117,7 +119,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     }
 
     @Override
-    public void modificar(Empleado empleado) throws SQLException, NegocioException {
+    public void modificar(Empleado empleado) {
         // Reutilizamos tus validaciones existentes
         validarEmpleado(empleado);
 
@@ -126,7 +128,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
             TransactionContext.commit();
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el empleado.", e);
         } finally {
             TransactionContext.close();
         }

@@ -8,11 +8,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import pe.pucp.progra3.mimados.bo.VeterinarioBO;
+import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.VeterinarioBOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.VeterinarioResumen;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("VeterinarioRS")
@@ -67,7 +67,7 @@ public class VeterinarioRS {
                     )
             ).build();
 
-        } catch (SQLException e) {
+        } catch (NegocioException e) {
 
             e.printStackTrace();
 

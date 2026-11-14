@@ -2,6 +2,7 @@
 package pe.pucp.progra3.mimados.bo.impl;
 
 import pe.pucp.progra3.mimados.bo.VeterinarioBO;
+import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.VeterinarioDAO;
 import pe.pucp.progra3.mimados.dao.imp.VeterinarioDAOimp;
 import pe.pucp.progra3.mimados.model.dto.response.VeterinarioResumen;
@@ -18,9 +19,12 @@ public class VeterinarioBOImpl implements VeterinarioBO {
     }
 
     @Override
-    public List<VeterinarioResumen> listarTodos()
-            throws SQLException {
+    public List<VeterinarioResumen> listarTodos() {
 
-        return veterinarioDAO.listar_veterinarios();
+        try {
+            return veterinarioDAO.listar_veterinarios();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los veterinarios.", e);
+        }
     }
 }

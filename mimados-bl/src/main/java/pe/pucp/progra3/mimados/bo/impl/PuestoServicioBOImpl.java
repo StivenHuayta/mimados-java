@@ -19,8 +19,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
     }
 
     @Override
-    public void insertar(PuestoServicio puestoServicio)
-            throws SQLException, NegocioException {
+    public void insertar(PuestoServicio puestoServicio) {
 
         validarPuestoServicio(puestoServicio);
 
@@ -31,15 +30,14 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la relación puesto-servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idPuestoServicio)
-            throws SQLException, NegocioException {
+    public void eliminar(int idPuestoServicio) {
 
         validarId(idPuestoServicio);
 
@@ -50,31 +48,37 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la relación puesto-servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<PuestoServicio> listarPorPuesto(int idPuesto)
-            throws SQLException, NegocioException {
+    public List<PuestoServicio> listarPorPuesto(int idPuesto) {
 
         validarId(idPuesto);
 
-        return puestoServicioDAO.listar_servicios_puesto(idPuesto);
+        try {
+            return puestoServicioDAO.listar_servicios_puesto(idPuesto);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios del puesto.", e);
+        }
     }
+
     @Override
-    public PuestoServicio obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public PuestoServicio obtenerPorId(int id) {
 
         validarId(id);
 
-        return puestoServicioDAO.mostrar_puesto_servicio(id);
+        try {
+            return puestoServicioDAO.mostrar_puesto_servicio(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la relación puesto-servicio.", e);
+        }
     }
 
-    private void validarPuestoServicio(PuestoServicio puestoServicio)
-            throws NegocioException {
+    private void validarPuestoServicio(PuestoServicio puestoServicio) {
 
         if (puestoServicio == null) {
             throw new NegocioException(
@@ -99,8 +103,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarId(puestoServicio.getPuesto().getId());
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

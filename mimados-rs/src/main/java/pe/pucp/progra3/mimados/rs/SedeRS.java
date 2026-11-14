@@ -9,7 +9,6 @@ import pe.pucp.progra3.mimados.bo.impl.SedeBOImpl;
 import pe.pucp.progra3.mimados.model.entity.Sede;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("SedeRS")
@@ -68,15 +67,10 @@ public class SedeRS {
             Sede nueva=new Sede(req.getNombre(), req.getDireccion(), req.getTelefono());
             sedeBO.insertar(nueva);
             return Response.ok(new ApiResponse(true, "Sede registrada correctamente", nueva)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(false, e.getMessage(), null))
                     .build();
-
         }
     }
 
@@ -87,7 +81,7 @@ public class SedeRS {
         try {
             List <Sede> sedes=sedeBO.listarTodos();
             return Response.ok(new ApiResponse(true,"Listado correcto",sedes)).build();
-        } catch (SQLException e) {
+        } catch (NegocioException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
@@ -98,11 +92,6 @@ public class SedeRS {
         try{
             Sede sede=sedeBO.obtenerPorId(id);
             return Response.ok(new ApiResponse(true,"Solicitud correcta",sede)).build();
-        } catch (SQLException e) {
-            //lanza error averiguar
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(false, e.getMessage(), null))
@@ -116,10 +105,6 @@ public class SedeRS {
         try{
             sedeBO.eliminar(id);
             return Response.noContent().build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ApiResponse(false,e.getMessage(),null ))

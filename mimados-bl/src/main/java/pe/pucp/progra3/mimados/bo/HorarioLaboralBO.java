@@ -1,25 +1,18 @@
 package pe.pucp.progra3.mimados.bo;
 
-import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface HorarioLaboralBO {
 
-    void insertar(HorarioLaboral horario)
-            throws SQLException, NegocioException;
+    void insertar(HorarioLaboral horario);
 
-    void modificar(HorarioLaboral horario)
-            throws SQLException, NegocioException;
+    void modificar(HorarioLaboral horario);
 
-    void eliminar(int id)
-            throws SQLException, NegocioException;
+    void eliminar(int id);
 
-    List<HorarioLaboral> listarTodos()
-            throws SQLException;
+    List<HorarioLaboral> listarTodos();
 
-    List<HorarioLaboral> listarPorEmpleado(int idEmpleado)
-            throws SQLException, NegocioException;
+    List<HorarioLaboral> listarPorEmpleado(int idEmpleado);
 }

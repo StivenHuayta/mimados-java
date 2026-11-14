@@ -20,8 +20,7 @@ public class ServicioBOImpl implements ServicioBO {
     }
 
     @Override
-    public void insertar(Servicio servicio)
-            throws SQLException, NegocioException {
+    public void insertar(Servicio servicio) {
 
         validarServicio(servicio);
 
@@ -32,15 +31,14 @@ public class ServicioBOImpl implements ServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Servicio servicio)
-            throws SQLException, NegocioException {
+    public void modificar(Servicio servicio) {
 
         if (servicio == null) {
             throw new NegocioException(
@@ -64,15 +62,14 @@ public class ServicioBOImpl implements ServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
@@ -83,30 +80,35 @@ public class ServicioBOImpl implements ServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Servicio> listarTodos()
-            throws SQLException {
+    public List<Servicio> listarTodos() {
 
-        return servicioDAO.listar_servicios();
+        try {
+            return servicioDAO.listar_servicios();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios.", e);
+        }
     }
 
     @Override
-    public Servicio obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Servicio obtenerPorId(int id) {
 
         validarId(id);
 
-        return servicioDAO.mostrar_servicio(id);
+        try {
+            return servicioDAO.mostrar_servicio(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el servicio.", e);
+        }
     }
 
-    private void validarServicio(Servicio servicio)
-            throws NegocioException {
+    private void validarServicio(Servicio servicio) {
 
         if (servicio == null) {
             throw new NegocioException(
@@ -151,8 +153,7 @@ public class ServicioBOImpl implements ServicioBO {
         }
     }
 
-    private void validarPrecio(BigDecimal precio)
-            throws NegocioException {
+    private void validarPrecio(BigDecimal precio) {
 
         if (precio == null) {
             throw new NegocioException(
@@ -167,8 +168,7 @@ public class ServicioBOImpl implements ServicioBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

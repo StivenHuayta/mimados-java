@@ -19,8 +19,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
     }
 
     @Override
-    public void insertar(EmpleadoPuesto empleadoPuesto)
-            throws SQLException, NegocioException {
+    public void insertar(EmpleadoPuesto empleadoPuesto) {
 
         validarEmpleadoPuesto(empleadoPuesto);
 
@@ -31,15 +30,14 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void iniciar(int idEmpleadoPuesto)
-            throws SQLException, NegocioException {
+    public void iniciar(int idEmpleadoPuesto) {
 
         validarId(idEmpleadoPuesto);
 
@@ -50,15 +48,14 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al iniciar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idEmpleadoPuesto, LocalDate fechaFin)
-            throws SQLException, NegocioException {
+    public void eliminar(int idEmpleadoPuesto, LocalDate fechaFin) {
 
         validarId(idEmpleadoPuesto);
 
@@ -72,14 +69,13 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
-    private void validarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto)
-            throws NegocioException {
+    private void validarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto) {
 
         if (empleadoPuesto == null) {
             throw new NegocioException(
@@ -116,8 +112,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

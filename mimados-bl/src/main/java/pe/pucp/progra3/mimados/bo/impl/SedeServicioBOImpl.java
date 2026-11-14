@@ -21,8 +21,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     }
 
     @Override
-    public void insertar(SedeServicio sedeServicio)
-            throws SQLException, NegocioException {
+    public void insertar(SedeServicio sedeServicio) {
 
         validarSedeServicio(sedeServicio);
 
@@ -38,15 +37,14 @@ public class SedeServicioBOImpl implements SedeServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al asociar el servicio a la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idSedeServicio)
-            throws SQLException, NegocioException {
+    public void eliminar(int idSedeServicio) {
 
         validarId(idSedeServicio);
 
@@ -57,30 +55,36 @@ public class SedeServicioBOImpl implements SedeServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el servicio de la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<SedeServicioDTO> listarPorSede(int idSede)
-            throws SQLException, NegocioException {
+    public List<SedeServicioDTO> listarPorSede(int idSede) {
 
         validarId(idSede);
 
-        return sedeServicioDAO.listar_servicios_por_sede(idSede);
+        try {
+            return sedeServicioDAO.listar_servicios_por_sede(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios de la sede.", e);
+        }
     }
 
     @Override
-    public List<Servicio> listar_servicios_disponibles(int idSede) throws SQLException, NegocioException {
+    public List<Servicio> listar_servicios_disponibles(int idSede) {
         validarId(idSede);
 
-        return sedeServicioDAO.listar_servicios_disponibles(idSede);
+        try {
+            return sedeServicioDAO.listar_servicios_disponibles(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios disponibles de la sede.", e);
+        }
     }
 
-    private void validarSedeServicio(SedeServicio sedeServicio)
-            throws NegocioException {
+    private void validarSedeServicio(SedeServicio sedeServicio) {
 
         if (sedeServicio == null) {
             throw new NegocioException(
@@ -105,11 +109,14 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarId(sedeServicio.getServicio().getId());
     }
 
-    private void validarNoDuplicado(int idSede, int idServicio)
-            throws SQLException, NegocioException {
+    private void validarNoDuplicado(int idSede, int idServicio) {
 
-        List<SedeServicioDTO> servicios =
-                sedeServicioDAO.listar_servicios_por_sede(idSede);
+        List<SedeServicioDTO> servicios;
+        try {
+            servicios = sedeServicioDAO.listar_servicios_por_sede(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al validar servicios duplicados en la sede.", e);
+        }
 
         for (SedeServicioDTO servicio : servicios) {
 
@@ -123,8 +130,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

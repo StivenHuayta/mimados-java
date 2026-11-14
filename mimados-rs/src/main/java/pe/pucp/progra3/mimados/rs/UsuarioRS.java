@@ -10,7 +10,6 @@ import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 @Path("UsuarioRS")
 @Produces(MediaType.APPLICATION_JSON)
@@ -136,10 +135,6 @@ public class UsuarioRS {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(new ApiResponse(false, e.getMessage(), null))
                     .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
-                    .build();
         }
     }
 
@@ -168,10 +163,6 @@ public class UsuarioRS {
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(false, e.getMessage(), null))
-                    .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
                     .build();
         }
     }

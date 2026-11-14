@@ -20,8 +20,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
     }
 
     @Override
-    public void insertar(CitaServicio citaServicio)
-            throws SQLException, NegocioException {
+    public void insertar(CitaServicio citaServicio) {
 
         validarCitaServicio(citaServicio);
 
@@ -32,15 +31,14 @@ public class CitaServicioBOImpl implements CitaServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el servicio de la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(CitaServicio citaServicio)
-            throws SQLException, NegocioException {
+    public void modificar(CitaServicio citaServicio) {
 
         validarCitaServicio(citaServicio);
 
@@ -51,23 +49,25 @@ public class CitaServicioBOImpl implements CitaServicioBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el servicio de la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<CitaServicio> listarPorCita(int idCita)
-            throws SQLException, NegocioException {
+    public List<CitaServicio> listarPorCita(int idCita) {
 
         validarId(idCita);
 
-        return citaServicioDAO.listar_servicios_por_cita(idCita);
+        try {
+            return citaServicioDAO.listar_servicios_por_cita(idCita);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios de la cita.", e);
+        }
     }
 
-    private void validarCitaServicio(CitaServicio citaServicio)
-            throws NegocioException {
+    private void validarCitaServicio(CitaServicio citaServicio) {
 
         if (citaServicio == null) {
             throw new NegocioException(
@@ -109,8 +109,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

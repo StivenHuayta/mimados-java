@@ -138,8 +138,6 @@ public class EmpleadoRS {
             return Response.ok(new ApiResponse(true, "Empleado modificado correctamente", null)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
 
@@ -149,7 +147,7 @@ public class EmpleadoRS {
         try {
             List<Empleado> lista = empleadoBO.listarTodos();
             return Response.ok(new ApiResponse(true, "Listado correcto", lista)).build();
-        } catch (SQLException e) {
+        } catch (NegocioException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }

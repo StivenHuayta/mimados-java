@@ -20,8 +20,7 @@ public class CitaBOImpl implements CitaBO {
     }
 
     @Override
-    public void insertar(Cita cita)
-            throws SQLException, NegocioException {
+    public void insertar(Cita cita) {
 
         validarCita(cita);
 
@@ -32,33 +31,38 @@ public class CitaBOImpl implements CitaBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Cita> listarPorMascota(int idMascota)
-            throws SQLException, NegocioException {
+    public List<Cita> listarPorMascota(int idMascota) {
 
         validarId(idMascota);
 
-        return citaDAO.listar_citas_por_mascota(idMascota);
+        try {
+            return citaDAO.listar_citas_por_mascota(idMascota);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las citas de la mascota.", e);
+        }
     }
 
     @Override
-    public Cita obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Cita obtenerPorId(int id) {
 
         validarId(id);
 
-        return citaDAO.mostrar_cita(id);
+        try {
+            return citaDAO.mostrar_cita(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la cita.", e);
+        }
     }
 
     @Override
-    public void cancelar(int idCita)
-            throws SQLException, NegocioException {
+    public void cancelar(int idCita) {
 
         validarId(idCita);
 
@@ -69,15 +73,14 @@ public class CitaBOImpl implements CitaBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al cancelar la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void atender(int idCita)
-            throws SQLException, NegocioException {
+    public void atender(int idCita) {
 
         validarId(idCita);
 
@@ -88,14 +91,13 @@ public class CitaBOImpl implements CitaBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al atender la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
-    private void validarCita(Cita cita)
-            throws NegocioException {
+    private void validarCita(Cita cita) {
 
         if (cita == null) {
             throw new NegocioException(
@@ -148,8 +150,7 @@ public class CitaBOImpl implements CitaBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
@@ -159,8 +160,7 @@ public class CitaBOImpl implements CitaBO {
     }
 
     @Override
-    public void modificar(Cita cita)
-            throws SQLException, NegocioException {
+    public void modificar(Cita cita) {
 
         if (cita == null) {
             throw new NegocioException(
@@ -171,7 +171,12 @@ public class CitaBOImpl implements CitaBO {
         validarId(cita.getId());
         validarCita(cita);
 
-        Cita existente = citaDAO.mostrar_cita(cita.getId());
+        Cita existente;
+        try {
+            existente = citaDAO.mostrar_cita(cita.getId());
+        } catch (SQLException e) {
+            throw new NegocioException("Error al consultar la cita.", e);
+        }
 
         if (existente == null) {
             throw new NegocioException(
@@ -200,7 +205,7 @@ public class CitaBOImpl implements CitaBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la cita.", e);
 
         } finally {
             TransactionContext.close();

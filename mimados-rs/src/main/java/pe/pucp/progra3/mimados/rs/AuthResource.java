@@ -12,7 +12,6 @@ import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 @Path("/auth")
 public class AuthResource {
@@ -93,10 +92,6 @@ public class AuthResource {
         } catch (NegocioException e) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(new ApiResponse(false, e.getMessage(), null))
-                    .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
                     .build();
         }
     }

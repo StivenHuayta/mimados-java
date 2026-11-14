@@ -33,7 +33,7 @@ public class DisponibilidadBOImpl implements DisponibilidadBO {
             int idEmpleado,
             LocalDate fecha,
             int duracionMinutos
-    ) throws SQLException, NegocioException {
+    ) {
 
         // Validaciones
         if (idEmpleado <= 0) {
@@ -63,10 +63,14 @@ public class DisponibilidadBOImpl implements DisponibilidadBO {
                 horarioBO.listarPorEmpleado(idEmpleado);
 
         // Consultar citas ocupadas en esa fecha
-        List<Cita> citasOcupadas =
-                citaDAO.listar_citas_por_empleado_fecha(
-                        idEmpleado, fecha
-                );
+        List<Cita> citasOcupadas;
+        try {
+            citasOcupadas = citaDAO.listar_citas_por_empleado_fecha(
+                    idEmpleado, fecha
+            );
+        } catch (SQLException e) {
+            throw new NegocioException("Error al consultar la disponibilidad.", e);
+        }
 
         // Obtener el dia de la semana
         DiaSemana dia =

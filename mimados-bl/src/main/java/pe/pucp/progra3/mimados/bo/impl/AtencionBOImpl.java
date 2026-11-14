@@ -23,8 +23,7 @@ public class AtencionBOImpl implements AtencionBO {
     }
 
     @Override
-    public void insertar(Atencion atencion)
-            throws SQLException, NegocioException {
+    public void insertar(Atencion atencion) {
 
         validarAtencion(atencion);
 
@@ -39,15 +38,14 @@ public class AtencionBOImpl implements AtencionBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la atención.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Atencion atencion)
-            throws SQLException, NegocioException {
+    public void modificar(Atencion atencion) {
 
         if (atencion == null) {
             throw new NegocioException(
@@ -65,23 +63,25 @@ public class AtencionBOImpl implements AtencionBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la atención.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public Atencion obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Atencion obtenerPorId(int id) {
 
         validarId(id);
 
-        return atencionDAO.mostrar_atencion(id);
+        try {
+            return atencionDAO.mostrar_atencion(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la atención.", e);
+        }
     }
 
-    private void validarAtencion(Atencion atencion)
-            throws NegocioException {
+    private void validarAtencion(Atencion atencion) {
 
         if (atencion == null) {
             throw new NegocioException(
@@ -112,8 +112,7 @@ public class AtencionBOImpl implements AtencionBO {
         validarDatosAtencion(atencion);
     }
 
-    private void validarDatosAtencion(Atencion atencion)
-            throws NegocioException {
+    private void validarDatosAtencion(Atencion atencion) {
 
         if (atencion.getPesoActual() != null &&
                 atencion.getPesoActual() < 0) {
@@ -170,8 +169,7 @@ public class AtencionBOImpl implements AtencionBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

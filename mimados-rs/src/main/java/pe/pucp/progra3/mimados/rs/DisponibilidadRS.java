@@ -10,7 +10,6 @@ import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.DisponibilidadBOImpl;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -95,13 +94,6 @@ public class DisponibilidadRS {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
-                    .build();
-
-        } catch (SQLException e) {
-            return Response.status(
-                            Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error al consultar disponibilidad", null))
                     .build();
         }
     }

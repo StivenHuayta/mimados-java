@@ -16,7 +16,6 @@ import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.io.Serializable;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("SedeServicioRS")
@@ -54,15 +53,10 @@ public class SedeServicioRS {
             SedeServicio nueva=new SedeServicio(sede,servicio);
             sedeServicioBO.insertar(nueva);
             return Response.ok(new ServicioRS.ApiResponse(true, "SedeServicio registrado correctamente", nueva)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ServicioRS.ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ServicioRS.ApiResponse(false, e.getMessage(), null))
                     .build();
-
         }
     }
 
@@ -73,10 +67,6 @@ public class SedeServicioRS {
         try {
             List<SedeServicioDTO> servicios=sedeServicioBO.listarPorSede(id);
             return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ServicioRS.ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ServicioRS.ApiResponse(false, e.getMessage(), null))
@@ -90,10 +80,6 @@ public class SedeServicioRS {
         try {
             List<Servicio> servicios=sedeServicioBO.listar_servicios_disponibles(id);
             return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ServicioRS.ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ServicioRS.ApiResponse(false, e.getMessage(), null))
@@ -107,10 +93,6 @@ public class SedeServicioRS {
         try{
             sedeServicioBO.eliminar(id);
             return Response.noContent().build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ServicioRS.ApiResponse(false, "Error BD: " + e.getMessage(), null))
-                    .build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ServicioRS.ApiResponse(false,e.getMessage(),null ))

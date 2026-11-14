@@ -15,7 +15,6 @@ import pe.pucp.progra3.mimados.model.entity.Mascota;
 import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -155,12 +154,6 @@ public class CitaRS {
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
                     .build();
-
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error BD: " + e.getMessage(), null))
-                    .build();
         }
     }
 
@@ -185,12 +178,6 @@ public class CitaRS {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
-                    .build();
-
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error BD: " + e.getMessage(), null))
                     .build();
         }
     }
@@ -218,12 +205,6 @@ public class CitaRS {
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
                     .build();
-
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error BD: " + e.getMessage(), null))
-                    .build();
         }
     }
 
@@ -250,12 +231,6 @@ public class CitaRS {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
-                    .build();
-
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error BD: " + e.getMessage(), null))
                     .build();
         }
     }
@@ -360,12 +335,6 @@ public class CitaRS {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(
                             false, e.getMessage(), null))
-                    .build();
-
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(
-                            false, "Error al modificar la cita", null))
                     .build();
         }
     }

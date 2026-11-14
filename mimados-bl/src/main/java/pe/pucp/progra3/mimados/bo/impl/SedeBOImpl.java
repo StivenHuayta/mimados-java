@@ -19,8 +19,7 @@ public class SedeBOImpl implements SedeBO {
     }
 
     @Override
-    public void insertar(Sede sede)
-            throws SQLException, NegocioException {
+    public void insertar(Sede sede) {
 
         validarSede(sede);
 
@@ -31,15 +30,14 @@ public class SedeBOImpl implements SedeBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Sede sede)
-            throws SQLException, NegocioException {
+    public void modificar(Sede sede) {
 
         if (sede == null) {
             throw new NegocioException(
@@ -64,15 +62,14 @@ public class SedeBOImpl implements SedeBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
@@ -83,30 +80,35 @@ public class SedeBOImpl implements SedeBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Sede> listarTodos()
-            throws SQLException {
+    public List<Sede> listarTodos() {
 
-        return sedeDAO.listar_sedes();
+        try {
+            return sedeDAO.listar_sedes();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las sedes.", e);
+        }
     }
 
     @Override
-    public Sede obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Sede obtenerPorId(int id) {
 
         validarId(id);
 
-        return sedeDAO.mostrar_sede(id);
+        try {
+            return sedeDAO.mostrar_sede(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la sede.", e);
+        }
     }
 
-    private void validarSede(Sede sede)
-            throws NegocioException {
+    private void validarSede(Sede sede) {
 
         if (sede == null) {
             throw new NegocioException(
@@ -121,8 +123,7 @@ public class SedeBOImpl implements SedeBO {
         validarTelefono(sede.getTelefono());
     }
 
-    private void validarDireccion(String direccion)
-            throws NegocioException {
+    private void validarDireccion(String direccion) {
 
         if (direccion == null ||
                 direccion.isBlank()) {
@@ -138,8 +139,7 @@ public class SedeBOImpl implements SedeBO {
             );
         }
     }
-    private void validarNombre(String nombre)
-            throws NegocioException {
+    private void validarNombre(String nombre) {
 
         if (nombre == null ||
                 nombre.isBlank()) {
@@ -156,8 +156,7 @@ public class SedeBOImpl implements SedeBO {
         }
     }
 
-    private void validarTelefono(String telefono)
-            throws NegocioException {
+    private void validarTelefono(String telefono) {
 
         if (telefono == null ||
                 telefono.isBlank()) {
@@ -175,8 +174,7 @@ public class SedeBOImpl implements SedeBO {
     }
 
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
