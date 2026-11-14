@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.rs.Mascotas;
+package pe.pucp.progra3.mimados.rs;
 
 
 import jakarta.servlet.ServletContext;
@@ -23,9 +23,9 @@ import java.util.Map;
 @Path("/mascotas")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MascotaWebService {
+public class MascotaRS {
     private MascotaBO mascotaBO;
-    public MascotaWebService(){
+    public MascotaRS(){
         this.mascotaBO  = new MascotaBOImpl() ;
     }
 
