@@ -5,7 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.SedeServicioBO;
-import pe.pucp.progra3.mimados.bo.ServicioBO;
+
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.SedeServicioBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.ServicioBOImpl;
@@ -15,7 +15,7 @@ import pe.pucp.progra3.mimados.model.entity.SedeServicio;
 import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+
 import java.sql.SQLException;
 import java.util.List;
 
