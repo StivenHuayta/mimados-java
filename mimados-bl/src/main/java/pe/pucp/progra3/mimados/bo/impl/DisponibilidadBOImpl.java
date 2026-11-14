@@ -5,7 +5,7 @@ import pe.pucp.progra3.mimados.bo.DisponibilidadBO;
 import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.enums.DiaSemana;
 import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
@@ -25,7 +25,7 @@ public class DisponibilidadBOImpl implements DisponibilidadBO {
 
     public DisponibilidadBOImpl() {
         this.horarioBO = new HorarioLaboralBOImpl();
-        this.citaDAO = new CitaDAOimp();
+        this.citaDAO = new CitaDAOImpl();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class DisponibilidadBOImpl implements DisponibilidadBO {
         // Consultar citas ocupadas en esa fecha
         List<Cita> citasOcupadas;
         try {
-            citasOcupadas = citaDAO.listar_citas_por_empleado_fecha(
+            citasOcupadas = citaDAO.listarCitasPorEmpleadoFecha(
                     idEmpleado, fecha
             );
         } catch (SQLException e) {

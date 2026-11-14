@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -9,10 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmpleadoDAOimp implements EmpleadoDAO {
+public class EmpleadoDAOImpl implements EmpleadoDAO {
 
     @Override
-    public List<Empleado> listar_empleados() throws SQLException {
+    public List<Empleado> listarEmpleados() throws SQLException {
         List<Empleado> empleados = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_empleados()}");
@@ -37,7 +37,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
     }
 
     @Override
-    public void insertar_empleado(Empleado empleado) throws SQLException {
+    public void insertarEmpleado(Empleado empleado) throws SQLException {
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL insertar_empleado(?,?,?)}")) {
             cs.setInt(1, empleado.getSede().getId());
@@ -49,24 +49,24 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
     }
 
     @Override
-    public void eliminar_empleado(int id_empleado) throws SQLException {
+    public void eliminarEmpleado(int idEmpleado) throws SQLException {
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL eliminar_empleado(?)}")) {
-            cs.setInt(1, id_empleado);
+            cs.setInt(1, idEmpleado);
 
             int filasAfectadas = cs.executeUpdate();
             if (filasAfectadas == 0) {
-                System.out.println("Advertencia: No se encontró el empleado con ID " + id_empleado);
+                System.out.println("Advertencia: No se encontró el empleado con ID " + idEmpleado);
             }
         }
     }
 
     @Override
-    public Empleado mostrar_empleado(int id_empleado) throws SQLException {
+    public Empleado mostrarEmpleado(int idEmpleado) throws SQLException {
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL mostrar_empleado(?)}")) {
 
-            cs.setInt(1, id_empleado);
+            cs.setInt(1, idEmpleado);
 
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
@@ -82,7 +82,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                             rs.getBoolean("es_admin")
                     );
 
-                    emp.getUsuario().setId(id_empleado);
+                    emp.getUsuario().setId(idEmpleado);
                     return emp;
                 }
             }
@@ -91,7 +91,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                     "FROM empleado a INNER JOIN usuario b ON b.usuario_id = a.usuario_id WHERE a.usuario_id = ?";
             try (Connection connection = DBManager.getInstance().getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setInt(1, id_empleado);
+                ps.setInt(1, idEmpleado);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         Empleado emp = new Empleado(
@@ -105,7 +105,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
                                 rs.getBoolean("activo"),
                                 rs.getBoolean("es_admin")
                         );
-                        emp.getUsuario().setId(id_empleado);
+                        emp.getUsuario().setId(idEmpleado);
                         return emp;
                     }
                 }
@@ -116,7 +116,7 @@ public class EmpleadoDAOimp implements EmpleadoDAO {
         }
 
         @Override
-        public void actualizar_empleado(Empleado empleado) throws SQLException {
+        public void actualizarEmpleado(Empleado empleado) throws SQLException {
             String sql = "UPDATE empleado SET sede_id = ?, codigo_cmvp = ?, es_admin = ?, activo = ? " +
                     "WHERE usuario_id = ?";
 

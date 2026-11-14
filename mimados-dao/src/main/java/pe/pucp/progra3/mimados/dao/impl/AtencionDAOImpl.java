@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -17,10 +17,10 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 
-public class AtencionDAOimp implements AtencionDAO {
+public class AtencionDAOImpl implements AtencionDAO {
 
     @Override
-    public void insertar_atencion(Atencion atencion) throws SQLException {
+    public void insertarAtencion(Atencion atencion) throws SQLException {
         /*
         CREATE PROCEDURE insertar_atencion(
             IN p_cita_id INT,
@@ -63,7 +63,7 @@ public class AtencionDAOimp implements AtencionDAO {
     }
 
     @Override
-    public Atencion mostrar_atencion(int idAtencion) throws SQLException {
+    public Atencion mostrarAtencion(int idAtencion) throws SQLException {
         /*
         CREATE PROCEDURE mostrar_atencion(IN p_atencion_id INT)
         SELECT atencion_id, cita_id, empleado_id, fecha_hora_registro, peso_actual, temperatura,
@@ -113,7 +113,7 @@ public class AtencionDAOimp implements AtencionDAO {
     }
 
     @Override
-    public void actualizar_atencion(Atencion atencion) throws SQLException {
+    public void actualizarAtencion(Atencion atencion) throws SQLException {
         /*
         CREATE PROCEDURE actualizar_atencion(
             IN p_atencion_id INT,

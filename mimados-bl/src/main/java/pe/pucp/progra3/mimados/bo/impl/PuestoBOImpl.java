@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.PuestoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.PuestoDAO;
-import pe.pucp.progra3.mimados.dao.imp.PuestoDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.PuestoDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Puesto;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class PuestoBOImpl implements PuestoBO {
     private final PuestoDAO puestoDAO;
 
     public PuestoBOImpl() {
-        this.puestoDAO = new PuestoDAOimp();
+        this.puestoDAO = new PuestoDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PuestoBOImpl implements PuestoBO {
         validarPuesto(puesto);
 
         try {
-            puestoDAO.insertar_puesto(puesto);
+            puestoDAO.insertarPuesto(puesto);
 
             TransactionContext.commit();
 
@@ -49,7 +49,7 @@ public class PuestoBOImpl implements PuestoBO {
         validarPuesto(puesto);
 
         try {
-            puestoDAO.actualizar_puesto(puesto);
+            puestoDAO.actualizarPuesto(puesto);
 
             TransactionContext.commit();
 
@@ -65,7 +65,7 @@ public class PuestoBOImpl implements PuestoBO {
     public List<Puesto> listarTodos() {
 
         try {
-            return puestoDAO.listar_puestos();
+            return puestoDAO.listarPuestos();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los puestos.", e);
         }
@@ -77,7 +77,7 @@ public class PuestoBOImpl implements PuestoBO {
         validarId(id);
 
         try {
-            return puestoDAO.mostrar_puesto(id);
+            return puestoDAO.mostrarPuesto(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener el puesto.", e);
         }

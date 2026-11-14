@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PuestoServicioDAOimp implements PuestoServicioDAO {
+public class PuestoServicioDAOImpl implements PuestoServicioDAO {
 
     @Override
-    public List<PuestoServicio> listar_servicio_puesto_general() throws SQLException {
-        List<PuestoServicio> servicios_de_puesto = new ArrayList<>();
+    public List<PuestoServicio> listarServicioPuestoGeneral() throws SQLException {
+        List<PuestoServicio> serviciosDePuesto = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL listar_puesto_servicio()}");){
-            ResultSet rs = cs.executeQuery();
+            CallableStatement cs = connection.prepareCall(" {CALL listar_puesto_servicio()}");
+            ResultSet rs = cs.executeQuery()){
             while(rs.next()){
                 PuestoServicio ps = new PuestoServicio(
                         rs.getInt("id"),
@@ -26,44 +26,45 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
                         rs.getInt("puesto_id"),
                         rs.getBoolean("activo")
                 );
-                servicios_de_puesto.add(ps);
+                serviciosDePuesto.add(ps);
             }
         }
-        return servicios_de_puesto;
+        return serviciosDePuesto;
     }
 
     @Override
-    public List<PuestoServicio> listar_servicios_puesto(int id_puesto) throws SQLException {
+    public List<PuestoServicio> listarServiciosPuesto(int idPuesto) throws SQLException {
 
-        List<PuestoServicio> servicios_de_puesto = new ArrayList<>();
+        List<PuestoServicio> serviciosDePuesto = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
             CallableStatement cs = connection.prepareCall(" {CALL listar_servicios_puesto(?)}");){
 
-            cs.setInt( 1 , id_puesto );
-            ResultSet rs = cs.executeQuery();
-            while(rs.next()){
-                PuestoServicio ps = new PuestoServicio(
-                        rs.getInt("id"),
-                        rs.getInt("servicio_id"),
-                        rs.getInt("puesto_id"),
-                        rs.getBoolean("activo"),
+            cs.setInt(1, idPuesto);
+            try (ResultSet rs = cs.executeQuery()) {
+                while(rs.next()){
+                    PuestoServicio ps = new PuestoServicio(
+                            rs.getInt("id"),
+                            rs.getInt("servicio_id"),
+                            rs.getInt("puesto_id"),
+                            rs.getBoolean("activo"),
 
-                        rs.getString("usuario_creacion"),
-                        rs.getString("usuario_ultima_actualizacion"),
-                        rs.getObject("fecha_ultima_actualizacion" , LocalDateTime.class),
-                        rs.getObject("fecha_creacion" , LocalDateTime.class)
+                            rs.getString("usuario_creacion"),
+                            rs.getString("usuario_ultima_actualizacion"),
+                            rs.getObject("fecha_ultima_actualizacion" , LocalDateTime.class),
+                            rs.getObject("fecha_creacion" , LocalDateTime.class)
 
 
-                );
-                servicios_de_puesto.add(ps);
+                    );
+                    serviciosDePuesto.add(ps);
+                }
             }
         }
-        return servicios_de_puesto;
+        return serviciosDePuesto;
 
     }
 
     @Override
-    public void eliminar_puesto_servicio(int id_puesto_servicio) throws SQLException {
+    public void eliminarPuestoServicio(int idPuestoServicio) throws SQLException {
 
         Connection connection = TransactionContext.getConnection();
 
@@ -76,13 +77,13 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
             int filasAfectadas = cs.executeUpdate();
 
             if (filasAfectadas == 0) {
-                System.out.println("Advertencia: No se encontró el servicio-puesto con ID " + id_puesto_servicio);
+                System.out.println("Advertencia: No se encontró el servicio-puesto con ID " + idPuestoServicio);
             }
         }
     }
 
     @Override
-    public void insertar_puesto_servicio(PuestoServicio ps) throws SQLException {
+    public void insertarPuestoServicio(PuestoServicio ps) throws SQLException {
 
         Connection connection = TransactionContext.getConnection();
 
@@ -102,27 +103,29 @@ public class PuestoServicioDAOimp implements PuestoServicioDAO {
     }
 
     @Override
-    public PuestoServicio mostrar_puesto_servicio(int id_puesto_servicio) throws SQLException {
+    public PuestoServicio mostrarPuestoServicio(int idPuestoServicio) throws SQLException {
 
         try(Connection connection = DBManager.getInstance().getConnection();
             CallableStatement cs = connection.prepareCall(" {CALL mostrar_puesto_servicio_por_id( ? )}");){
 
-            cs.setInt(1 , id_puesto_servicio);
-            ResultSet rs = cs.executeQuery();
-
-            PuestoServicio ps = new PuestoServicio(
-                    rs.getInt("id"),
-                    rs.getInt("servicio_id"),
-                    rs.getInt("puesto_id"),
-                    rs.getBoolean("activo")
-            );
-            return ps;
+            cs.setInt(1, idPuestoServicio);
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    return new PuestoServicio(
+                            rs.getInt("id"),
+                            rs.getInt("servicio_id"),
+                            rs.getInt("puesto_id"),
+                            rs.getBoolean("activo")
+                    );
+                }
+            }
+            return null;
         }
     }
 
 
     @Override
-    public void actualizar_puesto_servicio(PuestoServicio ps) throws SQLException {
+    public void actualizarPuestoServicio(PuestoServicio ps) throws SQLException {
 
         Connection connection = TransactionContext.getConnection();
 

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -12,10 +12,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicioDAOimp implements ServicioDAO {
+public class ServicioDAOImpl implements ServicioDAO {
 
     @Override
-    public List<Servicio> listar_servicios() throws SQLException {
+    public List<Servicio> listarServicios() throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
             CallableStatement cs = connection.prepareCall(" {CALL listar_servicios()}");
@@ -38,7 +38,7 @@ public class ServicioDAOimp implements ServicioDAO {
     }
 
     @Override
-    public void insertar_servicio(Servicio servicio) throws SQLException {
+    public void insertarServicio(Servicio servicio) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
         try(CallableStatement cs = connection.prepareCall("{CALL insertar_servicio(?,?,?,?, ?)}")){
@@ -58,18 +58,18 @@ public class ServicioDAOimp implements ServicioDAO {
     }
 
     @Override
-    public void eliminar_servicio(int id_servicio) throws SQLException {
+    public void eliminarServicio(int idServicio) throws SQLException {
 
         Connection connection = TransactionContext.getConnection();
 
         try(CallableStatement cs = connection.prepareCall("{CALL eliminar_servicio(?)}")){
 
-            cs.setInt(1 , id_servicio);
+            cs.setInt(1, idServicio);
 
             int filasAfectadas = cs.executeUpdate();
 
             if (filasAfectadas == 0) {
-                System.out.println("Advertencia: No se encontró el servicio con ID " + id_servicio);
+                System.out.println("Advertencia: No se encontró el servicio con ID " + idServicio);
             }
         }
 
@@ -78,25 +78,25 @@ public class ServicioDAOimp implements ServicioDAO {
 
 
     @Override
-    public void actualizar_servicio_precio(int id_servicio, BigDecimal precio) throws SQLException {
+    public void actualizarServicioPrecio(int idServicio, BigDecimal precio) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
         try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio_precio(?,?)}")) {
 
-            cs.setInt(1 , id_servicio);
+            cs.setInt(1, idServicio);
             cs.setBigDecimal(2,precio);
 
             int filasAfectadas = cs.executeUpdate();
 
             if (filasAfectadas == 0) {
-                System.out.println("Advertencia: No se encontró la sede con ID " + id_servicio);
+                System.out.println("Advertencia: No se encontró el servicio con ID " + idServicio);
             }
 
         }
     }
 
     @Override
-    public void actualizar_servicio(Servicio servicio) throws SQLException {
+    public void actualizarServicio(Servicio servicio) throws SQLException {
         Connection connection = TransactionContext.getConnection();
 
         try(CallableStatement cs = connection.prepareCall("{CALL actualizar_servicio(?,?,?,?,?,?)}")) {
@@ -118,20 +118,20 @@ public class ServicioDAOimp implements ServicioDAO {
     }
 
     @Override
-    public Servicio mostrar_servicio(int id_servicio) throws SQLException {
+    public Servicio mostrarServicio(int idServicio) throws SQLException {
 
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs =
                      connection.prepareCall("{CALL mostrar_servicio(?)}")) {
 
-            cs.setInt(1, id_servicio);
+            cs.setInt(1, idServicio);
 
             try (ResultSet rs = cs.executeQuery()) {
 
                 if (rs.next()) {
 
                     return new Servicio(
-                            id_servicio,
+                            idServicio,
                             rs.getString("nombre"),
                             rs.getString("descripcion"),
                             rs.getBigDecimal("precio_referencial"),

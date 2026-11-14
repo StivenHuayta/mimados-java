@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.SedeBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeDAO;
-import pe.pucp.progra3.mimados.dao.imp.SedeDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.SedeDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Sede;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class SedeBOImpl implements SedeBO {
     private final SedeDAO sedeDAO;
 
     public SedeBOImpl() {
-        this.sedeDAO = new SedeDAOimp();
+        this.sedeDAO = new SedeDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SedeBOImpl implements SedeBO {
         validarSede(sede);
 
         try {
-            sedeDAO.agregar_sede(sede);
+            sedeDAO.agregarSede(sede);
 
             TransactionContext.commit();
 
@@ -56,7 +56,7 @@ public class SedeBOImpl implements SedeBO {
 //                    sede.getId(),
 //                    sede.getDireccion()
 //            );
-            sedeDAO.modificar_sede(sede);
+            sedeDAO.modificarSede(sede);
 
             TransactionContext.commit();
 
@@ -74,7 +74,7 @@ public class SedeBOImpl implements SedeBO {
         validarId(id);
 
         try {
-            sedeDAO.eliminar_sede(id);
+            sedeDAO.eliminarSede(id);
 
             TransactionContext.commit();
 
@@ -90,7 +90,7 @@ public class SedeBOImpl implements SedeBO {
     public List<Sede> listarTodos() {
 
         try {
-            return sedeDAO.listar_sedes();
+            return sedeDAO.listarSedes();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar las sedes.", e);
         }
@@ -102,7 +102,7 @@ public class SedeBOImpl implements SedeBO {
         validarId(id);
 
         try {
-            return sedeDAO.mostrar_sede(id);
+            return sedeDAO.mostrarSede(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener la sede.", e);
         }

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -15,10 +15,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAOimp implements UsuarioDAO {
+public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
-    public void insertar_usuario(Usuario usuario) throws SQLException {
+    public void insertarUsuario(Usuario usuario) throws SQLException {
         /*
         CREATE PROCEDURE insertar_usuario(
             IN p_dni VARCHAR(8),
@@ -65,7 +65,7 @@ public class UsuarioDAOimp implements UsuarioDAO {
     }
 
     @Override
-    public List<Usuario> listar_usuarios() throws SQLException {
+    public List<Usuario> listarUsuarios() throws SQLException {
         /*
         CREATE PROCEDURE listar_usuarios()
         select usuario_id, dni, nombres, apellidos, email, telefono from usuario;
@@ -91,7 +91,7 @@ public class UsuarioDAOimp implements UsuarioDAO {
     }
 
     @Override
-    public Usuario mostrar_usuario(int id) throws SQLException {
+    public Usuario mostrarUsuario(int id) throws SQLException {
         /*
         CREATE PROCEDURE mostrar_usuario(IN id int)
         select dni, nombres, apellidos, email, telefono from usuario where usuario_id=id;
@@ -117,7 +117,7 @@ public class UsuarioDAOimp implements UsuarioDAO {
     }
 
     @Override
-    public void actualizar_telefono_usuario(int id, String telefono) throws SQLException {
+    public void actualizarTelefonoUsuario(int id, String telefono) throws SQLException {
         /*
         CREATE PROCEDURE actualizar_telefono_usuario(
             IN p_usuario_id INT,
@@ -137,7 +137,7 @@ public class UsuarioDAOimp implements UsuarioDAO {
     }
 
     @Override
-    public Usuario buscar_por_email(String email) throws SQLException {
+    public Usuario buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT usuario_id, dni, nombres, apellidos, email, password_hash, telefono FROM usuario WHERE email = ?";
         try (Connection connection = DBManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

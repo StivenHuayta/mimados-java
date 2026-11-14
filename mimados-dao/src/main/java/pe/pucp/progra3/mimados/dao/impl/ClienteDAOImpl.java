@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -14,10 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteDAOimp implements ClienteDAO {
+public class ClienteDAOImpl implements ClienteDAO {
 
     @Override
-    public void insertar_cliente(Cliente cliente) throws SQLException {
+    public void insertarCliente(Cliente cliente) throws SQLException {
         /*
         CREATE PROCEDURE insertar_cliente(
             IN p_usuario_id INT,
@@ -44,7 +44,7 @@ public class ClienteDAOimp implements ClienteDAO {
     }
 
     @Override
-    public List<Cliente> listar_clientes() throws SQLException {
+    public List<Cliente> listarClientes() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_clientes()}");
@@ -73,7 +73,7 @@ public class ClienteDAOimp implements ClienteDAO {
     }
 
     @Override
-    public Cliente mostrar_cliente(int id) throws SQLException {
+    public Cliente mostrarCliente(int id) throws SQLException {
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL mostrar_cliente(?)}")) {
 
@@ -129,7 +129,7 @@ public class ClienteDAOimp implements ClienteDAO {
     }
 
     @Override
-    public void actualizar_telefono_cliente(int id, String contactoEmergencia) throws SQLException {
+    public void actualizarTelefonoCliente(int id, String contactoEmergencia) throws SQLException {
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL actualizar_telefono_cliente(?, ?)}")) {
             cs.setInt(1, id);
@@ -143,7 +143,7 @@ public class ClienteDAOimp implements ClienteDAO {
     }
 
     @Override
-    public void eliminar_cliente(int id) throws SQLException {
+    public void eliminarCliente(int id) throws SQLException {
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL eliminar_cliente(?)}")) {
             cs.setInt(1, id);

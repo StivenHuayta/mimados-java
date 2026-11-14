@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ServicioDAO {
 
-    public List<Servicio> listar_servicios() throws SQLException;
-    public void insertar_servicio(Servicio servicio) throws SQLException;
-    public void eliminar_servicio(int id_servicio) throws SQLException;
+    public List<Servicio> listarServicios() throws SQLException;
+    public void insertarServicio(Servicio servicio) throws SQLException;
+    public void eliminarServicio(int idServicio) throws SQLException;
 
-    public void actualizar_servicio_precio(int id_servicio , BigDecimal precio) throws SQLException;
-    public void actualizar_servicio(Servicio servicio) throws SQLException;
+    public void actualizarServicioPrecio(int idServicio, BigDecimal precio) throws SQLException;
+    public void actualizarServicio(Servicio servicio) throws SQLException;
 
 
-    public Servicio mostrar_servicio(int id_servicio) throws SQLException;
+    public Servicio mostrarServicio(int idServicio) throws SQLException;
 
 
 

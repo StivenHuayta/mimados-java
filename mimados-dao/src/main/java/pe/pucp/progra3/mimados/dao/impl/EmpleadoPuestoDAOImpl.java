@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.EmpleadoPuestoDAO;
@@ -11,10 +11,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 
-public class EmpleadoPuestoDAOimp implements EmpleadoPuestoDAO {
+public class EmpleadoPuestoDAOImpl implements EmpleadoPuestoDAO {
 
     @Override
-    public void insertar_empleado_puesto(EmpleadoPuesto empleadoPuesto) throws SQLException {
+    public void insertarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto) throws SQLException {
         /*
         CREATE PROCEDURE insertar_empleado_puesto (
             IN p_puesto_id INT,
@@ -33,7 +33,7 @@ public class EmpleadoPuestoDAOimp implements EmpleadoPuestoDAO {
     }
 
     @Override
-    public void iniciar_empleado_puesto(int idEmpleadoPuesto) throws SQLException {
+    public void iniciarEmpleadoPuesto(int idEmpleadoPuesto) throws SQLException {
         /*
         CREATE PROCEDURE iniciar_empleado_puesto (
             IN p_empleado_puesto_id INT
@@ -51,7 +51,7 @@ public class EmpleadoPuestoDAOimp implements EmpleadoPuestoDAO {
     }
 
     @Override
-    public void eliminar_empleado_puesto(int idEmpleadoPuesto, LocalDate fechaFin) throws SQLException {
+    public void eliminarEmpleadoPuesto(int idEmpleadoPuesto, LocalDate fechaFin) throws SQLException {
         /*
         CREATE PROCEDURE eliminar_empleado_puesto (
             IN p_empleado_puesto_id INT,

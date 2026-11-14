@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.EmpleadoPuestoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.EmpleadoPuestoDAO;
-import pe.pucp.progra3.mimados.dao.imp.EmpleadoPuestoDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoPuestoDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.EmpleadoPuesto;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
     private final EmpleadoPuestoDAO empleadoPuestoDAO;
 
     public EmpleadoPuestoBOImpl() {
-        this.empleadoPuestoDAO = new EmpleadoPuestoDAOimp();
+        this.empleadoPuestoDAO = new EmpleadoPuestoDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
         validarEmpleadoPuesto(empleadoPuesto);
 
         try {
-            empleadoPuestoDAO.insertar_empleado_puesto(empleadoPuesto);
+            empleadoPuestoDAO.insertarEmpleadoPuesto(empleadoPuesto);
 
             TransactionContext.commit();
 
@@ -42,7 +42,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
         validarId(idEmpleadoPuesto);
 
         try {
-            empleadoPuestoDAO.iniciar_empleado_puesto(idEmpleadoPuesto);
+            empleadoPuestoDAO.iniciarEmpleadoPuesto(idEmpleadoPuesto);
 
             TransactionContext.commit();
 
@@ -60,7 +60,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
         validarId(idEmpleadoPuesto);
 
         try {
-            empleadoPuestoDAO.eliminar_empleado_puesto(
+            empleadoPuestoDAO.eliminarEmpleadoPuesto(
                     idEmpleadoPuesto,
                     fechaFin
             );

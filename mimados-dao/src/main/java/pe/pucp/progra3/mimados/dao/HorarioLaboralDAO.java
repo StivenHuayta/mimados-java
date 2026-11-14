@@ -9,14 +9,14 @@ import java.util.List;
 
 public interface HorarioLaboralDAO {
 
-    public List<HorarioLaboral> listar_horarios() throws SQLException;
-    public List<HorarioLaboral> horarios_por_empleado(int id_empleado) throws SQLException;
+    public List<HorarioLaboral> listarHorarios() throws SQLException;
+    public List<HorarioLaboral> horariosPorEmpleado(int idEmpleado) throws SQLException;
 
-    public void insertar_horario( HorarioLaboral horario) throws SQLException;
-    public void eliminar_horario_laboral( int id_horario) throws SQLException;
+    public void insertarHorario(HorarioLaboral horario) throws SQLException;
+    public void eliminarHorarioLaboral(int idHorario) throws SQLException;
 
 
-    public void actualizar_horario_laboral(int id_horario, DiaSemana diaSemana , LocalTime horai , LocalTime horaf) throws  SQLException;
+    public void actualizarHorarioLaboral(int idHorario, DiaSemana diaSemana, LocalTime horaInicio, LocalTime horaFin) throws SQLException;
 
 
 

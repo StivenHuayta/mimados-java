@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.PuestoServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.PuestoServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.PuestoServicioDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.PuestoServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.PuestoServicio;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
     private final PuestoServicioDAO puestoServicioDAO;
 
     public PuestoServicioBOImpl() {
-        this.puestoServicioDAO = new PuestoServicioDAOimp();
+        this.puestoServicioDAO = new PuestoServicioDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarPuestoServicio(puestoServicio);
 
         try {
-            puestoServicioDAO.insertar_puesto_servicio(puestoServicio);
+            puestoServicioDAO.insertarPuestoServicio(puestoServicio);
 
             TransactionContext.commit();
 
@@ -42,7 +42,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarId(idPuestoServicio);
 
         try {
-            puestoServicioDAO.eliminar_puesto_servicio(idPuestoServicio);
+            puestoServicioDAO.eliminarPuestoServicio(idPuestoServicio);
 
             TransactionContext.commit();
 
@@ -60,7 +60,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarId(idPuesto);
 
         try {
-            return puestoServicioDAO.listar_servicios_puesto(idPuesto);
+            return puestoServicioDAO.listarServiciosPuesto(idPuesto);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios del puesto.", e);
         }
@@ -72,7 +72,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarId(id);
 
         try {
-            return puestoServicioDAO.mostrar_puesto_servicio(id);
+            return puestoServicioDAO.mostrarPuestoServicio(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener la relación puesto-servicio.", e);
         }

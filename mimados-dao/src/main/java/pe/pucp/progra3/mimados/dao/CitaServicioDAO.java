@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CitaServicioDAO {
 
-    public void insertar_cita_servicio(CitaServicio citaServicio) throws SQLException;
-    public List<CitaServicio> listar_servicios_por_cita(int idCita) throws SQLException;
-    public void actualizar_cita_servicio(CitaServicio citaServicio) throws SQLException;
+    public void insertarCitaServicio(CitaServicio citaServicio) throws SQLException;
+    public List<CitaServicio> listarServiciosPorCita(int idCita) throws SQLException;
+    public void actualizarCitaServicio(CitaServicio citaServicio) throws SQLException;
 
     //public void eliminar_cita_servicio(int cita_id , int sede_servicio_id) throws SQLException;
 

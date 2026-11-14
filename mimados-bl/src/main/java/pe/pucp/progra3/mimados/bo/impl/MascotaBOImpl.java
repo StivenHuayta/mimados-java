@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
-import pe.pucp.progra3.mimados.dao.imp.MascotaDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.MascotaDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
 
@@ -17,7 +17,7 @@ public class MascotaBOImpl implements MascotaBO {
     private final MascotaDAO mascotaDAO;
 
     public MascotaBOImpl() {
-        this.mascotaDAO = new MascotaDAOimp();
+        this.mascotaDAO = new MascotaDAOImpl();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarMascota(mascota);
 
         try {
-            mascotaDAO.insertar_mascota(mascota);
+            mascotaDAO.insertarMascota(mascota);
 
             TransactionContext.commit();
 
@@ -51,7 +51,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarNombre(mascota.getNombre());
 
         try {
-            mascotaDAO.actualizar_mascota_nombre(
+            mascotaDAO.actualizarMascotaNombre(
                     mascota.getId(),
                     mascota.getNombre()
             );
@@ -72,7 +72,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarId(id);
 
         try {
-            mascotaDAO.eliminar_mascota(id);
+            mascotaDAO.eliminarMascota(id);
 
             TransactionContext.commit();
 
@@ -88,7 +88,7 @@ public class MascotaBOImpl implements MascotaBO {
     public List<Mascota> listarTodos() {
 
         try {
-            return mascotaDAO.listar_mascotas();
+            return mascotaDAO.listarMascotas();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar las mascotas.", e);
         }
@@ -100,7 +100,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarId(id);
 
         try {
-            return mascotaDAO.mostrar_mascota(id);
+            return mascotaDAO.mostrarMascota(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener la mascota.", e);
         }
@@ -112,7 +112,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarId(idCliente);
 
         try {
-            return mascotaDAO.mostrar_mascotas_dueno(idCliente);
+            return mascotaDAO.mostrarMascotasDueno(idCliente);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar las mascotas del dueño.", e);
         }

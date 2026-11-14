@@ -78,7 +78,7 @@ public class SedeServicioRS {
     public Response listarServiciosDisponibles(@PathParam("id") int id){
 
         try {
-            List<Servicio> servicios=sedeServicioBO.listar_servicios_disponibles(id);
+            List<Servicio> servicios=sedeServicioBO.listarServiciosDisponibles(id);
             return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)

@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.EmpleadoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
-import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     private final EmpleadoDAO empleadoDAO;
 
     public EmpleadoBOImpl() {
-        this.empleadoDAO = new EmpleadoDAOimp();
+        this.empleadoDAO = new EmpleadoDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         validarEmpleado(empleado);
 
         try {
-            empleadoDAO.insertar_empleado(empleado);
+            empleadoDAO.insertarEmpleado(empleado);
 
             TransactionContext.commit();
 
@@ -42,7 +42,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         validarId(id);
 
         try {
-            empleadoDAO.eliminar_empleado(id);
+            empleadoDAO.eliminarEmpleado(id);
 
             TransactionContext.commit();
 
@@ -58,7 +58,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     public List<Empleado> listarTodos() {
 
         try {
-            return empleadoDAO.listar_empleados();
+            return empleadoDAO.listarEmpleados();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los empleados.", e);
         }
@@ -70,7 +70,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         validarId(id);
 
         try {
-            return empleadoDAO.mostrar_empleado(id);
+            return empleadoDAO.mostrarEmpleado(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener el empleado.", e);
         }
@@ -124,7 +124,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         validarEmpleado(empleado);
 
         try {
-            empleadoDAO.actualizar_empleado(empleado);
+            empleadoDAO.actualizarEmpleado(empleado);
             TransactionContext.commit();
         } catch (SQLException e) {
             TransactionContext.rollback();

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -21,10 +21,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MascotaDAOimp implements MascotaDAO {
+public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
-    public void insertar_mascota(Mascota mascota) throws SQLException {
+    public void insertarMascota(Mascota mascota) throws SQLException {
         /*
         CREATE PROCEDURE insertar_mascota(
             IN p_id INT, 
@@ -67,7 +67,7 @@ public class MascotaDAOimp implements MascotaDAO {
     }
 
     @Override
-    public List<Mascota> listar_mascotas() throws SQLException {
+    public List<Mascota> listarMascotas() throws SQLException {
         /*
         CREATE PROCEDURE listar_mascotas ()
         SELECT mascota_id, cliente_id, nombre, especie, raza, sexo, fecha_nacimiento, peso_referencial, activo
@@ -114,7 +114,7 @@ public class MascotaDAOimp implements MascotaDAO {
     }
 
     @Override
-    public Mascota mostrar_mascota(int id) throws SQLException {
+    public Mascota mostrarMascota(int id) throws SQLException {
         /*
         CREATE PROCEDURE mostrar_mascota(IN id int)
         SELECT cliente_id, nombre, especie, raza, sexo, fecha_nacimiento, peso_referencial, activo
@@ -161,7 +161,7 @@ public class MascotaDAOimp implements MascotaDAO {
     }
 
     @Override
-    public List<Mascota> mostrar_mascotas_dueno(int idCliente) throws SQLException {
+    public List<Mascota> mostrarMascotasDueno(int idCliente) throws SQLException {
         /*
         CREATE PROCEDURE mostrar_mascotas_dueno(IN id int)
         SELECT mascota_id, nombre, especie, raza, sexo, fecha_nacimiento, peso_referencial, activo
@@ -210,7 +210,7 @@ public class MascotaDAOimp implements MascotaDAO {
     }
 
     @Override
-    public void actualizar_mascota_nombre(int id, String nuevoNombre) throws SQLException {
+    public void actualizarMascotaNombre(int id, String nuevoNombre) throws SQLException {
         /*
         CREATE PROCEDURE actualizar_mascota_nombre(IN id int, IN nuevo_nom varchar(60))
         */
@@ -227,7 +227,7 @@ public class MascotaDAOimp implements MascotaDAO {
     }
 
     @Override
-    public void eliminar_mascota(int id) throws SQLException {
+    public void eliminarMascota(int id) throws SQLException {
         /*
         CREATE PROCEDURE eliminar_mascota(IN id int)
         */

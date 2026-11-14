@@ -5,8 +5,8 @@ import pe.pucp.progra3.mimados.bo.AtencionBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.AtencionDAO;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.dao.imp.AtencionDAOimp;
-import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.AtencionDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Atencion;
 
 import java.math.BigDecimal;
@@ -18,8 +18,8 @@ public class AtencionBOImpl implements AtencionBO {
     private final CitaDAO citaDAO;
 
     public AtencionBOImpl() {
-        this.atencionDAO = new AtencionDAOimp();
-        this.citaDAO = new CitaDAOimp();
+        this.atencionDAO = new AtencionDAOImpl();
+        this.citaDAO = new CitaDAOImpl();
     }
 
     @Override
@@ -28,9 +28,9 @@ public class AtencionBOImpl implements AtencionBO {
         validarAtencion(atencion);
 
         try {
-            atencionDAO.insertar_atencion(atencion);
+            atencionDAO.insertarAtencion(atencion);
 
-            citaDAO.atender_cita(
+            citaDAO.atenderCita(
                     atencion.getCita().getId()
             );
 
@@ -57,7 +57,7 @@ public class AtencionBOImpl implements AtencionBO {
         validarDatosAtencion(atencion);
 
         try {
-            atencionDAO.actualizar_atencion(atencion);
+            atencionDAO.actualizarAtencion(atencion);
 
             TransactionContext.commit();
 
@@ -75,7 +75,7 @@ public class AtencionBOImpl implements AtencionBO {
         validarId(id);
 
         try {
-            return atencionDAO.mostrar_atencion(id);
+            return atencionDAO.mostrarAtencion(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener la atención.", e);
         }

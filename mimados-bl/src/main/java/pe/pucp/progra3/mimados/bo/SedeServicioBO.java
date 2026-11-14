@@ -14,5 +14,5 @@ public interface SedeServicioBO {
 
     List<SedeServicioDTO> listarPorSede(int idSede);
 
-    List<Servicio> listar_servicios_disponibles(int idSede);
+    List<Servicio> listarServiciosDisponibles(int idSede);
 }

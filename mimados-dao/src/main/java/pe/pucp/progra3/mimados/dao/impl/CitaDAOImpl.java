@@ -1,5 +1,5 @@
 
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CitaDAOimp implements CitaDAO {
+public class CitaDAOImpl implements CitaDAO {
 
     @Override
-    public void insertar_cita(Cita cita) throws SQLException {
+    public void insertarCita(Cita cita) throws SQLException {
 
         /*
          * Procedimiento: insertar_cita
@@ -52,7 +52,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public List<Cita> listar_citas_por_mascota(int idMascota)
+    public List<Cita> listarCitasPorMascota(int idMascota)
             throws SQLException {
 
         /*
@@ -113,7 +113,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public Cita mostrar_cita(int id) throws SQLException {
+    public Cita mostrarCita(int id) throws SQLException {
 
         /*
          * Procedimiento: mostrar_cita
@@ -169,7 +169,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public void cancelar_cita(int idCita) throws SQLException {
+    public void cancelarCita(int idCita) throws SQLException {
 
         /*
          * Procedimiento: cancelar_cita
@@ -196,7 +196,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public void atender_cita(int idCita) throws SQLException {
+    public void atenderCita(int idCita) throws SQLException {
 
         /*
          * Procedimiento: atender_cita
@@ -223,7 +223,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public void actualizar_cita(Cita cita) throws SQLException {
+    public void actualizarCita(Cita cita) throws SQLException {
 
         /*
          * Procedimiento: actualizar_cita
@@ -252,7 +252,7 @@ public class CitaDAOimp implements CitaDAO {
     }
 
     @Override
-    public List<Cita> listar_citas_por_empleado_fecha(
+    public List<Cita> listarCitasPorEmpleadoFecha(
             int idEmpleado, LocalDate fecha) throws SQLException {
 
         /*

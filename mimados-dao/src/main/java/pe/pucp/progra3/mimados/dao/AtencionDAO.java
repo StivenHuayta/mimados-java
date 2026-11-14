@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public interface AtencionDAO {
 
-    public void insertar_atencion(Atencion atencion) throws SQLException;
-    public Atencion mostrar_atencion(int idAtencion) throws SQLException;
-    public void actualizar_atencion(Atencion atencion) throws SQLException;
+    public void insertarAtencion(Atencion atencion) throws SQLException;
+    public Atencion mostrarAtencion(int idAtencion) throws SQLException;
+    public void actualizarAtencion(Atencion atencion) throws SQLException;
 
 }

@@ -8,14 +8,11 @@ import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.EmpleadoBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
-import pe.pucp.progra3.mimados.dao.UsuarioDAO;
-import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
 import pe.pucp.progra3.mimados.model.entity.Sede;
 import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("EmpleadoRS")
@@ -25,7 +22,6 @@ public class EmpleadoRS {
 
     private final EmpleadoBO empleadoBO = new EmpleadoBOImpl();
     private final UsuarioBO usuarioBO = new UsuarioBOImpl();
-    private final UsuarioDAO usuarioDAO = new UsuarioDAOimp(); // Para recuperar el ID autogenerado
 
     // DTO para registrar y modificar
     public static class EmpleadoRequest implements Serializable {
@@ -87,7 +83,7 @@ public class EmpleadoRS {
             usuarioBO.insertar(nuevoUsuario);
 
             // Recuperar el ID del usuario insertado buscando por email
-            Usuario uCreado = usuarioDAO.buscar_por_email(req.getEmail().trim());
+            Usuario uCreado = usuarioBO.buscarPorEmail(req.getEmail().trim());
             if (uCreado == null) throw new NegocioException("Error al recuperar el ID del usuario insertado.");
 
             // 2. Crear el Empleado
@@ -108,8 +104,6 @@ public class EmpleadoRS {
 
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
 

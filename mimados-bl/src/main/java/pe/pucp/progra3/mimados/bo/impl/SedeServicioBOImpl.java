@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.SedeServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.SedeServicioDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.entity.SedeServicio;
 import pe.pucp.progra3.mimados.model.entity.Servicio;
@@ -17,7 +17,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     private final SedeServicioDAO sedeServicioDAO;
 
     public SedeServicioBOImpl() {
-        this.sedeServicioDAO = new SedeServicioDAOimp();
+        this.sedeServicioDAO = new SedeServicioDAOImpl();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarNoDuplicado(idSede, idServicio);
 
         try {
-            sedeServicioDAO.insertar_sede_servicio(sedeServicio);
+            sedeServicioDAO.insertarSedeServicio(sedeServicio);
 
             TransactionContext.commit();
 
@@ -49,7 +49,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarId(idSedeServicio);
 
         try {
-            sedeServicioDAO.eliminar_sede_servicio(idSedeServicio);
+            sedeServicioDAO.eliminarSedeServicio(idSedeServicio);
 
             TransactionContext.commit();
 
@@ -67,18 +67,18 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarId(idSede);
 
         try {
-            return sedeServicioDAO.listar_servicios_por_sede(idSede);
+            return sedeServicioDAO.listarServiciosPorSede(idSede);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios de la sede.", e);
         }
     }
 
     @Override
-    public List<Servicio> listar_servicios_disponibles(int idSede) {
+    public List<Servicio> listarServiciosDisponibles(int idSede) {
         validarId(idSede);
 
         try {
-            return sedeServicioDAO.listar_servicios_disponibles(idSede);
+            return sedeServicioDAO.listarServiciosDisponibles(idSede);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios disponibles de la sede.", e);
         }
@@ -113,7 +113,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
 
         List<SedeServicioDTO> servicios;
         try {
-            servicios = sedeServicioDAO.listar_servicios_por_sede(idSede);
+            servicios = sedeServicioDAO.listarServiciosPorSede(idSede);
         } catch (SQLException e) {
             throw new NegocioException("Error al validar servicios duplicados en la sede.", e);
         }

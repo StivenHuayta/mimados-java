@@ -1,5 +1,5 @@
 
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.dao.VeterinarioDAO;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VeterinarioDAOimp implements VeterinarioDAO {
+public class VeterinarioDAOImpl implements VeterinarioDAO {
 
     @Override
-    public List<VeterinarioResumen> listar_veterinarios()
+    public List<VeterinarioResumen> listarVeterinarios()
             throws SQLException {
 
         List<VeterinarioResumen> veterinarios = new ArrayList<>();

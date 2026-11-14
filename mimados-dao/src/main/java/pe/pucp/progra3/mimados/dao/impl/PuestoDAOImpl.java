@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PuestoDAOimp implements PuestoDAO {
+public class PuestoDAOImpl implements PuestoDAO {
 
     @Override
-    public void insertar_puesto(Puesto puesto) throws SQLException {
+    public void insertarPuesto(Puesto puesto) throws SQLException {
         /*
         CREATE PROCEDURE insertar_puesto(
             IN p_nombre VARCHAR(45),
@@ -32,7 +32,7 @@ public class PuestoDAOimp implements PuestoDAO {
     }
 
     @Override
-    public List<Puesto> listar_puestos() throws SQLException {
+    public List<Puesto> listarPuestos() throws SQLException {
         /*
         CREATE PROCEDURE listar_puestos()
         SELECT puesto_id, nombre, descripcion FROM puesto;
@@ -55,7 +55,7 @@ public class PuestoDAOimp implements PuestoDAO {
     }
 
     @Override
-    public Puesto mostrar_puesto(int idPuesto) throws SQLException {
+    public Puesto mostrarPuesto(int idPuesto) throws SQLException {
         /*
         CREATE PROCEDURE mostrar_puesto(IN p_puesto_id INT)
         SELECT puesto_id, nombre, descripcion FROM puesto WHERE puesto_id = p_puesto_id;
@@ -78,7 +78,7 @@ public class PuestoDAOimp implements PuestoDAO {
     }
 
     @Override
-    public void actualizar_puesto(Puesto puesto) throws SQLException {
+    public void actualizarPuesto(Puesto puesto) throws SQLException {
         /*
         CREATE PROCEDURE actualizar_puesto(
             IN p_puesto_id INT,

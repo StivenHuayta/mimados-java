@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface ClienteDAO {
 
-    public void insertar_cliente(Cliente cliente) throws SQLException;
-    public List<Cliente> listar_clientes() throws SQLException;
-    public Cliente mostrar_cliente(int id) throws SQLException;
-    public void actualizar_telefono_cliente(int id, String contactoEmergencia) throws SQLException;
-    public void eliminar_cliente(int id) throws SQLException;
+    public void insertarCliente(Cliente cliente) throws SQLException;
+    public List<Cliente> listarClientes() throws SQLException;
+    public Cliente mostrarCliente(int id) throws SQLException;
+    public void actualizarTelefonoCliente(int id, String contactoEmergencia) throws SQLException;
+    public void eliminarCliente(int id) throws SQLException;
 
 }

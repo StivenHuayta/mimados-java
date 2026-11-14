@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -16,10 +16,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SedeServicioDAOimp implements SedeServicioDAO {
+public class SedeServicioDAOImpl implements SedeServicioDAO {
 
     @Override
-    public void insertar_sede_servicio(SedeServicio sedeServicio) throws SQLException {
+    public void insertarSedeServicio(SedeServicio sedeServicio) throws SQLException {
         /*
         CREATE PROCEDURE insertar_sede_servicio(
             IN p_servicio_id INT,
@@ -42,7 +42,7 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
     }
 
     @Override
-    public List<SedeServicioDTO> listar_servicios_por_sede(int idSede) throws SQLException {
+    public List<SedeServicioDTO> listarServiciosPorSede(int idSede) throws SQLException {
         /*
         CREATE PROCEDURE listar_servicios_por_sede(IN p_sede_id INT)
         SELECT b.servicio_id, b.nombre, b.descripcion, b.precio_referencial, b.duracion_minutos, a.activo as activo_sede
@@ -73,7 +73,7 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
     }
 
     @Override
-    public void eliminar_sede_servicio(int idSedeServicio) throws SQLException {
+    public void eliminarSedeServicio(int idSedeServicio) throws SQLException {
         /*
         CREATE PROCEDURE eliminar_sede_servicio(
             IN p_sede_servicio_id INT
@@ -91,7 +91,7 @@ public class SedeServicioDAOimp implements SedeServicioDAO {
     }
 
     @Override
-    public List<Servicio> listar_servicios_disponibles(int idSede) throws SQLException {
+    public List<Servicio> listarServiciosDisponibles(int idSede) throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_servicios_no_asignados_o_inactivos(?)}")) {

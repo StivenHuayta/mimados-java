@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface VeterinarioDAO {
 
-    List<VeterinarioResumen> listar_veterinarios()
+    List<VeterinarioResumen> listarVeterinarios()
             throws SQLException;
 }

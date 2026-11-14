@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.ServicioDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.ServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ public class ServicioBOImpl implements ServicioBO {
     private final ServicioDAO servicioDAO;
 
     public ServicioBOImpl() {
-        this.servicioDAO = new ServicioDAOimp();
+        this.servicioDAO = new ServicioDAOImpl();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ServicioBOImpl implements ServicioBO {
         validarServicio(servicio);
 
         try {
-            servicioDAO.insertar_servicio(servicio);
+            servicioDAO.insertarServicio(servicio);
 
             TransactionContext.commit();
 
@@ -52,11 +52,11 @@ public class ServicioBOImpl implements ServicioBO {
 
 
         try {
-//            servicioDAO.actualizar_servicio_precio(
+//            servicioDAO.actualizarServicio_precio(
 //                    servicio.getId(),
 //                    servicio.getPrecioReferencial()
 //            );
-            servicioDAO.actualizar_servicio(servicio);
+            servicioDAO.actualizarServicio(servicio);
 
             TransactionContext.commit();
 
@@ -74,7 +74,7 @@ public class ServicioBOImpl implements ServicioBO {
         validarId(id);
 
         try {
-            servicioDAO.eliminar_servicio(id);
+            servicioDAO.eliminarServicio(id);
 
             TransactionContext.commit();
 
@@ -90,7 +90,7 @@ public class ServicioBOImpl implements ServicioBO {
     public List<Servicio> listarTodos() {
 
         try {
-            return servicioDAO.listar_servicios();
+            return servicioDAO.listarServicios();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios.", e);
         }
@@ -102,7 +102,7 @@ public class ServicioBOImpl implements ServicioBO {
         validarId(id);
 
         try {
-            return servicioDAO.mostrar_servicio(id);
+            return servicioDAO.mostrarServicio(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener el servicio.", e);
         }

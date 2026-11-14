@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UsuarioBO {
 
+    Usuario buscarPorEmail(String email);
+
     void insertar(Usuario usuario);
 
     void modificar(Usuario usuario);

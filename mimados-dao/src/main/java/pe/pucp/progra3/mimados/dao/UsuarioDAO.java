@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface UsuarioDAO {
 
-    public void insertar_usuario(Usuario usuario) throws SQLException;
-    public List<Usuario> listar_usuarios() throws SQLException;
-    public Usuario mostrar_usuario(int id) throws SQLException;
-    public void actualizar_telefono_usuario(int id, String telefono) throws SQLException;
-    public Usuario buscar_por_email(String email) throws SQLException;
+    public void insertarUsuario(Usuario usuario) throws SQLException;
+    public List<Usuario> listarUsuarios() throws SQLException;
+    public Usuario mostrarUsuario(int id) throws SQLException;
+    public void actualizarTelefonoUsuario(int id, String telefono) throws SQLException;
+    public Usuario buscarPorEmail(String email) throws SQLException;
 
 
     UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws SQLException;

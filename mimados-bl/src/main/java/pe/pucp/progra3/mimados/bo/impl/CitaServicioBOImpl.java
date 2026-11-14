@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.CitaServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.CitaServicioDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.CitaServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.CitaServicio;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
     private final CitaServicioDAO citaServicioDAO;
 
     public CitaServicioBOImpl() {
-        this.citaServicioDAO = new CitaServicioDAOimp();
+        this.citaServicioDAO = new CitaServicioDAOImpl();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
         validarCitaServicio(citaServicio);
 
         try {
-            citaServicioDAO.insertar_cita_servicio(citaServicio);
+            citaServicioDAO.insertarCitaServicio(citaServicio);
 
             TransactionContext.commit();
 
@@ -43,7 +43,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
         validarCitaServicio(citaServicio);
 
         try {
-            citaServicioDAO.actualizar_cita_servicio(citaServicio);
+            citaServicioDAO.actualizarCitaServicio(citaServicio);
 
             TransactionContext.commit();
 
@@ -61,7 +61,7 @@ public class CitaServicioBOImpl implements CitaServicioBO {
         validarId(idCita);
 
         try {
-            return citaServicioDAO.listar_servicios_por_cita(idCita);
+            return citaServicioDAO.listarServiciosPorCita(idCita);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios de la cita.", e);
         }

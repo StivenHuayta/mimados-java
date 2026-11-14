@@ -6,9 +6,9 @@ import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ClienteDAO;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
 import pe.pucp.progra3.mimados.dao.UsuarioDAO;
-import pe.pucp.progra3.mimados.dao.imp.ClienteDAOimp;
-import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
-import pe.pucp.progra3.mimados.dao.imp.UsuarioDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.ClienteDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.UsuarioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 import pe.pucp.progra3.mimados.model.entity.Cliente;
 import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
@@ -23,7 +23,7 @@ public class UsuarioBOImpl implements UsuarioBO {
     private final UsuarioDAO usuarioDAO;
 
     public UsuarioBOImpl() {
-        this.usuarioDAO = new UsuarioDAOimp();
+        this.usuarioDAO = new UsuarioDAOImpl();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class UsuarioBOImpl implements UsuarioBO {
         validarUsuario(usuario);
 
         try {
-            usuarioDAO.insertar_usuario(usuario);
+            usuarioDAO.insertarUsuario(usuario);
 
             TransactionContext.commit();
 
@@ -57,7 +57,7 @@ public class UsuarioBOImpl implements UsuarioBO {
         validarTelefono(usuario.getTelefono());
 
         try {
-            usuarioDAO.actualizar_telefono_usuario(
+            usuarioDAO.actualizarTelefonoUsuario(
                     usuario.getId(),
                     usuario.getTelefono()
             );
@@ -76,7 +76,7 @@ public class UsuarioBOImpl implements UsuarioBO {
     public List<Usuario> listarTodos() {
 
         try {
-            return usuarioDAO.listar_usuarios();
+            return usuarioDAO.listarUsuarios();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los usuarios.", e);
         }
@@ -88,9 +88,21 @@ public class UsuarioBOImpl implements UsuarioBO {
         validarId(id);
 
         try {
-            return usuarioDAO.mostrar_usuario(id);
+            return usuarioDAO.mostrarUsuario(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener el usuario.", e);
+        }
+    }
+
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new NegocioException("El email no puede estar vacío.");
+        }
+        try {
+            return usuarioDAO.buscarPorEmail(email.trim());
+        } catch (SQLException e) {
+            throw new NegocioException("Error al buscar usuario por email.", e);
         }
     }
 
@@ -104,7 +116,7 @@ public class UsuarioBOImpl implements UsuarioBO {
         }
 
         try {
-            Usuario usuario = usuarioDAO.buscar_por_email(email.trim());
+            Usuario usuario = usuarioDAO.buscarPorEmail(email.trim());
             if (usuario == null) {
                 throw new NegocioException("Usuario o contraseña incorrectos.");
             }
@@ -113,8 +125,8 @@ public class UsuarioBOImpl implements UsuarioBO {
                 throw new NegocioException("Usuario o contraseña incorrectos.");
             }
 
-            EmpleadoDAO empleadoDAO = new EmpleadoDAOimp();
-            Empleado emp = empleadoDAO.mostrar_empleado(usuario.getId());
+            EmpleadoDAO empleadoDAO = new EmpleadoDAOImpl();
+            Empleado emp = empleadoDAO.mostrarEmpleado(usuario.getId());
             if (emp != null) {
                 // Regla 2: "el admin si es que hay un veterinario con ese correo, con atributo es admin 1 y es activo"
                 if (emp.getEsAdmin() && emp.getActivo()) {
@@ -141,8 +153,8 @@ public class UsuarioBOImpl implements UsuarioBO {
                 throw new NegocioException("El veterinario asociado a este correo se encuentra inactivo.");
             }
 
-            ClienteDAO clienteDAO = new ClienteDAOimp();
-            Cliente cli = clienteDAO.mostrar_cliente(usuario.getId());
+            ClienteDAO clienteDAO = new ClienteDAOImpl();
+            Cliente cli = clienteDAO.mostrarCliente(usuario.getId());
             if (cli != null) {
                 // Regla 1: "el cliente puede entrar si en la bd hay ese cliente activo"
                 if (cli.getActivo()) {
@@ -185,7 +197,7 @@ public class UsuarioBOImpl implements UsuarioBO {
         }
 
         try {
-            Usuario usuarioExistente = usuarioDAO.buscar_por_email(email.trim());
+            Usuario usuarioExistente = usuarioDAO.buscarPorEmail(email.trim());
             if (usuarioExistente != null) {
                 throw new NegocioException("Ya existe una cuenta registrada con este correo electrónico.");
             }
@@ -198,23 +210,23 @@ public class UsuarioBOImpl implements UsuarioBO {
             usuario.setPasswordHash(password.trim());
             usuario.setTelefono(telefono.trim());
 
-            usuarioDAO.insertar_usuario(usuario);
+            usuarioDAO.insertarUsuario(usuario);
 
             if (usuario.getId() <= 0) {
-                Usuario uCreado = usuarioDAO.buscar_por_email(email.trim());
+                Usuario uCreado = usuarioDAO.buscarPorEmail(email.trim());
                 if (uCreado != null) {
                     usuario.setId(uCreado.getId());
                 }
             }
 
-            ClienteDAO clienteDAO = new ClienteDAOimp();
+            ClienteDAO clienteDAO = new ClienteDAOImpl();
             Cliente cliente = new Cliente(
                     usuario,
                     direccion != null ? direccion.trim() : "",
                     contactoEmergencia != null ? contactoEmergencia.trim() : "",
                     true
             );
-            clienteDAO.insertar_cliente(cliente);
+            clienteDAO.insertarCliente(cliente);
 
             return new AuthResultado(
                     usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),

@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
@@ -15,10 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CitaServicioDAOimp implements CitaServicioDAO {
+public class CitaServicioDAOImpl implements CitaServicioDAO {
 
     @Override
-    public void insertar_cita_servicio(CitaServicio citaServicio) throws SQLException {
+    public void insertarCitaServicio(CitaServicio citaServicio) throws SQLException {
         /*
         CREATE PROCEDURE insertar_cita_servicio (
             IN p_cita_id INT,
@@ -39,7 +39,7 @@ public class CitaServicioDAOimp implements CitaServicioDAO {
     }
 
     @Override
-    public List<CitaServicio> listar_servicios_por_cita(int idCita) throws SQLException {
+    public List<CitaServicio> listarServiciosPorCita(int idCita) throws SQLException {
         /*
         CREATE PROCEDURE listar_servicios_por_cita (IN id INT)
         SELECT s.servicio_id, s.nombre, s.descripcion, s.precio_referencial, s.duracion_minutos, s.activo, cs.sede_servicio_id, cs.precio_aplicado, cs.notas
@@ -83,7 +83,7 @@ public class CitaServicioDAOimp implements CitaServicioDAO {
     }
 
     @Override
-    public void actualizar_cita_servicio(CitaServicio citaServicio) throws SQLException {
+    public void actualizarCitaServicio(CitaServicio citaServicio) throws SQLException {
         /*
         CREATE PROCEDURE actualizar_cita_servicio (
             IN p_cita_id INT,

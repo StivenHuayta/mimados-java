@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.enums.Estado;
 
@@ -16,7 +16,7 @@ public class CitaBOImpl implements CitaBO {
     private final CitaDAO citaDAO;
 
     public CitaBOImpl() {
-        this.citaDAO = new CitaDAOimp();
+        this.citaDAO = new CitaDAOImpl();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class CitaBOImpl implements CitaBO {
         validarCita(cita);
 
         try {
-            citaDAO.insertar_cita(cita);
+            citaDAO.insertarCita(cita);
 
             TransactionContext.commit();
 
@@ -43,7 +43,7 @@ public class CitaBOImpl implements CitaBO {
         validarId(idMascota);
 
         try {
-            return citaDAO.listar_citas_por_mascota(idMascota);
+            return citaDAO.listarCitasPorMascota(idMascota);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar las citas de la mascota.", e);
         }
@@ -55,7 +55,7 @@ public class CitaBOImpl implements CitaBO {
         validarId(id);
 
         try {
-            return citaDAO.mostrar_cita(id);
+            return citaDAO.mostrarCita(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener la cita.", e);
         }
@@ -67,7 +67,7 @@ public class CitaBOImpl implements CitaBO {
         validarId(idCita);
 
         try {
-            citaDAO.cancelar_cita(idCita);
+            citaDAO.cancelarCita(idCita);
 
             TransactionContext.commit();
 
@@ -85,7 +85,7 @@ public class CitaBOImpl implements CitaBO {
         validarId(idCita);
 
         try {
-            citaDAO.atender_cita(idCita);
+            citaDAO.atenderCita(idCita);
 
             TransactionContext.commit();
 
@@ -173,7 +173,7 @@ public class CitaBOImpl implements CitaBO {
 
         Cita existente;
         try {
-            existente = citaDAO.mostrar_cita(cita.getId());
+            existente = citaDAO.mostrarCita(cita.getId());
         } catch (SQLException e) {
             throw new NegocioException("Error al consultar la cita.", e);
         }
@@ -199,7 +199,7 @@ public class CitaBOImpl implements CitaBO {
         }
 
         try {
-            citaDAO.actualizar_cita(cita);
+            citaDAO.actualizarCita(cita);
 
             TransactionContext.commit();
 

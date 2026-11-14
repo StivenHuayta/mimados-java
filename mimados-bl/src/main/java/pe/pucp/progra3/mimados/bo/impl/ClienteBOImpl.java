@@ -4,7 +4,7 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.ClienteBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ClienteDAO;
-import pe.pucp.progra3.mimados.dao.imp.ClienteDAOimp;
+import pe.pucp.progra3.mimados.dao.impl.ClienteDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Cliente;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class ClienteBOImpl implements ClienteBO {
     private final ClienteDAO clienteDAO;
 
     public ClienteBOImpl() {
-        this.clienteDAO = new ClienteDAOimp();
+        this.clienteDAO = new ClienteDAOImpl();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarCliente(cliente);
 
         try {
-            clienteDAO.insertar_cliente(cliente);
+            clienteDAO.insertarCliente(cliente);
 
             TransactionContext.commit();
 
@@ -55,7 +55,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarTelefono(cliente.getTelefonoEmergencia());
 
         try {
-            clienteDAO.actualizar_telefono_cliente(
+            clienteDAO.actualizarTelefonoCliente(
                     cliente.getUsuario().getId(),
                     cliente.getTelefonoEmergencia()
             );
@@ -76,7 +76,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarId(id);
 
         try {
-            clienteDAO.eliminar_cliente(id);
+            clienteDAO.eliminarCliente(id);
 
             TransactionContext.commit();
 
@@ -92,7 +92,7 @@ public class ClienteBOImpl implements ClienteBO {
     public List<Cliente> listarTodos() {
 
         try {
-            return clienteDAO.listar_clientes();
+            return clienteDAO.listarClientes();
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los clientes.", e);
         }
@@ -104,7 +104,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarId(id);
 
         try {
-            return clienteDAO.mostrar_cliente(id);
+            return clienteDAO.mostrarCliente(id);
         } catch (SQLException e) {
             throw new NegocioException("Error al obtener el cliente.", e);
         }
