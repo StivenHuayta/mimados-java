@@ -7,6 +7,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ReporteServicioDAO {
-    List<ReporteServiciosSolicitadosDTO> obetenerServiciosMasSolicitados(Date fechaInicio, Date fechaFin)
+    List<ReporteServiciosSolicitadosDTO> obtenerServiciosMasSolicitados(Date fechaInicio, Date fechaFin)
             throws SQLException;
 }

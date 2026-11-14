@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReporteServicioDAOimp implements ReporteServicioDAO {
-    public List<ReporteServiciosSolicitadosDTO> obetenerServiciosMasSolicitados(Date fechaInicio, Date fechaFin)
+    @Override
+    public List<ReporteServiciosSolicitadosDTO> obtenerServiciosMasSolicitados(Date fechaInicio, Date fechaFin)
             throws SQLException {
         List<ReporteServiciosSolicitadosDTO> servicios = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();

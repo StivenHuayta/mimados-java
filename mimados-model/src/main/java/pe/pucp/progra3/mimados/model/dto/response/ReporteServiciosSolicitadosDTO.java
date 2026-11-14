@@ -8,6 +8,9 @@ public class ReporteServiciosSolicitadosDTO {
     private double total;
     private double proporcion;
 
+    public ReporteServiciosSolicitadosDTO() {
+    }
+
     public ReporteServiciosSolicitadosDTO(int orden, String nombre, int cantidad, double precio,
                                           double total, double proporcion) {
         this.orden = orden;

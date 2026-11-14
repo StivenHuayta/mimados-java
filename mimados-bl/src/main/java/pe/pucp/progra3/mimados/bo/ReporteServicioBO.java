@@ -8,6 +8,5 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ReporteServicioBO {
-    List<ReporteServiciosSolicitadosDTO> listarServiciosMasSolicitados(Date fechaInicio, Date fechaFin)
-            throws SQLException;
+    List<ReporteServiciosSolicitadosDTO> listarServiciosMasSolicitados(Date fechaInicio, Date fechaFin);
 }
