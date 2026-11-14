@@ -25,18 +25,6 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public void insertarMascota(Mascota mascota) throws SQLException {
-        /*
-        CREATE PROCEDURE insertar_mascota(
-            IN p_id INT, 
-            IN p_nombre VARCHAR(45), 
-            IN p_especie VARCHAR(45), 
-            IN p_raza VARCHAR(45), 
-            IN p_sexo VARCHAR(45), 
-            IN p_fecha_nacimiento DATE, 
-            IN p_peso_referencial DECIMAL(5,2),
-            OUT mascota_id INT
-        )
-        */
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL insertar_mascota(?, ?, ?, ?, ?, ?, ?, ?)}")) {
             cs.registerOutParameter(8, Types.INTEGER);
@@ -68,11 +56,6 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public List<Mascota> listarMascotas() throws SQLException {
-        /*
-        CREATE PROCEDURE listar_mascotas ()
-        SELECT mascota_id, cliente_id, nombre, especie, raza, sexo, fecha_nacimiento, peso_referencial, activo
-        FROM mascota;
-        */
         List<Mascota> mascotas = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL listar_mascotas()}");
@@ -162,11 +145,7 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public List<Mascota> mostrarMascotasDueno(int idCliente) throws SQLException {
-        /*
-        CREATE PROCEDURE mostrar_mascotas_dueno(IN id int)
-        SELECT mascota_id, nombre, especie, raza, sexo, fecha_nacimiento, peso_referencial, activo
-        FROM mascota WHERE cliente_id=id;
-        */
+
         List<Mascota> mascotas = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall("{CALL mostrar_mascotas_dueno(?)}")) {
@@ -211,9 +190,7 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public void actualizarMascotaNombre(int id, String nuevoNombre) throws SQLException {
-        /*
-        CREATE PROCEDURE actualizar_mascota_nombre(IN id int, IN nuevo_nom varchar(60))
-        */
+
         Connection connection = TransactionContext.getConnection();
         try (CallableStatement cs = connection.prepareCall("{CALL actualizar_mascota_nombre(?, ?)}")) {
             cs.setInt(1, id);
@@ -247,13 +224,11 @@ public class MascotaDAOImpl implements MascotaDAO {
     public List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId) {
         List<RegistroMedicoDTO> historial = new ArrayList<>();
 
-        // Sintaxis estándar de JDBC para llamar a un procedimiento almacenado
         String sql = "{CALL sp_obtener_historial_mascota(?)}";
 
         try (Connection conn = DBManager.getInstance().getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
 
-            // Le pasamos el ID de la mascota al procedimiento
             cs.setInt(1, mascotaId);
 
             try (ResultSet rs = cs.executeQuery()) {
@@ -275,6 +250,4 @@ public class MascotaDAOImpl implements MascotaDAO {
 
         return historial;
     }
-
-
 }
