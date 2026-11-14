@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.rs.Reporte;
+package pe.pucp.progra3.mimados.rs;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
