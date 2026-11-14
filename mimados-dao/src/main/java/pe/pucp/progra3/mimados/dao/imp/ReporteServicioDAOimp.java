@@ -3,7 +3,7 @@ package pe.pucp.progra3.mimados.dao.imp;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.dao.ReporteServicioDAO;
 import pe.pucp.progra3.mimados.model.dto.response.ReporteServiciosSolicitadosDTO;
-import pe.pucp.progra3.mimados.model.entity.Sede;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class ReporteServicioDAOimp implements ReporteServicioDAO {
             throws SQLException {
         List<ReporteServiciosSolicitadosDTO> servicios = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL sp_obtener_reporte_servicios_por_fechas(?,?)}")
+            CallableStatement cs = connection.prepareCall("{CALL sp_obtener_reporte_servicios_por_fechas(?,?)}")
             ){
             cs.setDate(1 , fechaInicio);
             cs.setDate(2 , fechaFin);
