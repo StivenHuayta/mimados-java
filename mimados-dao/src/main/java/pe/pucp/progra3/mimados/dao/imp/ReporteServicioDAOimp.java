@@ -17,7 +17,7 @@ public class ReporteServicioDAOimp implements ReporteServicioDAO {
         try(Connection connection = DBManager.getInstance().getConnection();
             CallableStatement cs = connection.prepareCall("{CALL sp_obtener_reporte_servicios_por_fechas(?,?)}")
             ){
-            cs.setDate(1 , fechaInicio);
+            cs.setDate(1 , fechaInicio);//hola eeee
             cs.setDate(2 , fechaFin);
             try(ResultSet rs = cs.executeQuery()){
                 while(rs.next()){
