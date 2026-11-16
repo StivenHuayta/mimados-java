@@ -10,10 +10,10 @@ import java.util.List;
 public interface SedeServicioDAO {
 
     public void insertarSedeServicio(SedeServicio sedeServicio) throws SQLException;
-    // se va a editar para admitid nombres
+
     public List<SedeServicioDTO> listarServiciosPorSede(int idSede) throws SQLException;
     public void eliminarSedeServicio(int idSedeServicio) throws SQLException;
-
-    public List<Servicio> listarServiciosDisponibles(int idSede) throws SQLException;
+    // se va a editar para admitid nombres
+    public List<Servicio> listarServiciosDisponibles(int idSede,String nombre) throws SQLException;
 
 }

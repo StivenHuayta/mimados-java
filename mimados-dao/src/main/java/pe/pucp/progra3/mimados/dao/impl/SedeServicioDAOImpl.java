@@ -91,12 +91,13 @@ public class SedeServicioDAOImpl implements SedeServicioDAO {
     }
 
     @Override
-    public List<Servicio> listarServiciosDisponibles(int idSede) throws SQLException {
+    public List<Servicio> listarServiciosDisponibles(int idSede,String nombre) throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         try (Connection connection = DBManager.getInstance().getConnection();
-             CallableStatement cs = connection.prepareCall("{CALL listar_servicios_no_asignados_o_inactivos(?)}")) {
+             CallableStatement cs = connection.prepareCall("{CALL sp_listar_servicios_no_asignados_o_inactivos_por_nombre(?,?)}")) {
 
             cs.setInt(1, idSede);
+            cs.setString(2, nombre);
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Servicio ser = new Servicio(
