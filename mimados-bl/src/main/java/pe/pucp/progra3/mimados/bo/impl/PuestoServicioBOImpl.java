@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.PuestoServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.PuestoServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.PuestoServicioDAOimp;
-import pe.pucp.progra3.mimados.model.PuestoServicio;
+import pe.pucp.progra3.mimados.dao.impl.PuestoServicioDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.PuestoServicio;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,66 +15,70 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
     private final PuestoServicioDAO puestoServicioDAO;
 
     public PuestoServicioBOImpl() {
-        this.puestoServicioDAO = new PuestoServicioDAOimp();
+        this.puestoServicioDAO = new PuestoServicioDAOImpl();
     }
 
     @Override
-    public void insertar(PuestoServicio puestoServicio)
-            throws SQLException, NegocioException {
+    public void insertar(PuestoServicio puestoServicio) {
 
         validarPuestoServicio(puestoServicio);
 
         try {
-            puestoServicioDAO.insertar_puesto_servicio(puestoServicio);
+            puestoServicioDAO.insertarPuestoServicio(puestoServicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la relación puesto-servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idPuestoServicio)
-            throws SQLException, NegocioException {
+    public void eliminar(int idPuestoServicio) {
 
         validarId(idPuestoServicio);
 
         try {
-            puestoServicioDAO.eliminar_puesto_servicio(idPuestoServicio);
+            puestoServicioDAO.eliminarPuestoServicio(idPuestoServicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la relación puesto-servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<PuestoServicio> listarPorPuesto(int idPuesto)
-            throws SQLException, NegocioException {
+    public List<PuestoServicio> listarPorPuesto(int idPuesto) {
 
         validarId(idPuesto);
 
-        return puestoServicioDAO.listar_servicios_puesto(idPuesto);
+        try {
+            return puestoServicioDAO.listarServiciosPuesto(idPuesto);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios del puesto.", e);
+        }
     }
+
     @Override
-    public PuestoServicio obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public PuestoServicio obtenerPorId(int id) {
 
         validarId(id);
 
-        return puestoServicioDAO.mostrar_puesto_servicio(id);
+        try {
+            return puestoServicioDAO.mostrarPuestoServicio(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la relación puesto-servicio.", e);
+        }
     }
 
-    private void validarPuestoServicio(PuestoServicio puestoServicio)
-            throws NegocioException {
+    private void validarPuestoServicio(PuestoServicio puestoServicio) {
 
         if (puestoServicio == null) {
             throw new NegocioException(
@@ -99,8 +103,7 @@ public class PuestoServicioBOImpl implements PuestoServicioBO {
         validarId(puestoServicio.getPuesto().getId());
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

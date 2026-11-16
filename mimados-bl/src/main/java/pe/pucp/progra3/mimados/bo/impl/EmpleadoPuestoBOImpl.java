@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.EmpleadoPuestoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.EmpleadoPuestoDAO;
-import pe.pucp.progra3.mimados.dao.imp.EmpleadoPuestoDAOimp;
-import pe.pucp.progra3.mimados.model.EmpleadoPuesto;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoPuestoDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.EmpleadoPuesto;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -15,55 +15,52 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
     private final EmpleadoPuestoDAO empleadoPuestoDAO;
 
     public EmpleadoPuestoBOImpl() {
-        this.empleadoPuestoDAO = new EmpleadoPuestoDAOimp();
+        this.empleadoPuestoDAO = new EmpleadoPuestoDAOImpl();
     }
 
     @Override
-    public void insertar(EmpleadoPuesto empleadoPuesto)
-            throws SQLException, NegocioException {
+    public void insertar(EmpleadoPuesto empleadoPuesto) {
 
         validarEmpleadoPuesto(empleadoPuesto);
 
         try {
-            empleadoPuestoDAO.insertar_empleado_puesto(empleadoPuesto);
+            empleadoPuestoDAO.insertarEmpleadoPuesto(empleadoPuesto);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void iniciar(int idEmpleadoPuesto)
-            throws SQLException, NegocioException {
+    public void iniciar(int idEmpleadoPuesto) {
 
         validarId(idEmpleadoPuesto);
 
         try {
-            empleadoPuestoDAO.iniciar_empleado_puesto(idEmpleadoPuesto);
+            empleadoPuestoDAO.iniciarEmpleadoPuesto(idEmpleadoPuesto);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al iniciar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idEmpleadoPuesto, LocalDate fechaFin)
-            throws SQLException, NegocioException {
+    public void eliminar(int idEmpleadoPuesto, LocalDate fechaFin) {
 
         validarId(idEmpleadoPuesto);
 
         try {
-            empleadoPuestoDAO.eliminar_empleado_puesto(
+            empleadoPuestoDAO.eliminarEmpleadoPuesto(
                     idEmpleadoPuesto,
                     fechaFin
             );
@@ -72,14 +69,13 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la relación empleado-puesto.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
-    private void validarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto)
-            throws NegocioException {
+    private void validarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto) {
 
         if (empleadoPuesto == null) {
             throw new NegocioException(
@@ -116,8 +112,7 @@ public class EmpleadoPuestoBOImpl implements EmpleadoPuestoBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

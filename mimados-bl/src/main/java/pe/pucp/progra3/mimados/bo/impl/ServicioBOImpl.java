@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.ServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.ServicioDAOimp;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.dao.impl.ServicioDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -16,31 +16,29 @@ public class ServicioBOImpl implements ServicioBO {
     private final ServicioDAO servicioDAO;
 
     public ServicioBOImpl() {
-        this.servicioDAO = new ServicioDAOimp();
+        this.servicioDAO = new ServicioDAOImpl();
     }
 
     @Override
-    public void insertar(Servicio servicio)
-            throws SQLException, NegocioException {
+    public void insertar(Servicio servicio) {
 
         validarServicio(servicio);
 
         try {
-            servicioDAO.insertar_servicio(servicio);
+            servicioDAO.insertarServicio(servicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Servicio servicio)
-            throws SQLException, NegocioException {
+    public void modificar(Servicio servicio) {
 
         if (servicio == null) {
             throw new NegocioException(
@@ -54,59 +52,63 @@ public class ServicioBOImpl implements ServicioBO {
 
 
         try {
-//            servicioDAO.actualizar_servicio_precio(
+//            servicioDAO.actualizarServicio_precio(
 //                    servicio.getId(),
 //                    servicio.getPrecioReferencial()
 //            );
-            servicioDAO.actualizar_servicio(servicio);
+            servicioDAO.actualizarServicio(servicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            servicioDAO.eliminar_servicio(id);
+            servicioDAO.eliminarServicio(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el servicio.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Servicio> listarTodos()
-            throws SQLException {
+    public List<Servicio> listarTodos() {
 
-        return servicioDAO.listar_servicios();
+        try {
+            return servicioDAO.listarServicios();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios.", e);
+        }
     }
 
     @Override
-    public Servicio obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Servicio obtenerPorId(int id) {
 
         validarId(id);
 
-        return servicioDAO.mostrar_servicio(id);
+        try {
+            return servicioDAO.mostrarServicio(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el servicio.", e);
+        }
     }
 
-    private void validarServicio(Servicio servicio)
-            throws NegocioException {
+    private void validarServicio(Servicio servicio) {
 
         if (servicio == null) {
             throw new NegocioException(
@@ -151,8 +153,7 @@ public class ServicioBOImpl implements ServicioBO {
         }
     }
 
-    private void validarPrecio(BigDecimal precio)
-            throws NegocioException {
+    private void validarPrecio(BigDecimal precio) {
 
         if (precio == null) {
             throw new NegocioException(
@@ -167,8 +168,7 @@ public class ServicioBOImpl implements ServicioBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

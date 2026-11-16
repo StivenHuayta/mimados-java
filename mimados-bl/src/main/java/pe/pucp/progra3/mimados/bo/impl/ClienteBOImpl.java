@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.ClienteBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ClienteDAO;
-import pe.pucp.progra3.mimados.dao.imp.ClienteDAOimp;
-import pe.pucp.progra3.mimados.model.Cliente;
+import pe.pucp.progra3.mimados.dao.impl.ClienteDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Cliente;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,31 +15,29 @@ public class ClienteBOImpl implements ClienteBO {
     private final ClienteDAO clienteDAO;
 
     public ClienteBOImpl() {
-        this.clienteDAO = new ClienteDAOimp();
+        this.clienteDAO = new ClienteDAOImpl();
     }
 
     @Override
-    public void insertar(Cliente cliente)
-            throws SQLException, NegocioException {
+    public void insertar(Cliente cliente) {
 
         validarCliente(cliente);
 
         try {
-            clienteDAO.insertar_cliente(cliente);
+            clienteDAO.insertarCliente(cliente);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el cliente.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Cliente cliente)
-            throws SQLException, NegocioException {
+    public void modificar(Cliente cliente) {
 
         if (cliente == null) {
             throw new NegocioException(
@@ -57,7 +55,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarTelefono(cliente.getTelefonoEmergencia());
 
         try {
-            clienteDAO.actualizar_telefono_cliente(
+            clienteDAO.actualizarTelefonoCliente(
                     cliente.getUsuario().getId(),
                     cliente.getTelefonoEmergencia()
             );
@@ -66,49 +64,53 @@ public class ClienteBOImpl implements ClienteBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el cliente.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            clienteDAO.eliminar_cliente(id);
+            clienteDAO.eliminarCliente(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el cliente.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Cliente> listarTodos()
-            throws SQLException {
+    public List<Cliente> listarTodos() {
 
-        return clienteDAO.listar_clientes();
+        try {
+            return clienteDAO.listarClientes();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los clientes.", e);
+        }
     }
 
     @Override
-    public Cliente obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Cliente obtenerPorId(int id) {
 
         validarId(id);
 
-        return clienteDAO.mostrar_cliente(id);
+        try {
+            return clienteDAO.mostrarCliente(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el cliente.", e);
+        }
     }
 
-    private void validarCliente(Cliente cliente)
-            throws NegocioException {
+    private void validarCliente(Cliente cliente) {
 
         if (cliente == null) {
             throw new NegocioException(
@@ -135,8 +137,7 @@ public class ClienteBOImpl implements ClienteBO {
         validarTelefono(cliente.getTelefonoEmergencia());
     }
 
-    private void validarTelefono(String telefono)
-            throws NegocioException {
+    private void validarTelefono(String telefono) {
 
         if (telefono != null &&
                 telefono.length() > 9) {
@@ -147,8 +148,7 @@ public class ClienteBOImpl implements ClienteBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

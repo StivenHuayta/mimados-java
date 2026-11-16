@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.HorarioLaboralDAO;
-import pe.pucp.progra3.mimados.dao.imp.HorarioLaboralimp;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
+import pe.pucp.progra3.mimados.dao.impl.HorarioLaboralDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,12 +15,11 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
     private final HorarioLaboralDAO horarioLaboralDAO;
 
     public HorarioLaboralBOImpl() {
-        this.horarioLaboralDAO = new HorarioLaboralimp();
+        this.horarioLaboralDAO = new HorarioLaboralDAOImpl();
     }
 
     @Override
-    public void insertar(HorarioLaboral horario)
-            throws SQLException, NegocioException {
+    public void insertar(HorarioLaboral horario) {
 
         validarHorario(horario);
 
@@ -30,21 +29,20 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
         validarCruceHorario(horario, idEmpleado);
 
         try {
-            horarioLaboralDAO.insertar_horario(horario);
+            horarioLaboralDAO.insertarHorario(horario);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el horario laboral.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(HorarioLaboral horario)
-            throws SQLException, NegocioException {
+    public void modificar(HorarioLaboral horario) {
 
         if (horario == null) {
             throw new NegocioException(
@@ -57,7 +55,7 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
         validarHoras(horario);
 
         try {
-            horarioLaboralDAO.actualizar_horario_laboral(
+            horarioLaboralDAO.actualizarHorarioLaboral(
                     horario.getId(),
                     horario.getDiaSemana(),
                     horario.getHoraInicio(),
@@ -68,49 +66,53 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el horario laboral.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            horarioLaboralDAO.eliminar_horario_laboral(id);
+            horarioLaboralDAO.eliminarHorarioLaboral(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el horario laboral.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<HorarioLaboral> listarTodos()
-            throws SQLException {
+    public List<HorarioLaboral> listarTodos() {
 
-        return horarioLaboralDAO.listar_horarios();
+        try {
+            return horarioLaboralDAO.listarHorarios();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los horarios laborales.", e);
+        }
     }
 
     @Override
-    public List<HorarioLaboral> listarPorEmpleado(int idEmpleado)
-            throws SQLException, NegocioException {
+    public List<HorarioLaboral> listarPorEmpleado(int idEmpleado) {
 
         validarId(idEmpleado);
 
-        return horarioLaboralDAO.horarios_por_empleado(idEmpleado);
+        try {
+            return horarioLaboralDAO.horariosPorEmpleado(idEmpleado);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los horarios del empleado.", e);
+        }
     }
 
-    private void validarHorario(HorarioLaboral horario)
-            throws NegocioException {
+    private void validarHorario(HorarioLaboral horario) {
 
         if (horario == null) {
             throw new NegocioException(
@@ -139,8 +141,7 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
         validarHoras(horario);
     }
 
-    private void validarHoras(HorarioLaboral horario)
-            throws NegocioException {
+    private void validarHoras(HorarioLaboral horario) {
 
         if (horario.getHoraInicio() == null ||
                 horario.getHoraFin() == null) {
@@ -162,10 +163,14 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
     private void validarCruceHorario(
             HorarioLaboral horario,
             int idEmpleado
-    ) throws SQLException, NegocioException {
+    ) {
 
-        List<HorarioLaboral> horariosActuales =
-                horarioLaboralDAO.horarios_por_empleado(idEmpleado);
+        List<HorarioLaboral> horariosActuales;
+        try {
+            horariosActuales = horarioLaboralDAO.horariosPorEmpleado(idEmpleado);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al consultar los horarios del empleado.", e);
+        }
 
         for (HorarioLaboral existente : horariosActuales) {
 
@@ -191,8 +196,7 @@ public class HorarioLaboralBOImpl implements HorarioLaboralBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

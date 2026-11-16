@@ -4,8 +4,9 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Cita;
+import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,86 +16,88 @@ public class CitaBOImpl implements CitaBO {
     private final CitaDAO citaDAO;
 
     public CitaBOImpl() {
-        this.citaDAO = new CitaDAOimp();
+        this.citaDAO = new CitaDAOImpl();
     }
 
     @Override
-    public void insertar(Cita cita)
-            throws SQLException, NegocioException {
+    public void insertar(Cita cita) {
 
         validarCita(cita);
 
         try {
-            citaDAO.insertar_cita(cita);
+            citaDAO.insertarCita(cita);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Cita> listarPorMascota(int idMascota)
-            throws SQLException, NegocioException {
+    public List<Cita> listarPorMascota(int idMascota) {
 
         validarId(idMascota);
 
-        return citaDAO.listar_citas_por_mascota(idMascota);
+        try {
+            return citaDAO.listarCitasPorMascota(idMascota);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las citas de la mascota.", e);
+        }
     }
 
     @Override
-    public Cita obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Cita obtenerPorId(int id) {
 
         validarId(id);
 
-        return citaDAO.mostrar_cita(id);
+        try {
+            return citaDAO.mostrarCita(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la cita.", e);
+        }
     }
 
     @Override
-    public void cancelar(int idCita)
-            throws SQLException, NegocioException {
+    public void cancelar(int idCita) {
 
         validarId(idCita);
 
         try {
-            citaDAO.cancelar_cita(idCita);
+            citaDAO.cancelarCita(idCita);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al cancelar la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void atender(int idCita)
-            throws SQLException, NegocioException {
+    public void atender(int idCita) {
 
         validarId(idCita);
 
         try {
-            citaDAO.atender_cita(idCita);
+            citaDAO.atenderCita(idCita);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al atender la cita.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
-    private void validarCita(Cita cita)
-            throws NegocioException {
+    private void validarCita(Cita cita) {
 
         if (cita == null) {
             throw new NegocioException(
@@ -147,8 +150,7 @@ public class CitaBOImpl implements CitaBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
@@ -156,4 +158,58 @@ public class CitaBOImpl implements CitaBO {
             );
         }
     }
+
+    @Override
+    public void modificar(Cita cita) {
+
+        if (cita == null) {
+            throw new NegocioException(
+                    "La cita no puede ser nula."
+            );
+        }
+
+        validarId(cita.getId());
+        validarCita(cita);
+
+        Cita existente;
+        try {
+            existente = citaDAO.mostrarCita(cita.getId());
+        } catch (SQLException e) {
+            throw new NegocioException("Error al consultar la cita.", e);
+        }
+
+        if (existente == null) {
+            throw new NegocioException(
+                    "La cita no existe."
+            );
+        }
+
+        if (existente.getEstado() != Estado.PROGRAMADA &&
+                existente.getEstado() != Estado.CONFIRMADA) {
+            throw new NegocioException(
+                    "La cita no puede modificarse en su estado actual."
+            );
+        }
+
+        if (!existente.getMascota().getId()
+                .equals(cita.getMascota().getId())) {
+            throw new NegocioException(
+                    "No se puede cambiar la mascota de la cita."
+            );
+        }
+
+        try {
+            citaDAO.actualizarCita(cita);
+
+            TransactionContext.commit();
+
+        } catch (SQLException e) {
+            TransactionContext.rollback();
+            throw new NegocioException("Error al modificar la cita.", e);
+
+        } finally {
+            TransactionContext.close();
+        }
+    }
+
 }

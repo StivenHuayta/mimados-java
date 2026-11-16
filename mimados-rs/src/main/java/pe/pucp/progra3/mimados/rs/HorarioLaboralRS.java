@@ -6,13 +6,12 @@ import jakarta.ws.rs.core.Response;
 import pe.pucp.progra3.mimados.bo.HorarioLaboralBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.HorarioLaboralBOImpl;
-import pe.pucp.progra3.mimados.model.DiaSemana;
-import pe.pucp.progra3.mimados.model.Empleado;
-import pe.pucp.progra3.mimados.model.HorarioLaboral;
-import pe.pucp.progra3.mimados.model.Usuario;
+import pe.pucp.progra3.mimados.model.enums.DiaSemana;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.HorarioLaboral;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -77,8 +76,6 @@ public class HorarioLaboralRS {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, "Formato de hora o día inválido", null)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
 
@@ -90,8 +87,6 @@ public class HorarioLaboralRS {
             return Response.ok(new ApiResponse(true, "Listado de horarios del empleado", lista)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
 
@@ -105,8 +100,6 @@ public class HorarioLaboralRS {
             return Response.ok(new ApiResponse(true, "Horario eliminado", null)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponse(false, e.getMessage(), null)).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();
         }
     }
 }

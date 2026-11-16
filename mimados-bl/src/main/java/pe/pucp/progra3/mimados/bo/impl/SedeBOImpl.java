@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.SedeBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeDAO;
-import pe.pucp.progra3.mimados.dao.imp.SedeDAOimp;
-import pe.pucp.progra3.mimados.model.Sede;
+import pe.pucp.progra3.mimados.dao.impl.SedeDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Sede;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,31 +15,29 @@ public class SedeBOImpl implements SedeBO {
     private final SedeDAO sedeDAO;
 
     public SedeBOImpl() {
-        this.sedeDAO = new SedeDAOimp();
+        this.sedeDAO = new SedeDAOImpl();
     }
 
     @Override
-    public void insertar(Sede sede)
-            throws SQLException, NegocioException {
+    public void insertar(Sede sede) {
 
         validarSede(sede);
 
         try {
-            sedeDAO.agregar_sede(sede);
+            sedeDAO.agregarSede(sede);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Sede sede)
-            throws SQLException, NegocioException {
+    public void modificar(Sede sede) {
 
         if (sede == null) {
             throw new NegocioException(
@@ -58,55 +56,59 @@ public class SedeBOImpl implements SedeBO {
 //                    sede.getId(),
 //                    sede.getDireccion()
 //            );
-            sedeDAO.modificar_sede(sede);
+            sedeDAO.modificarSede(sede);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            sedeDAO.eliminar_sede(id);
+            sedeDAO.eliminarSede(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Sede> listarTodos()
-            throws SQLException {
+    public List<Sede> listarTodos() {
 
-        return sedeDAO.listar_sedes();
+        try {
+            return sedeDAO.listarSedes();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las sedes.", e);
+        }
     }
 
     @Override
-    public Sede obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Sede obtenerPorId(int id) {
 
         validarId(id);
 
-        return sedeDAO.mostrar_sede(id);
+        try {
+            return sedeDAO.mostrarSede(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la sede.", e);
+        }
     }
 
-    private void validarSede(Sede sede)
-            throws NegocioException {
+    private void validarSede(Sede sede) {
 
         if (sede == null) {
             throw new NegocioException(
@@ -121,8 +123,7 @@ public class SedeBOImpl implements SedeBO {
         validarTelefono(sede.getTelefono());
     }
 
-    private void validarDireccion(String direccion)
-            throws NegocioException {
+    private void validarDireccion(String direccion) {
 
         if (direccion == null ||
                 direccion.isBlank()) {
@@ -138,8 +139,7 @@ public class SedeBOImpl implements SedeBO {
             );
         }
     }
-    private void validarNombre(String nombre)
-            throws NegocioException {
+    private void validarNombre(String nombre) {
 
         if (nombre == null ||
                 nombre.isBlank()) {
@@ -156,8 +156,7 @@ public class SedeBOImpl implements SedeBO {
         }
     }
 
-    private void validarTelefono(String telefono)
-            throws NegocioException {
+    private void validarTelefono(String telefono) {
 
         if (telefono == null ||
                 telefono.isBlank()) {
@@ -175,8 +174,7 @@ public class SedeBOImpl implements SedeBO {
     }
 
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

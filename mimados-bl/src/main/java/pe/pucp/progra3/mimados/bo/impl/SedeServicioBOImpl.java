@@ -4,9 +4,10 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.SedeServicioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.SedeServicioDAO;
-import pe.pucp.progra3.mimados.dao.imp.SedeServicioDAOimp;
-import pe.pucp.progra3.mimados.model.SedeServicio;
-import pe.pucp.progra3.mimados.model.Servicio;
+import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
+import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
+import pe.pucp.progra3.mimados.model.entity.SedeServicio;
+import pe.pucp.progra3.mimados.model.entity.Servicio;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,12 +17,11 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     private final SedeServicioDAO sedeServicioDAO;
 
     public SedeServicioBOImpl() {
-        this.sedeServicioDAO = new SedeServicioDAOimp();
+        this.sedeServicioDAO = new SedeServicioDAOImpl();
     }
 
     @Override
-    public void insertar(SedeServicio sedeServicio)
-            throws SQLException, NegocioException {
+    public void insertar(SedeServicio sedeServicio) {
 
         validarSedeServicio(sedeServicio);
 
@@ -31,48 +31,60 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarNoDuplicado(idSede, idServicio);
 
         try {
-            sedeServicioDAO.insertar_sede_servicio(sedeServicio);
+            sedeServicioDAO.insertarSedeServicio(sedeServicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al asociar el servicio a la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int idSedeServicio)
-            throws SQLException, NegocioException {
+    public void eliminar(int idSedeServicio) {
 
         validarId(idSedeServicio);
 
         try {
-            sedeServicioDAO.eliminar_sede_servicio(idSedeServicio);
+            sedeServicioDAO.eliminarSedeServicio(idSedeServicio);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el servicio de la sede.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Servicio> listarPorSede(int idSede)
-            throws SQLException, NegocioException {
+    public List<SedeServicioDTO> listarPorSede(int idSede) {
 
         validarId(idSede);
 
-        return sedeServicioDAO.listar_servicios_por_sede(idSede);
+        try {
+            return sedeServicioDAO.listarServiciosPorSede(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios de la sede.", e);
+        }
     }
 
-    private void validarSedeServicio(SedeServicio sedeServicio)
-            throws NegocioException {
+    @Override
+    public List<Servicio> listarServiciosDisponibles(int idSede) {
+        validarId(idSede);
+
+        try {
+            return sedeServicioDAO.listarServiciosDisponibles(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los servicios disponibles de la sede.", e);
+        }
+    }
+
+    private void validarSedeServicio(SedeServicio sedeServicio) {
 
         if (sedeServicio == null) {
             throw new NegocioException(
@@ -97,16 +109,19 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         validarId(sedeServicio.getServicio().getId());
     }
 
-    private void validarNoDuplicado(int idSede, int idServicio)
-            throws SQLException, NegocioException {
+    private void validarNoDuplicado(int idSede, int idServicio) {
 
-        List<Servicio> servicios =
-                sedeServicioDAO.listar_servicios_por_sede(idSede);
+        List<SedeServicioDTO> servicios;
+        try {
+            servicios = sedeServicioDAO.listarServiciosPorSede(idSede);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al validar servicios duplicados en la sede.", e);
+        }
 
-        for (Servicio servicio : servicios) {
+        for (SedeServicioDTO servicio : servicios) {
 
-            if (servicio.getId() != null &&
-                    servicio.getId() == idServicio) {
+            if (servicio.getIdSedeServicio() != null &&
+                    servicio.getIdSedeServicio() == idServicio) {
 
                 throw new NegocioException(
                         "El servicio ya está asociado a la sede."
@@ -115,8 +130,7 @@ public class SedeServicioBOImpl implements SedeServicioBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

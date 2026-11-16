@@ -4,9 +4,9 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
-import pe.pucp.progra3.mimados.dao.imp.MascotaDAOimp;
-import pe.pucp.progra3.mimados.model.DTO.RegistroMedicoDTO;
-import pe.pucp.progra3.mimados.model.Mascota;
+import pe.pucp.progra3.mimados.dao.impl.MascotaDAOImpl;
+import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,31 +17,29 @@ public class MascotaBOImpl implements MascotaBO {
     private final MascotaDAO mascotaDAO;
 
     public MascotaBOImpl() {
-        this.mascotaDAO = new MascotaDAOimp();
+        this.mascotaDAO = new MascotaDAOImpl();
     }
 
     @Override
-    public void insertar(Mascota mascota)
-            throws SQLException, NegocioException {
+    public void insertar(Mascota mascota) {
 
         validarMascota(mascota);
 
         try {
-            mascotaDAO.insertar_mascota(mascota);
+            mascotaDAO.insertarMascota(mascota);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la mascota.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Mascota mascota)
-            throws SQLException, NegocioException {
+    public void modificar(Mascota mascota) {
 
         if (mascota == null) {
             throw new NegocioException(
@@ -53,7 +51,7 @@ public class MascotaBOImpl implements MascotaBO {
         validarNombre(mascota.getNombre());
 
         try {
-            mascotaDAO.actualizar_mascota_nombre(
+            mascotaDAO.actualizarMascotaNombre(
                     mascota.getId(),
                     mascota.getNombre()
             );
@@ -62,72 +60,83 @@ public class MascotaBOImpl implements MascotaBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la mascota.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            mascotaDAO.eliminar_mascota(id);
+            mascotaDAO.eliminarMascota(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar la mascota.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Mascota> listarTodos()
-            throws SQLException {
+    public List<Mascota> listarTodos() {
 
-        return mascotaDAO.listar_mascotas();
+        try {
+            return mascotaDAO.listarMascotas();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las mascotas.", e);
+        }
     }
 
     @Override
-    public Mascota obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Mascota obtenerPorId(int id) {
 
         validarId(id);
 
-        return mascotaDAO.mostrar_mascota(id);
+        try {
+            return mascotaDAO.mostrarMascota(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la mascota.", e);
+        }
     }
 
     @Override
-    public List<Mascota> listarPorDueno(int idCliente)
-            throws SQLException, NegocioException {
+    public List<Mascota> listarPorDueno(int idCliente) {
 
         validarId(idCliente);
 
-        return mascotaDAO.mostrar_mascotas_dueno(idCliente);
+        try {
+            return mascotaDAO.mostrarMascotasDueno(idCliente);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las mascotas del dueño.", e);
+        }
     }
 
-    public List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId)throws SQLException, NegocioException  {
+    @Override
+    public List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId) {
         // Validación de negocio básica para evitar consultas innecesarias a la BD
         if (mascotaId <= 0) {
             System.out.println("BO Error: El ID de la mascota debe ser mayor a cero.");
             return new ArrayList<>();
         }
-        // Llamada directa a la capa de datos
-        return mascotaDAO.listarHistorialPorMascota(mascotaId);
-
+        // Llamada a la capa de datos
+        try {
+            return mascotaDAO.listarHistorialPorMascota(mascotaId);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el historial médico de la mascota.", e);
+        }
     }
 
 
 
 
-    private void validarMascota(Mascota mascota)
-            throws NegocioException {
+    private void validarMascota(Mascota mascota) {
 
         if (mascota == null) {
             throw new NegocioException(
@@ -178,8 +187,7 @@ public class MascotaBOImpl implements MascotaBO {
         }
     }
 
-    private void validarNombre(String nombre)
-            throws NegocioException {
+    private void validarNombre(String nombre) {
 
         if (nombre == null || nombre.isBlank()) {
             throw new NegocioException(
@@ -194,8 +202,7 @@ public class MascotaBOImpl implements MascotaBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(

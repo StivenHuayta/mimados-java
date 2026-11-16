@@ -4,8 +4,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.bo.EmpleadoBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
-import pe.pucp.progra3.mimados.dao.imp.EmpleadoDAOimp;
-import pe.pucp.progra3.mimados.model.Empleado;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Empleado;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,65 +15,68 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     private final EmpleadoDAO empleadoDAO;
 
     public EmpleadoBOImpl() {
-        this.empleadoDAO = new EmpleadoDAOimp();
+        this.empleadoDAO = new EmpleadoDAOImpl();
     }
 
     @Override
-    public void insertar(Empleado empleado)
-            throws SQLException, NegocioException {
+    public void insertar(Empleado empleado) {
 
         validarEmpleado(empleado);
 
         try {
-            empleadoDAO.insertar_empleado(empleado);
+            empleadoDAO.insertarEmpleado(empleado);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar el empleado.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void eliminar(int id)
-            throws SQLException, NegocioException {
+    public void eliminar(int id) {
 
         validarId(id);
 
         try {
-            empleadoDAO.eliminar_empleado(id);
+            empleadoDAO.eliminarEmpleado(id);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al eliminar el empleado.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public List<Empleado> listarTodos()
-            throws SQLException {
+    public List<Empleado> listarTodos() {
 
-        return empleadoDAO.listar_empleados();
+        try {
+            return empleadoDAO.listarEmpleados();
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar los empleados.", e);
+        }
     }
 
     @Override
-    public Empleado obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Empleado obtenerPorId(int id) {
 
         validarId(id);
 
-        return empleadoDAO.mostrar_empleado(id);
+        try {
+            return empleadoDAO.mostrarEmpleado(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el empleado.", e);
+        }
     }
 
-    private void validarEmpleado(Empleado empleado)
-            throws NegocioException {
+    private void validarEmpleado(Empleado empleado) {
 
         if (empleado == null) {
             throw new NegocioException(
@@ -106,8 +109,7 @@ public class EmpleadoBOImpl implements EmpleadoBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
@@ -117,16 +119,16 @@ public class EmpleadoBOImpl implements EmpleadoBO {
     }
 
     @Override
-    public void modificar(Empleado empleado) throws SQLException, NegocioException {
+    public void modificar(Empleado empleado) {
         // Reutilizamos tus validaciones existentes
         validarEmpleado(empleado);
 
         try {
-            empleadoDAO.actualizar_empleado(empleado);
+            empleadoDAO.actualizarEmpleado(empleado);
             TransactionContext.commit();
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar el empleado.", e);
         } finally {
             TransactionContext.close();
         }

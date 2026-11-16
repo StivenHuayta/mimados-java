@@ -3,14 +3,15 @@ package pe.pucp.progra3.mimados.rs;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pe.pucp.progra3.mimados.bo.ClienteBO;
 import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
+import pe.pucp.progra3.mimados.bo.impl.ClienteBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
-import pe.pucp.progra3.mimados.model.AuthResultado;
-import pe.pucp.progra3.mimados.model.DTO.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
+import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 @Path("UsuarioRS")
 @Produces(MediaType.APPLICATION_JSON)
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 public class UsuarioRS {
 
     private final UsuarioBO usuarioBO = new UsuarioBOImpl();
+    private final ClienteBO clienteBO = new ClienteBOImpl();
 
 
 
@@ -84,12 +86,12 @@ public class UsuarioRS {
     public static class ApiResponse implements Serializable {
         private boolean success;
         private String message;
-        private AuthResultado data;
+        private Object data;
 
         public ApiResponse() {
         }
 
-        public ApiResponse(boolean success, String message, AuthResultado data) {
+        public ApiResponse(boolean success, String message, Object data) {
             this.success = success;
             this.message = message;
             this.data = data;
@@ -111,11 +113,11 @@ public class UsuarioRS {
             this.message = message;
         }
 
-        public AuthResultado getData() {
+        public Object getData() {
             return data;
         }
 
-        public void setData(AuthResultado data) {
+        public void setData(Object data) {
             this.data = data;
         }
     }
@@ -135,10 +137,6 @@ public class UsuarioRS {
         } catch (NegocioException e) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(new ApiResponse(false, e.getMessage(), null))
-                    .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
                     .build();
         }
     }
@@ -169,13 +167,62 @@ public class UsuarioRS {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ApiResponse(false, e.getMessage(), null))
                     .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ApiResponse(false, "Error de base de datos: " + e.getMessage(), null))
+        }
+    }
+
+    @GET
+    @Path("perfil/{id}")
+    public Response obtenerPerfil(@PathParam("id") Integer id) {
+        try {
+            UsuarioPerfilDTO perfil = usuarioBO.obtenerPerfil(id);
+            if (perfil != null) {
+                return Response.ok(perfil).build();
+            }
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new ApiResponse(false, "Perfil no encontrado", null))
+                    .build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
                     .build();
         }
     }
 
+    @PUT
+    @Path("perfil")
+    public Response actualizarPerfil(UsuarioPerfilDTO perfilDto) {
+        if (perfilDto == null || perfilDto.getId() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "Datos incompletos", null))
+                    .build();
+        }
 
+        try {
+            boolean actualizado = usuarioBO.actualizarPerfil(perfilDto);
+            if (actualizado) {
+                return Response.ok(new ApiResponse(true, "Perfil actualizado", null)).build();
+            }
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "No se pudo actualizar el perfil", null))
+                    .build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Path("eliminar/{id}")
+    public Response eliminarCuenta(@PathParam("id") Integer id) {
+        try {
+            clienteBO.eliminar(id);
+            return Response.ok(new ApiResponse(true, "Cuenta eliminada lógicamente", null)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null))
+                    .build();
+        }
+    }
 
 }

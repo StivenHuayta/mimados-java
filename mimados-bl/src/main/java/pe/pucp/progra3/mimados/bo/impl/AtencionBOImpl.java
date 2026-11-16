@@ -5,9 +5,9 @@ import pe.pucp.progra3.mimados.bo.AtencionBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.AtencionDAO;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
-import pe.pucp.progra3.mimados.dao.imp.AtencionDAOimp;
-import pe.pucp.progra3.mimados.dao.imp.CitaDAOimp;
-import pe.pucp.progra3.mimados.model.Atencion;
+import pe.pucp.progra3.mimados.dao.impl.AtencionDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
+import pe.pucp.progra3.mimados.model.entity.Atencion;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -18,20 +18,19 @@ public class AtencionBOImpl implements AtencionBO {
     private final CitaDAO citaDAO;
 
     public AtencionBOImpl() {
-        this.atencionDAO = new AtencionDAOimp();
-        this.citaDAO = new CitaDAOimp();
+        this.atencionDAO = new AtencionDAOImpl();
+        this.citaDAO = new CitaDAOImpl();
     }
 
     @Override
-    public void insertar(Atencion atencion)
-            throws SQLException, NegocioException {
+    public void insertar(Atencion atencion) {
 
         validarAtencion(atencion);
 
         try {
-            atencionDAO.insertar_atencion(atencion);
+            atencionDAO.insertarAtencion(atencion);
 
-            citaDAO.atender_cita(
+            citaDAO.atenderCita(
                     atencion.getCita().getId()
             );
 
@@ -39,15 +38,14 @@ public class AtencionBOImpl implements AtencionBO {
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al registrar la atención.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public void modificar(Atencion atencion)
-            throws SQLException, NegocioException {
+    public void modificar(Atencion atencion) {
 
         if (atencion == null) {
             throw new NegocioException(
@@ -59,29 +57,31 @@ public class AtencionBOImpl implements AtencionBO {
         validarDatosAtencion(atencion);
 
         try {
-            atencionDAO.actualizar_atencion(atencion);
+            atencionDAO.actualizarAtencion(atencion);
 
             TransactionContext.commit();
 
         } catch (SQLException e) {
             TransactionContext.rollback();
-            throw e;
+            throw new NegocioException("Error al modificar la atención.", e);
         } finally {
             TransactionContext.close();
         }
     }
 
     @Override
-    public Atencion obtenerPorId(int id)
-            throws SQLException, NegocioException {
+    public Atencion obtenerPorId(int id) {
 
         validarId(id);
 
-        return atencionDAO.mostrar_atencion(id);
+        try {
+            return atencionDAO.mostrarAtencion(id);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener la atención.", e);
+        }
     }
 
-    private void validarAtencion(Atencion atencion)
-            throws NegocioException {
+    private void validarAtencion(Atencion atencion) {
 
         if (atencion == null) {
             throw new NegocioException(
@@ -112,8 +112,7 @@ public class AtencionBOImpl implements AtencionBO {
         validarDatosAtencion(atencion);
     }
 
-    private void validarDatosAtencion(Atencion atencion)
-            throws NegocioException {
+    private void validarDatosAtencion(Atencion atencion) {
 
         if (atencion.getPesoActual() != null &&
                 atencion.getPesoActual() < 0) {
@@ -170,8 +169,7 @@ public class AtencionBOImpl implements AtencionBO {
         }
     }
 
-    private void validarId(Integer id)
-            throws NegocioException {
+    private void validarId(Integer id) {
 
         if (id == null || id <= 0) {
             throw new NegocioException(
