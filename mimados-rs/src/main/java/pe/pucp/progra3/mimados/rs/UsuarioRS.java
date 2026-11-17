@@ -10,8 +10,11 @@ import pe.pucp.progra3.mimados.bo.impl.ClienteBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 import pe.pucp.progra3.mimados.model.dto.response.UsuarioPerfilDTO;
+import pe.pucp.progra3.mimados.model.entity.Cliente;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("UsuarioRS")
 @Produces(MediaType.APPLICATION_JSON)
@@ -224,5 +227,62 @@ public class UsuarioRS {
                     .build();
         }
     }
+
+
+    @GET
+    @Path("clientes")
+    public Response listarClientes() {
+
+        try {
+            List<Cliente> clientes = clienteBO.listarTodos();
+            List<ClienteOpcion> resultado = new ArrayList<>();
+
+            for (Cliente cliente : clientes) {
+
+                if (Boolean.TRUE.equals(cliente.getActivo())
+                        && cliente.getUsuario() != null) {
+
+                    resultado.add(new ClienteOpcion(
+                            cliente.getUsuario().getId(),
+                            cliente.getUsuario().getNombreCompleto()
+                    ));
+                }
+            }
+
+            return Response.ok(new ApiResponse(
+                    true, "Listado de clientes", resultado
+            )).build();
+
+        } catch (NegocioException e) {
+            return Response.status(
+                            Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(
+                            false, e.getMessage(), null))
+                    .build();
+        }
+    }
+
+    public static class ClienteOpcion implements Serializable {
+
+        private Integer id;
+        private String nombre;
+
+        public ClienteOpcion() {
+        }
+
+        public ClienteOpcion(Integer id, String nombre) {
+            this.id = id;
+            this.nombre = nombre;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+    }
+
 
 }

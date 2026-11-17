@@ -9,10 +9,8 @@ import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.CitaBOImpl;
 
-import pe.pucp.progra3.mimados.model.entity.Cita;
-import pe.pucp.progra3.mimados.model.entity.Empleado;
-import pe.pucp.progra3.mimados.model.entity.Mascota;
-import pe.pucp.progra3.mimados.model.entity.Usuario;
+import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
+import pe.pucp.progra3.mimados.model.entity.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -27,6 +25,7 @@ public class CitaRS {
 
     private final CitaBO citaBO = new CitaBOImpl();
 
+
     // Clase para recibir y devolver los datos de una cita
     public static class CitaRequest implements Serializable {
 
@@ -37,6 +36,8 @@ public class CitaRS {
         private String fechaHoraFin;
         private String estado;
         private String motivo;
+        private Integer sedeId;
+        private Integer sedeServicioId;
 
         public CitaRequest() {}
 
@@ -72,6 +73,11 @@ public class CitaRS {
         public void setMotivo(String motivo) {
             this.motivo = motivo;
         }
+
+        public Integer getSedeId() { return sedeId; }
+        public void setSedeId(Integer sedeId) { this.sedeId = sedeId; }
+        public Integer getSedeServicioId() { return sedeServicioId; }
+        public void setSedeServicioId(Integer sedeServicioId) { this.sedeServicioId = sedeServicioId; }
     }
 
     // Clase para las respuestas del servicio
@@ -338,5 +344,74 @@ public class CitaRS {
                     .build();
         }
     }
+
+
+    @GET
+    @Path("listar")
+    public Response listarTodas() {
+
+        try {
+            List<CitaListadoEmpleadoDTO> citas = citaBO.listarTodas();
+
+            return Response.ok(new ApiResponse(
+                    true,
+                    "Listado de todas las citas",
+                    citas
+            )).build();
+
+        } catch (NegocioException e) {
+            return Response.status(
+                            Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ApiResponse(
+                            false, e.getMessage(), null))
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("registrarEmpleado")
+    public Response registrarCitaEmpleado(CitaRequest req) {
+        if (req == null || req.getEmpleadoId() == null || req.getEmpleadoId() <= 0
+                || req.getMascotaId() == null || req.getMascotaId() <= 0
+                || req.getSedeId() == null || req.getSedeId() <= 0
+                || req.getSedeServicioId() == null || req.getSedeServicioId() <= 0
+                || req.getFechaHoraInicio() == null || req.getFechaHoraInicio().isBlank()
+                || req.getFechaHoraFin() == null || req.getFechaHoraFin().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "Faltan datos obligatorios", null)).build();
+        }
+
+        try {
+            Usuario usuario = new Usuario();
+            usuario.setId(req.getEmpleadoId());
+            Empleado empleado = new Empleado();
+            empleado.setUsuario(usuario);
+            Mascota mascota = new Mascota();
+            mascota.setId(req.getMascotaId());
+
+            Cita cita = new Cita();
+            cita.setEmpleado(empleado);
+            cita.setMascota(mascota);
+            cita.setFechaHoraInicio(LocalDateTime.parse(req.getFechaHoraInicio()));
+            cita.setFechaHoraFin(LocalDateTime.parse(req.getFechaHoraFin()));
+            cita.setMotivo(req.getMotivo());
+
+            citaBO.insertarConServicio(cita, req.getSedeId(), req.getSedeServicioId());
+
+            return Response.status(Response.Status.CREATED)
+                    .entity(new ApiResponse(true, "Cita y servicio registrados correctamente",
+                            convertir(cita)))
+                    .build();
+        } catch (DateTimeParseException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "Formato de fecha inválido", null)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null)).build();
+        }
+    }
+
+
+
 
 }
