@@ -74,11 +74,12 @@ public class SedeServicioBOImpl implements SedeServicioBO {
     }
 
     @Override
-    public List<Servicio> listarServiciosDisponibles(int idSede) {
+    public List<Servicio> listarServiciosDisponibles(int idSede,String nombre) {
         validarId(idSede);
 
         try {
-            return sedeServicioDAO.listarServiciosDisponibles(idSede);
+            if(nombre==null || nombre.isBlank()) nombre= "";// evitar null
+            return sedeServicioDAO.listarServiciosDisponibles(idSede, nombre);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios disponibles de la sede.", e);
         }

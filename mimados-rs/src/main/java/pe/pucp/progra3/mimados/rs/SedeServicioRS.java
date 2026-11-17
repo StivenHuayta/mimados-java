@@ -75,10 +75,11 @@ public class SedeServicioRS {
     }
     @GET
     @Path("listarServiciosDisponibles/{id}")
-    public Response listarServiciosDisponibles(@PathParam("id") int id){
+    public Response listarServiciosDisponibles(@PathParam("id") int id,
+                                               @QueryParam("nombre") String nombre){
 
         try {
-            List<Servicio> servicios=sedeServicioBO.listarServiciosDisponibles(id);
+            List<Servicio> servicios=sedeServicioBO.listarServiciosDisponibles(id, nombre);
             return Response.ok(new ServicioRS.ApiResponse(true,"Listado correcto",servicios)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.BAD_REQUEST)
