@@ -12,7 +12,9 @@ public interface SedeBO {
 
     void eliminar(int id);
 
-    List<Sede> listarTodos();
+    List<Sede> listarTodos(String nombre,String direccion);
+    //List<Sede> listarTodosParametros();
+    //ahora con parametros
 
     Sede obtenerPorId(int id);
 }

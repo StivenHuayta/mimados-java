@@ -94,6 +94,7 @@ public class ServicioBOImpl implements ServicioBO {
             validarRangoDuracion(minMin,minMax);
             //agregar validadores
             if(nombre==null || nombre.isBlank()) nombre= "";
+            validarNombreFiltro(nombre);
             //no se admiten negativos, el valor minimo que pueden tomar es 0
             double pMin = (preMin == null || preMin < 0) ? 0.0 : preMin;
             double pMax = (preMax == null || preMax < 0) ? 0.0 : preMax;
@@ -196,6 +197,14 @@ public class ServicioBOImpl implements ServicioBO {
         if (duracionMin!=null && duracionMax!=null && duracionMax > 0 && duracionMax<duracionMin) {
             throw new NegocioException(
                     "La duracion maxima no puede ser menor que la duracion minima."
+            );
+        }
+    }
+    private void validarNombreFiltro(String nombre){
+        int max=60;
+        if (nombre.length() > max) {
+            throw new NegocioException(
+                    "El nombre del filtro no puede superar los "+max+" caracteres."
             );
         }
     }

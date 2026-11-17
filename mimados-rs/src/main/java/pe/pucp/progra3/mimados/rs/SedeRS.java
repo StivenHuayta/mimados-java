@@ -77,9 +77,10 @@ public class SedeRS {
 
     @GET
     @Path("listarSede")
-    public Response listarSedes(){
+    public Response listarSedes(@QueryParam("nombre")String nombre,
+                                @QueryParam("direccion")String direccion){
         try {
-            List <Sede> sedes=sedeBO.listarTodos();
+            List <Sede> sedes=sedeBO.listarTodos(nombre,direccion);
             return Response.ok(new ApiResponse(true,"Listado correcto",sedes)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ApiResponse(false, "Error BD: " + e.getMessage(), null)).build();

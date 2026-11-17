@@ -13,24 +13,28 @@ import java.util.List;
 public class SedeDAOImpl implements SedeDAO {
 
     @Override
-    public List<Sede> listarSedes() throws SQLException {
+    public List<Sede> listarSedes(String nombre,String direccion) throws SQLException {
 
         List<Sede> sedes = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL listar_sedes()}");
-            ResultSet rs = cs.executeQuery()){
+            CallableStatement cs = connection.prepareCall(" {CALL sp_listar_sedes_parametros(?,?)}")
+            ){
+            cs.setString(1,nombre);
+            cs.setString(2,direccion);
+            try(ResultSet rs = cs.executeQuery()){
+                while(rs.next()){
 
-            while(rs.next()){
-
-                Sede sede = new Sede(
-                        rs.getInt("sede_id"),
-                        rs.getString("nombre"),
-                        rs.getString("direccion"),
-                        rs.getString("telefono"),
-                        rs.getBoolean("activo")
-                );
-                sedes.add(sede);
+                    Sede sede = new Sede(
+                            rs.getInt("sede_id"),
+                            rs.getString("nombre"),
+                            rs.getString("direccion"),
+                            rs.getString("telefono"),
+                            rs.getBoolean("activo")
+                    );
+                    sedes.add(sede);
+                }
             }
+
         }
         return sedes;
     }

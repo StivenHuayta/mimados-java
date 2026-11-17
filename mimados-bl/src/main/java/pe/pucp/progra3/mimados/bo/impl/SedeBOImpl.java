@@ -87,10 +87,15 @@ public class SedeBOImpl implements SedeBO {
     }
 
     @Override
-    public List<Sede> listarTodos() {
+    public List<Sede> listarTodos(String nombre,String direccion) {
 
         try {
-            return sedeDAO.listarSedes();
+            if(nombre==null || nombre.isBlank()) nombre="";
+            if(direccion==null || direccion.isBlank()) direccion="";
+            validarNombreFiltro(nombre);
+            validarDireccionFiltro(direccion);
+
+            return sedeDAO.listarSedes(nombre,direccion);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar las sedes.", e);
         }
@@ -179,6 +184,23 @@ public class SedeBOImpl implements SedeBO {
         if (id == null || id <= 0) {
             throw new NegocioException(
                     "El ID de la sede debe ser mayor que cero."
+            );
+        }
+    }
+
+    private void validarNombreFiltro(String nombre){
+        int max=60;
+        if (nombre.length() > max) {
+            throw new NegocioException(
+                    "El nombre del filtro no puede superar los "+max+" caracteres."
+            );
+        }
+    }
+    private void validarDireccionFiltro(String nombre){
+        int max=60;
+        if (nombre.length() > max) {
+            throw new NegocioException(
+                    "La direccion del filtro no puede superar los "+max+" caracteres."
             );
         }
     }
