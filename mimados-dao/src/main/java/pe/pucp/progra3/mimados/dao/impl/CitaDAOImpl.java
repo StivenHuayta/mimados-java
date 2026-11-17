@@ -4,6 +4,7 @@ package pe.pucp.progra3.mimados.dao.impl;
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
 import pe.pucp.progra3.mimados.model.enums.Estado;
@@ -302,4 +303,55 @@ public class CitaDAOImpl implements CitaDAO {
 
         return citas;
     }
+
+
+
+    @Override
+    public List<CitaListadoEmpleadoDTO> listarTodasCitas()
+            throws SQLException {
+
+        List<CitaListadoEmpleadoDTO> citas = new ArrayList<>();
+
+        String sql = "{CALL listar_todas_citas()}";
+
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs = connection.prepareCall(sql);
+             ResultSet rs = cs.executeQuery()) {
+
+            while (rs.next()) {
+
+                CitaListadoEmpleadoDTO cita = new CitaListadoEmpleadoDTO();
+
+                cita.setId(rs.getInt("cita_id"));
+                cita.setEmpleadoId(rs.getInt("empleado_id"));
+                cita.setMascotaId(rs.getInt("mascota_id"));
+
+                cita.setNombreCliente(rs.getString("nombre_cliente"));
+                cita.setNombreMascota(rs.getString("nombre_mascota"));
+                cita.setNombreServicio(rs.getString("nombre_servicio"));
+
+                LocalDateTime inicio = rs.getObject(
+                        "fecha_hora_inicio", LocalDateTime.class);
+
+                LocalDateTime fin = rs.getObject(
+                        "fecha_hora_fin", LocalDateTime.class);
+
+                cita.setFechaHoraInicio(
+                        inicio != null ? inicio.toString() : null);
+
+                cita.setFechaHoraFin(
+                        fin != null ? fin.toString() : null);
+
+                cita.setEstado(rs.getString("estado"));
+                cita.setMotivo(rs.getString("motivo"));
+
+                citas.add(cita);
+            }
+        }
+
+        return citas;
+    }
+
+
+
 }

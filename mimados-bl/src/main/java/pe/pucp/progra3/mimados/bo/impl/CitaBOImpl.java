@@ -5,10 +5,19 @@ import pe.pucp.progra3.mimados.bo.CitaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.CitaServicioDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
+import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
+import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.entity.CitaServicio;
+import pe.pucp.progra3.mimados.model.entity.SedeServicio;
 import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class CitaBOImpl implements CitaBO {
@@ -48,6 +57,22 @@ public class CitaBOImpl implements CitaBO {
             throw new NegocioException("Error al listar las citas de la mascota.", e);
         }
     }
+
+
+
+
+    @Override
+    public List<CitaListadoEmpleadoDTO> listarTodas() {
+
+        try {
+            return citaDAO.listarTodasCitas();
+
+        } catch (SQLException e) {
+            throw new NegocioException(
+                    "Error al listar todas las citas.", e);
+        }
+    }
+
 
     @Override
     public Cita obtenerPorId(int id) {
@@ -207,6 +232,73 @@ public class CitaBOImpl implements CitaBO {
             TransactionContext.rollback();
             throw new NegocioException("Error al modificar la cita.", e);
 
+        } finally {
+            TransactionContext.close();
+        }
+    }
+    @Override
+    public void insertarConServicio(Cita cita, int idSede, int idSedeServicio) {
+        validarCita(cita);
+        validarId(idSede);
+        validarId(idSedeServicio);
+
+        try {
+            SedeServicioDTO seleccionado = new SedeServicioDAOImpl()
+                    .listarServiciosPorSede(idSede).stream()
+                    .filter(s -> s.getIdSedeServicio() != null
+                            && s.getIdSedeServicio() == idSedeServicio)
+                    .findFirst().orElse(null);
+
+            if (seleccionado == null || !Boolean.TRUE.equals(seleccionado.getActivo())) {
+                throw new NegocioException("El servicio no está activo en la sede seleccionada.");
+            }
+            if (seleccionado.getDuracionMinutos() == null || seleccionado.getDuracionMinutos() <= 0) {
+                throw new NegocioException("El servicio no tiene duración válida.");
+            }
+            if (seleccionado.getPrecioReferencial() == null) {
+                throw new NegocioException("El servicio no tiene precio referencial definido.");
+            }
+            long minutos = Duration.between(cita.getFechaHoraInicio(),
+                    cita.getFechaHoraFin()).toMinutes();
+            if (minutos != seleccionado.getDuracionMinutos()) {
+                throw new NegocioException("La duración de la cita no coincide con el servicio.");
+            }
+            if (!cita.getFechaHoraInicio().isAfter(LocalDateTime.now())) {
+                throw new NegocioException("La fecha y hora deben ser futuras.");
+            }
+
+            // Revalidación de disponibilidad en Java antes de escribir en MySQL.
+            List<LocalTime> horasLibres = new DisponibilidadBOImpl()
+                    .consultarDisponibilidad(
+                            cita.getEmpleado().getUsuario().getId(),
+                            cita.getFechaHoraInicio().toLocalDate(),
+                            seleccionado.getDuracionMinutos());
+            if (!horasLibres.contains(cita.getFechaHoraInicio().toLocalTime())) {
+                throw new NegocioException("El horario seleccionado no está disponible.");
+            }
+
+            // Ambas inserciones comparten TransactionContext.
+            citaDAO.insertarCita(cita);
+            if (cita.getId() == null || cita.getId() <= 0) {
+                throw new NegocioException("No se obtuvo el ID de la cita registrada.");
+            }
+            SedeServicio sedeServicio = new SedeServicio();
+            sedeServicio.setId(idSedeServicio);
+
+            CitaServicio item = new CitaServicio();
+            item.setCita(cita);
+            item.setSedeServicio(sedeServicio);
+            item.setPrecioAplicado(seleccionado.getPrecioReferencial());
+            item.setNotas(null);
+            new CitaServicioDAOImpl().insertarCitaServicio(item);
+
+            TransactionContext.commit();
+        } catch (SQLException e) {
+            TransactionContext.rollback();
+            throw new NegocioException("Error al registrar la cita con servicio.", e);
+        } catch (RuntimeException e) {
+            TransactionContext.rollback();
+            throw e;
         } finally {
             TransactionContext.close();
         }

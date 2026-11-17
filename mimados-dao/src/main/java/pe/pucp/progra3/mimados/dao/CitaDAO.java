@@ -1,5 +1,6 @@
 package pe.pucp.progra3.mimados.dao;
 
+import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 
 import java.sql.SQLException;
@@ -16,4 +17,8 @@ public interface CitaDAO {
     public void actualizarCita(Cita cita) throws SQLException;
     List<Cita> listarCitasPorEmpleadoFecha(
             int idEmpleado, LocalDate fecha) throws SQLException;
+
+    List<CitaListadoEmpleadoDTO> listarTodasCitas()
+            throws SQLException;;
+
 }

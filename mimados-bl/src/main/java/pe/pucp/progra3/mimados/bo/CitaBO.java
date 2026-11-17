@@ -1,5 +1,6 @@
 package pe.pucp.progra3.mimados.bo;
 
+import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 
 import java.util.List;
@@ -10,6 +11,12 @@ public interface CitaBO {
 
     List<Cita> listarPorMascota(int idMascota);
 
+
+
+    List<CitaListadoEmpleadoDTO> listarTodas();
+
+
+
     Cita obtenerPorId(int id);
 
     void cancelar(int idCita);
@@ -17,4 +24,7 @@ public interface CitaBO {
     void atender(int idCita);
 
     void modificar(Cita cita);
+
+    void insertarConServicio(Cita cita, int idSede, int idSedeServicio);
+
 }
