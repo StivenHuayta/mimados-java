@@ -12,7 +12,7 @@ public interface ServicioBO {
 
     void eliminar(int id);
 
-    List<Servicio> listarTodos();
+    List<Servicio> listarTodos(String nombre,Double preMin,Double preMax,Integer minMin,Integer minMax);
 
     Servicio obtenerPorId(int id);
 }

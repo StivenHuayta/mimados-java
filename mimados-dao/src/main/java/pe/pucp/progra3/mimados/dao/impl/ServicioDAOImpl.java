@@ -15,24 +15,35 @@ import java.util.List;
 public class ServicioDAOImpl implements ServicioDAO {
 
     @Override
-    public List<Servicio> listarServicios() throws SQLException {
+    public List<Servicio> listarServicios(String nombre,double preMin,double preMax,
+                                          int minMin,int minMax)
+                                            throws SQLException {
         List<Servicio> servicios = new ArrayList<>();
         try(Connection connection = DBManager.getInstance().getConnection();
-            CallableStatement cs = connection.prepareCall(" {CALL listar_servicios()}");
-            ResultSet rs = cs.executeQuery()){
+            CallableStatement cs = connection.prepareCall(" {CALL sp_listar_servicios_parametros(?,?,?,?,?)}")
 
-            while(rs.next()){
+            ){
+            //nuevos parametros de busqueda
+            cs.setString(1,nombre);
+            cs.setDouble(2,preMin);
+            cs.setDouble(3,preMax);
+            cs.setInt(4,minMin);
+            cs.setInt(5,minMax);
+            try(ResultSet rs = cs.executeQuery()){
+                while(rs.next()){
 
-                Servicio servicio = new Servicio(
-                        rs.getInt("servicio_id"),
-                        rs.getString("nombre"),
-                        rs.getString("descripcion"),
-                        rs.getBigDecimal("precio_referencial"),
-                        rs.getInt("duracion_minutos"),
-                        rs.getBoolean("activo")
-                );
-                servicios.add(servicio);
+                    Servicio servicio = new Servicio(
+                            rs.getInt("servicio_id"),
+                            rs.getString("nombre"),
+                            rs.getString("descripcion"),
+                            rs.getBigDecimal("precio_referencial"),
+                            rs.getInt("duracion_minutos"),
+                            rs.getBoolean("activo")
+                    );
+                    servicios.add(servicio);
+                }
             }
+
         }
         return servicios;
     }

@@ -85,9 +85,14 @@ public class ServicioRS {
 
     @GET
     @Path("listarServicios")
-    public Response listarServicios(){
+    public Response listarServicios(@QueryParam("nombre") String nombre,
+                                    @QueryParam("precioMinimo")Double preMin,
+                                    @QueryParam("precioMaximo")Double preMax,
+                                    @QueryParam("duracionMinima")Integer minMin,
+                                    @QueryParam("duracionMaxima")Integer minMax){
+        //se usan clases envolventes para que admitan el valor de null, luego se tratan en la clase BO
         try {
-            List<Servicio> servicios=servicioBO.listarTodos();
+            List<Servicio> servicios=servicioBO.listarTodos(nombre, preMin, preMax, minMin, minMax);
             return Response.ok(new ApiResponse(true,"Listado correcto",servicios)).build();
         } catch (NegocioException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
