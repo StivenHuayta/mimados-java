@@ -87,10 +87,20 @@ public class ServicioBOImpl implements ServicioBO {
     }
 
     @Override
-    public List<Servicio> listarTodos() {
+    public List<Servicio> listarTodos(String nombre,Double preMin,Double preMax,Integer minMin,Integer minMax) {
 
         try {
-            return servicioDAO.listarServicios();
+            validarRangoPrecio(preMin,preMax);
+            validarRangoDuracion(minMin,minMax);
+            //agregar validadores
+            if(nombre==null || nombre.isBlank()) nombre= "";
+            validarNombreFiltro(nombre);
+            //no se admiten negativos, el valor minimo que pueden tomar es 0
+            double pMin = (preMin == null || preMin < 0) ? 0.0 : preMin;
+            double pMax = (preMax == null || preMax < 0) ? 0.0 : preMax;
+            int dMin = (minMin == null || minMin < 0) ? 0 : minMin;
+            int dMax = (minMax == null || minMax < 0) ? 0 : minMax;
+            return servicioDAO.listarServicios(nombre, pMin, pMax, dMin, dMax);
         } catch (SQLException e) {
             throw new NegocioException("Error al listar los servicios.", e);
         }
@@ -173,6 +183,28 @@ public class ServicioBOImpl implements ServicioBO {
         if (id == null || id <= 0) {
             throw new NegocioException(
                     "El ID del servicio debe ser mayor que cero."
+            );
+        }
+    }
+    private void validarRangoPrecio(Double precioMin,Double precioMax){
+        if (precioMin!=null && precioMax!=null && precioMax > 0 && precioMax<precioMin) {
+            throw new NegocioException(
+                    "El precio maximo debe ser mayor que el precio minimo."
+            );
+        }
+    }
+    private void validarRangoDuracion(Integer duracionMin,Integer duracionMax){
+        if (duracionMin!=null && duracionMax!=null && duracionMax > 0 && duracionMax<duracionMin) {
+            throw new NegocioException(
+                    "La duracion maxima no puede ser menor que la duracion minima."
+            );
+        }
+    }
+    private void validarNombreFiltro(String nombre){
+        int max=60;
+        if (nombre.length() > max) {
+            throw new NegocioException(
+                    "El nombre del filtro no puede superar los "+max+" caracteres."
             );
         }
     }

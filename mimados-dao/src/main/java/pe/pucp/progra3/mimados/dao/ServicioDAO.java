@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ServicioDAO {
 
-    public List<Servicio> listarServicios() throws SQLException;
+    public List<Servicio> listarServicios(String nombre,double preMax,double preMin, int minMin,int minMax) throws SQLException;
     public void insertarServicio(Servicio servicio) throws SQLException;
     public void eliminarServicio(int idServicio) throws SQLException;
 

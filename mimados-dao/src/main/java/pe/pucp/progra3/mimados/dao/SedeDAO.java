@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SedeDAO {
 
-    public List<Sede> listarSedes() throws SQLException;
+    public List<Sede> listarSedes(String nombre,String direccion) throws SQLException;
     public Sede mostrarSede(int idSede) throws SQLException;
     public void modificarDireccion(int id, String dir) throws SQLException;
     public void modificarSede(Sede sede) throws SQLException;
