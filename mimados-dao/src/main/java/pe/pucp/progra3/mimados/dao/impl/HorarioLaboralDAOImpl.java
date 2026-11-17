@@ -74,8 +74,8 @@ public class HorarioLaboralDAOImpl implements HorarioLaboralDAO {
 
         try(CallableStatement cs = connection.prepareCall("{CALL actualizar_horario_laboral(?,?,?,?)}")) {
 
-            cs.setInt(1 , idHorario);
-            cs.setString(2, diaSemana.name());
+            cs.setInt(1, idHorario);
+            cs.setInt(2, diaSemana.ordinal() + 1);
             cs.setObject(3, horaInicio);
             cs.setObject(4, horaFin);
 
@@ -84,15 +84,8 @@ public class HorarioLaboralDAOImpl implements HorarioLaboralDAO {
             if (filasAfectadas == 0) {
                 System.out.println("Advertencia: No se encontró el horario con ID " + idHorario);
             }
-
         }
-
-
-
-
-
     }
-
 
     //ZONA TRANSACCION
 
@@ -106,21 +99,14 @@ public class HorarioLaboralDAOImpl implements HorarioLaboralDAO {
 
         try(CallableStatement cs = connection.prepareCall("{CALL insertar_horario_laboral(?,?,?,?)}")){
 
-
-
-            cs.setInt(1 , horario.getEmpleado().getUsuario().getId());
-            cs.setString(2, horario.getDiaSemana().name() );
+            cs.setInt(1, horario.getEmpleado().getUsuario().getId());
+            cs.setInt(2, horario.getDiaSemana().ordinal() + 1);
             cs.setObject(3, horario.getHoraInicio());
             cs.setObject(4, horario.getHoraFin());
 
             cs.execute();
-
-
-//            int id_generado = cs.getInt(6);
-//            horario.setId(id_generado);
         }
     }
-
 
     @Override
     public void eliminarHorarioLaboral(int idHorario) throws SQLException {
