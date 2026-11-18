@@ -12,6 +12,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.impl.MascotaBOImpl;
+import pe.pucp.progra3.mimados.model.dto.response.AtencionHistorialDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PacienteVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
 
@@ -69,6 +72,36 @@ public class MascotaRS {
         } catch (Exception ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("{\"error\": \"Error interno al obtener el historial médico\"}")
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/veterinario/pacientes")
+    public Response listarPacientesVeterinario(
+            @QueryParam("searchText") String searchText,
+            @QueryParam("pageNumber") @DefaultValue("0") int pageNumber,
+            @QueryParam("recordsPerPage") @DefaultValue("10") int recordsPerPage) {
+        try {
+            PageResultDTO<PacienteVeterinarioDTO> resultado =
+                    mascotaBO.listarPacientesVeterinarioPaginado(searchText, pageNumber, recordsPerPage);
+            return Response.ok(resultado).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error interno al listar pacientes\"}")
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/veterinario/historial/{id}")
+    public Response obtenerHistorialClinicoVeterinario(@PathParam("id") int mascotaId) {
+        try {
+            List<AtencionHistorialDTO> historial = mascotaBO.listarHistorialClinicoVeterinario(mascotaId);
+            return Response.ok(historial).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error interno al obtener el historial clínico\"}")
                     .build();
         }
     }

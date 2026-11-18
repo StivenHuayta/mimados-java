@@ -8,6 +8,8 @@ import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.dao.impl.AtencionDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Atencion;
+import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -24,18 +26,20 @@ public class AtencionBOImpl implements AtencionBO {
 
     @Override
     public void insertar(Atencion atencion) {
-
         validarAtencion(atencion);
-
         try {
+            Cita citaExistente = citaDAO.mostrarCita(atencion.getCita().getId());
+            if (citaExistente == null) {
+                throw new NegocioException("La cita asociada no existe.");
+            }
+            if (citaExistente.getEstado() != Estado.PROGRAMADA &&
+                    citaExistente.getEstado() != Estado.CONFIRMADA) {
+                throw new NegocioException(
+                        "La cita no puede atenderse en su estado actual (" + citaExistente.getEstado() + ").");
+            }
             atencionDAO.insertarAtencion(atencion);
-
-            citaDAO.atenderCita(
-                    atencion.getCita().getId()
-            );
-
+            citaDAO.atenderCita(atencion.getCita().getId());
             TransactionContext.commit();
-
         } catch (SQLException e) {
             TransactionContext.rollback();
             throw new NegocioException("Error al registrar la atención.", e);
@@ -46,21 +50,14 @@ public class AtencionBOImpl implements AtencionBO {
 
     @Override
     public void modificar(Atencion atencion) {
-
         if (atencion == null) {
-            throw new NegocioException(
-                    "La atención no puede ser nula."
-            );
+            throw new NegocioException("La atención no puede ser nula.");
         }
-
         validarId(atencion.getId());
         validarDatosAtencion(atencion);
-
         try {
             atencionDAO.actualizarAtencion(atencion);
-
             TransactionContext.commit();
-
         } catch (SQLException e) {
             TransactionContext.rollback();
             throw new NegocioException("Error al modificar la atención.", e);
@@ -71,9 +68,7 @@ public class AtencionBOImpl implements AtencionBO {
 
     @Override
     public Atencion obtenerPorId(int id) {
-
         validarId(id);
-
         try {
             return atencionDAO.mostrarAtencion(id);
         } catch (SQLException e) {
@@ -82,99 +77,47 @@ public class AtencionBOImpl implements AtencionBO {
     }
 
     private void validarAtencion(Atencion atencion) {
-
         if (atencion == null) {
-            throw new NegocioException(
-                    "La atención no puede ser nula."
-            );
+            throw new NegocioException("La atención no puede ser nula.");
         }
-
         if (atencion.getCita() == null) {
-            throw new NegocioException(
-                    "La atención debe estar asociada a una cita."
-            );
+            throw new NegocioException("La atención debe estar asociada a una cita.");
         }
-
         validarId(atencion.getCita().getId());
-
-        if (atencion.getEmpleado() == null ||
-                atencion.getEmpleado().getUsuario() == null) {
-
-            throw new NegocioException(
-                    "La atención debe tener un empleado."
-            );
+        if (atencion.getEmpleado() == null || atencion.getEmpleado().getUsuario() == null) {
+            throw new NegocioException("La atención debe tener un empleado.");
         }
-
-        validarId(
-                atencion.getEmpleado().getUsuario().getId()
-        );
-
+        validarId(atencion.getEmpleado().getUsuario().getId());
         validarDatosAtencion(atencion);
     }
 
     private void validarDatosAtencion(Atencion atencion) {
-
-        if (atencion.getPesoActual() != null &&
-                atencion.getPesoActual() < 0) {
-
-            throw new NegocioException(
-                    "El peso actual no puede ser negativo."
-            );
+        if (atencion.getPesoActual() != null && atencion.getPesoActual() < 0) {
+            throw new NegocioException("El peso actual no puede ser negativo.");
         }
-
-        if (atencion.getSintomas() != null &&
-                atencion.getSintomas().length() > 255) {
-
-            throw new NegocioException(
-                    "Los síntomas no pueden superar los 255 caracteres."
-            );
+        if (atencion.getSintomas() != null && atencion.getSintomas().length() > 255) {
+            throw new NegocioException("Los síntomas no pueden superar los 255 caracteres.");
         }
-
-        if (atencion.getDiagnostico() != null &&
-                atencion.getDiagnostico().length() > 255) {
-
-            throw new NegocioException(
-                    "El diagnóstico no puede superar los 255 caracteres."
-            );
+        if (atencion.getDiagnostico() != null && atencion.getDiagnostico().length() > 255) {
+            throw new NegocioException("El diagnóstico no puede superar los 255 caracteres.");
         }
-
-        if (atencion.getTratamientoRecetado() != null &&
-                atencion.getTratamientoRecetado().length() > 500) {
-
-            throw new NegocioException(
-                    "El tratamiento recetado no puede superar los 500 caracteres."
-            );
+        if (atencion.getTratamientoRecetado() != null && atencion.getTratamientoRecetado().length() > 500) {
+            throw new NegocioException("El tratamiento recetado no puede superar los 500 caracteres.");
         }
-
-        if (atencion.getObservaciones() != null &&
-                atencion.getObservaciones().length() > 255) {
-
-            throw new NegocioException(
-                    "Las observaciones no pueden superar los 255 caracteres."
-            );
+        if (atencion.getObservaciones() != null && atencion.getObservaciones().length() > 255) {
+            throw new NegocioException("Las observaciones no pueden superar los 255 caracteres.");
         }
-
         if (atencion.getMontoTotal() == null) {
-            throw new NegocioException(
-                    "El monto total es obligatorio."
-            );
+            throw new NegocioException("El monto total es obligatorio.");
         }
-
-        if (atencion.getMontoTotal()
-                .compareTo(BigDecimal.ZERO) < 0) {
-
-            throw new NegocioException(
-                    "El monto total no puede ser negativo."
-            );
+        if (atencion.getMontoTotal().compareTo(BigDecimal.ZERO) < 0) {
+            throw new NegocioException("El monto total no puede ser negativo.");
         }
     }
 
     private void validarId(Integer id) {
-
         if (id == null || id <= 0) {
-            throw new NegocioException(
-                    "El ID debe ser mayor que cero."
-            );
+            throw new NegocioException("El ID debe ser mayor que cero.");
         }
     }
 }

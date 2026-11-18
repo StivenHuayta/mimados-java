@@ -1,5 +1,8 @@
 package pe.pucp.progra3.mimados.bo;
 
+import pe.pucp.progra3.mimados.model.dto.response.AtencionHistorialDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PacienteVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
 
@@ -20,5 +23,10 @@ public interface MascotaBO {
     List<Mascota> listarPorDueno(int idCliente);
 
     List<RegistroMedicoDTO> listarHistorialPorMascota(int mascotaId);
+
+    PageResultDTO<PacienteVeterinarioDTO> listarPacientesVeterinarioPaginado(
+            String searchText, int pageNumber, int recordsPerPage);
+
+    List<AtencionHistorialDTO> listarHistorialClinicoVeterinario(int mascotaId);
 
 }

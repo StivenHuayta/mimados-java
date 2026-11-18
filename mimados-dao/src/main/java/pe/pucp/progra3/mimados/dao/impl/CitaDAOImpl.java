@@ -1,15 +1,15 @@
-
 package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
-import pe.pucp.progra3.mimados.model.enums.Estado;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
 import pe.pucp.progra3.mimados.model.entity.Usuario;
+import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -25,77 +25,40 @@ public class CitaDAOImpl implements CitaDAO {
 
     @Override
     public void insertarCita(Cita cita) throws SQLException {
-
-        /*
-         * Procedimiento: insertar_cita
-         * Registra una cita y devuelve su ID generado.
-         */
-
         Connection connection = TransactionContext.getConnection();
-
         String sql = "{CALL insertar_cita(?, ?, ?, ?, ?, ?)}";
-
         try (CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.registerOutParameter(6, Types.INTEGER);
-
             cs.setInt(1, cita.getEmpleado().getUsuario().getId());
             cs.setInt(2, cita.getMascota().getId());
             cs.setObject(3, cita.getFechaHoraInicio());
             cs.setObject(4, cita.getFechaHoraFin());
             cs.setString(5, cita.getMotivo());
-
             cs.execute();
-
-            int idGenerado = cs.getInt(6);
-            cita.setId(idGenerado);
+            cita.setId(cs.getInt(6));
         }
     }
 
     @Override
-    public List<Cita> listarCitasPorMascota(int idMascota)
-            throws SQLException {
-
-        /*
-         * Procedimiento: listar_citas_por_mascota
-         * Recupera las citas asociadas a una mascota.
-         */
-
+    public List<Cita> listarCitasPorMascota(int idMascota) throws SQLException {
         List<Cita> citas = new ArrayList<>();
-
         String sql = "{CALL listar_citas_por_mascota(?)}";
-
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, idMascota);
-
             try (ResultSet rs = cs.executeQuery()) {
-
                 while (rs.next()) {
-
                     Empleado empleado = new Empleado();
                     Usuario usuario = new Usuario();
-
                     usuario.setId(rs.getInt("empleado_id"));
                     empleado.setUsuario(usuario);
-
                     Mascota mascota = new Mascota();
                     mascota.setId(idMascota);
-
-                    LocalDateTime inicio = rs.getObject(
-                            "fecha_hora_inicio", LocalDateTime.class);
-
-                    LocalDateTime fin = rs.getObject(
-                            "fecha_hora_fin", LocalDateTime.class);
-
+                    LocalDateTime inicio = rs.getObject("fecha_hora_inicio", LocalDateTime.class);
+                    LocalDateTime fin = rs.getObject("fecha_hora_fin", LocalDateTime.class);
                     String estadoStr = rs.getString("estado");
-
-                    Estado estado = estadoStr != null
-                            ? Estado.valueOf(estadoStr.toUpperCase())
-                            : null;
-
-                    Cita cita = new Cita(
+                    Estado estado = estadoStr != null ? Estado.valueOf(estadoStr.toUpperCase()) : null;
+                    citas.add(new Cita(
                             rs.getInt("cita_id"),
                             empleado,
                             mascota,
@@ -103,56 +66,31 @@ public class CitaDAOImpl implements CitaDAO {
                             fin,
                             estado,
                             rs.getString("motivo")
-                    );
-
-                    citas.add(cita);
+                    ));
                 }
             }
         }
-
         return citas;
     }
 
     @Override
     public Cita mostrarCita(int id) throws SQLException {
-
-        /*
-         * Procedimiento: mostrar_cita
-         * Recupera una cita mediante su identificador.
-         */
-
         String sql = "{CALL mostrar_cita(?)}";
-
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, id);
-
             try (ResultSet rs = cs.executeQuery()) {
-
                 if (rs.next()) {
-
                     Empleado empleado = new Empleado();
                     Usuario usuario = new Usuario();
-
                     usuario.setId(rs.getInt("empleado_id"));
                     empleado.setUsuario(usuario);
-
                     Mascota mascota = new Mascota();
                     mascota.setId(rs.getInt("mascota_id"));
-
-                    LocalDateTime inicio = rs.getObject(
-                            "fecha_hora_inicio", LocalDateTime.class);
-
-                    LocalDateTime fin = rs.getObject(
-                            "fecha_hora_fin", LocalDateTime.class);
-
+                    LocalDateTime inicio = rs.getObject("fecha_hora_inicio", LocalDateTime.class);
+                    LocalDateTime fin = rs.getObject("fecha_hora_fin", LocalDateTime.class);
                     String estadoStr = rs.getString("estado");
-
-                    Estado estado = estadoStr != null
-                            ? Estado.valueOf(estadoStr.toUpperCase())
-                            : null;
-
+                    Estado estado = estadoStr != null ? Estado.valueOf(estadoStr.toUpperCase()) : null;
                     return new Cita(
                             id,
                             empleado,
@@ -165,142 +103,150 @@ public class CitaDAOImpl implements CitaDAO {
                 }
             }
         }
-
         return null;
     }
 
     @Override
     public void cancelarCita(int idCita) throws SQLException {
-
-        /*
-         * Procedimiento: cancelar_cita
-         * Cambia el estado de una cita a CANCELADA.
-         */
-
         Connection connection = TransactionContext.getConnection();
-
         String sql = "{CALL cancelar_cita(?)}";
-
         try (CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, idCita);
-
             int filasAfectadas = cs.executeUpdate();
-
             if (filasAfectadas == 0) {
-                System.out.println(
-                        "Advertencia: No se encontró la cita con ID "
-                                + idCita
-                );
+                System.out.println("Advertencia: No se encontró la cita con ID " + idCita);
             }
         }
     }
 
     @Override
     public void atenderCita(int idCita) throws SQLException {
-
-        /*
-         * Procedimiento: atender_cita
-         * Actualiza el estado de una cita atendida.
-         */
-
         Connection connection = TransactionContext.getConnection();
-
         String sql = "{CALL atender_cita(?)}";
-
         try (CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, idCita);
-
             int filasAfectadas = cs.executeUpdate();
-
             if (filasAfectadas == 0) {
-                System.out.println(
-                        "Advertencia: No se encontró la cita con ID "
-                                + idCita
-                );
+                System.out.println("Advertencia: No se encontró la cita con ID " + idCita);
             }
         }
     }
 
     @Override
     public void actualizarCita(Cita cita) throws SQLException {
-
-        /*
-         * Procedimiento: actualizar_cita
-         * Modifica el empleado, fechas y motivo de una cita.
-         */
-
         Connection connection = TransactionContext.getConnection();
-
         String sql = "{CALL actualizar_cita(?, ?, ?, ?, ?)}";
-
         try (CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, cita.getId());
-
-            cs.setInt(2,
-                    cita.getEmpleado().getUsuario().getId());
-
+            cs.setInt(2, cita.getEmpleado().getUsuario().getId());
             cs.setObject(3, cita.getFechaHoraInicio());
-
             cs.setObject(4, cita.getFechaHoraFin());
-
             cs.setString(5, cita.getMotivo());
-
             cs.execute();
         }
     }
 
     @Override
-    public List<Cita> listarCitasPorEmpleadoFecha(
-            int idEmpleado, LocalDate fecha) throws SQLException {
-
-        /*
-         * Procedimiento: listar_citas_por_empleado_fecha
-         * Recupera las citas ocupadas de un empleado en una fecha.
-         */
-
+    public List<Cita> listarCitasPorEmpleadoFecha(int idEmpleado, LocalDate fecha) throws SQLException {
         List<Cita> citas = new ArrayList<>();
-
         String sql = "{CALL listar_citas_por_empleado_fecha(?, ?)}";
-
         try (Connection connection = DBManager.getInstance().getConnection();
              CallableStatement cs = connection.prepareCall(sql)) {
-
             cs.setInt(1, idEmpleado);
             cs.setDate(2, java.sql.Date.valueOf(fecha));
-
             try (ResultSet rs = cs.executeQuery()) {
-
                 while (rs.next()) {
-
                     Cita cita = new Cita();
-
                     cita.setId(rs.getInt("cita_id"));
-
-                    LocalDateTime inicio = rs.getObject(
-                            "fecha_hora_inicio", LocalDateTime.class);
-
-                    LocalDateTime fin = rs.getObject(
-                            "fecha_hora_fin", LocalDateTime.class);
-
-                    cita.setFechaHoraInicio(inicio);
-                    cita.setFechaHoraFin(fin);
-
+                    cita.setFechaHoraInicio(rs.getObject("fecha_hora_inicio", LocalDateTime.class));
+                    cita.setFechaHoraFin(rs.getObject("fecha_hora_fin", LocalDateTime.class));
                     String estadoStr = rs.getString("estado");
-
                     if (estadoStr != null) {
-                        cita.setEstado(
-                                Estado.valueOf(estadoStr.toUpperCase())
-                        );
+                        cita.setEstado(Estado.valueOf(estadoStr.toUpperCase()));
                     }
-
                     citas.add(cita);
                 }
             }
         }
+        return citas;
+    }
 
+    @Override
+    public int contarCitasPorVeterinario(
+            int empleadoId, String searchText, LocalDate fecha, Estado estado) throws SQLException {
+        String sql = "{CALL sp_contar_citas_veterinario(?, ?, ?, ?)}";
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs = connection.prepareCall(sql)) {
+            cs.setInt(1, empleadoId);
+            if (searchText != null && !searchText.isBlank()) {
+                cs.setString(2, searchText.trim());
+            } else {
+                cs.setNull(2, Types.VARCHAR);
+            }
+            if (fecha != null) {
+                cs.setDate(3, java.sql.Date.valueOf(fecha));
+            } else {
+                cs.setNull(3, Types.DATE);
+            }
+            if (estado != null) {
+                cs.setString(4, estado.name());
+            } else {
+                cs.setNull(4, Types.VARCHAR);
+            }
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total_count");
+                }
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public List<CitaVeterinarioDTO> listarCitasPorVeterinarioPaginado(
+            int empleadoId, String searchText, LocalDate fecha, Estado estado,
+            int pageNumber, int recordsPerPage) throws SQLException {
+        List<CitaVeterinarioDTO> citas = new ArrayList<>();
+        String sql = "{CALL sp_listar_citas_veterinario_paginado(?, ?, ?, ?, ?, ?)}";
+        try (Connection connection = DBManager.getInstance().getConnection();
+             CallableStatement cs = connection.prepareCall(sql)) {
+            cs.setInt(1, empleadoId);
+            if (searchText != null && !searchText.isBlank()) {
+                cs.setString(2, searchText.trim());
+            } else {
+                cs.setNull(2, Types.VARCHAR);
+            }
+            if (fecha != null) {
+                cs.setDate(3, java.sql.Date.valueOf(fecha));
+            } else {
+                cs.setNull(3, Types.DATE);
+            }
+            if (estado != null) {
+                cs.setString(4, estado.name());
+            } else {
+                cs.setNull(4, Types.VARCHAR);
+            }
+            cs.setInt(5, recordsPerPage);
+            cs.setInt(6, pageNumber * recordsPerPage);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    CitaVeterinarioDTO dto = new CitaVeterinarioDTO();
+                    dto.setCitaId(rs.getInt("cita_id"));
+                    dto.setMascotaId(rs.getInt("mascota_id"));
+                    dto.setNombreMascota(rs.getString("nombre_mascota"));
+                    dto.setEspecie(rs.getString("especie"));
+                    dto.setClienteId(rs.getInt("cliente_id"));
+                    dto.setNombreCliente(rs.getString("nombre_cliente"));
+                    LocalDateTime inicio = rs.getObject("fecha_hora_inicio", LocalDateTime.class);
+                    LocalDateTime fin = rs.getObject("fecha_hora_fin", LocalDateTime.class);
+                    dto.setFechaHoraInicio(inicio != null ? inicio.toString() : null);
+                    dto.setFechaHoraFin(fin != null ? fin.toString() : null);
+                    dto.setEstado(rs.getString("estado"));
+                    dto.setMotivo(rs.getString("motivo"));
+                    citas.add(dto);
+                }
+            }
+        }
         return citas;
     }
 

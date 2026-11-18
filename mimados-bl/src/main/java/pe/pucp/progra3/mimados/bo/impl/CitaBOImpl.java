@@ -8,6 +8,8 @@ import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.CitaServicioDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.entity.CitaServicio;
@@ -16,6 +18,7 @@ import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -301,6 +304,26 @@ public class CitaBOImpl implements CitaBO {
             throw e;
         } finally {
             TransactionContext.close();
+        }
+    }
+
+    @Override
+    public PageResultDTO<CitaVeterinarioDTO> listarPorVeterinarioPaginado(
+            int empleadoId, String searchText, LocalDate fecha, Estado estado,
+            int pageNumber, int recordsPerPage) {
+
+        validarId(empleadoId);
+
+        int pagina = Math.max(0, pageNumber);
+        int tamano = recordsPerPage <= 0 ? 10 : recordsPerPage;
+
+        try {
+            int totalCount = citaDAO.contarCitasPorVeterinario(empleadoId, searchText, fecha, estado);
+            List<CitaVeterinarioDTO> page = citaDAO.listarCitasPorVeterinarioPaginado(
+                    empleadoId, searchText, fecha, estado, pagina, tamano);
+            return new PageResultDTO<>(totalCount, page);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar las citas del veterinario.", e);
         }
     }
 

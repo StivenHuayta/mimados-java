@@ -1,4 +1,4 @@
-package pe.pucp.progra3.mimados.dao.imp;
+package pe.pucp.progra3.mimados.dao.impl;
 
 import pe.pucp.progra3.mimados.DBManager.DBManager;
 import pe.pucp.progra3.mimados.dao.ReporteServicioDAO;

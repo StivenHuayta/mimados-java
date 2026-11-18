@@ -5,6 +5,9 @@ import pe.pucp.progra3.mimados.bo.MascotaBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.MascotaDAO;
 import pe.pucp.progra3.mimados.dao.impl.MascotaDAOImpl;
+import pe.pucp.progra3.mimados.model.dto.response.AtencionHistorialDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PacienteVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
 
@@ -208,6 +211,33 @@ public class MascotaBOImpl implements MascotaBO {
             throw new NegocioException(
                     "El ID debe ser mayor que cero."
             );
+        }
+    }
+
+    @Override
+    public PageResultDTO<PacienteVeterinarioDTO> listarPacientesVeterinarioPaginado(
+            String searchText, int pageNumber, int recordsPerPage) {
+
+        int pagina = Math.max(0, pageNumber);
+        int tamano = recordsPerPage <= 0 ? 10 : recordsPerPage;
+
+        try {
+            int totalCount = mascotaDAO.contarPacientesVeterinario(searchText);
+            List<PacienteVeterinarioDTO> page =
+                    mascotaDAO.listarPacientesVeterinarioPaginado(searchText, pagina, tamano);
+            return new PageResultDTO<>(totalCount, page);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al listar pacientes para veterinario.", e);
+        }
+    }
+
+    @Override
+    public List<AtencionHistorialDTO> listarHistorialClinicoVeterinario(int mascotaId) {
+        validarId(mascotaId);
+        try {
+            return mascotaDAO.listarHistorialClinicoVeterinario(mascotaId);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al obtener el historial clínico veterinario.", e);
         }
     }
 }
