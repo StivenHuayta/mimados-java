@@ -33,4 +33,7 @@ public interface CitaBO {
     PageResultDTO<CitaVeterinarioDTO> listarPorVeterinarioPaginado(
             int empleadoId, String searchText, LocalDate fecha, Estado estado,
             int pageNumber, int recordsPerPage);
+
+    List<CitaReporteDTO> listarCitasReporte(
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws NegocioException;
 }
