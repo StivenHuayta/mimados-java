@@ -327,4 +327,16 @@ public class CitaBOImpl implements CitaBO {
         }
     }
 
+    @Override
+    public List<CitaReporteDTO> listarCitasReporte(
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws NegocioException {
+    if (fechaInicio != null && fechaFin != null && fechaInicio.isAfter(fechaFin)) {
+        throw new NegocioException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+    }
+    try {
+        return citaDAO.listarCitasReporte(fechaInicio, fechaFin, estado);
+    } catch (SQLException e) {
+        throw new NegocioException("Error al obtener el listado de citas para el reporte: " + e.getMessage());
+    }
+}
 }
