@@ -26,4 +26,6 @@ public interface CitaDAO {
     List<CitaVeterinarioDTO> listarCitasPorVeterinarioPaginado(
             int empleadoId, String searchText, LocalDate fecha, Estado estado,
             int pageNumber, int recordsPerPage) throws SQLException;
+    List<CitaReporteDTO> listarCitasReporte(
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws SQLException;
 }
