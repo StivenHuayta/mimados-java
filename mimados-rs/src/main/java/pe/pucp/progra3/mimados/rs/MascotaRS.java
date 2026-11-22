@@ -10,15 +10,21 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import pe.pucp.progra3.mimados.bo.ClienteBO;
 import pe.pucp.progra3.mimados.bo.MascotaBO;
+import pe.pucp.progra3.mimados.bo.UsuarioBO;
+import pe.pucp.progra3.mimados.bo.impl.ClienteBOImpl;
 import pe.pucp.progra3.mimados.bo.impl.MascotaBOImpl;
+import pe.pucp.progra3.mimados.bo.impl.UsuarioBOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.AtencionHistorialDTO;
 import pe.pucp.progra3.mimados.model.dto.response.PacienteVeterinarioDTO;
 import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.RegistroMedicoDTO;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
+import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.InputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +34,10 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MascotaRS {
     private MascotaBO mascotaBO;
+    private UsuarioBO usuarioBO;
     public MascotaRS(){
         this.mascotaBO  = new MascotaBOImpl() ;
+        this.usuarioBO = new UsuarioBOImpl() ;
     }
 
     @GET
@@ -115,6 +123,37 @@ public class MascotaRS {
     @Produces("application/pdf")
     public Response generarPdfHistorial(@PathParam("id") int mascotaId) {
         try {
+
+            Mascota mascota = mascotaBO.obtenerPorId(mascotaId);
+            if(mascota == null){
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Mascota no encontrada").build();
+            }
+
+            String propietario = "No registrado";
+            String dniPropietario = "-";
+
+            if (mascota.getCliente() != null && mascota.getCliente().getUsuario() != null) {
+                int clienteId = mascota.getCliente().getUsuario().getId();
+
+                Usuario u = usuarioBO.obtenerPorId(clienteId);
+
+
+                if (u != null) {
+                    String nombres = u.getNombres() != null ? u.getNombres() : "";
+                    String apellidos = u.getApellidos() != null ? u.getApellidos() : "";
+                    String nombreCompleto = (nombres + " " + apellidos).trim();
+                    if (!nombreCompleto.isEmpty()) {
+                        propietario = nombreCompleto;
+                    }
+                    if (u.getDni() != null && !u.getDni().isBlank()) {
+                        dniPropietario = u.getDni();
+                    }
+                }
+            }
+
+
+
             List<RegistroMedicoDTO> historial = mascotaBO.listarHistorialPorMascota(mascotaId);
 
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(historial);
@@ -129,10 +168,25 @@ public class MascotaRS {
                 return Response.status(Response.Status.NOT_FOUND).entity("Logo no encontrado en /REPORTES/").build();
             }
 
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String nombreMascota = mascota.getNombre() != null ? mascota.getNombre() : "-";
+            String especie = mascota.getEspecie() != null ? mascota.getEspecie().name() : "-";
+            String raza = (mascota.getRaza() != null && !mascota.getRaza().isBlank()) ? mascota.getRaza() : "No registrada";
+            String sexo = mascota.getSexo() != null ? mascota.getSexo().name() : "-";
+            String fechaNac = mascota.getFechaNacimiento() != null ? mascota.getFechaNacimiento().format(fmt) : "No registrada";
 
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("MIMADOS", "Historial Clínico Veterinario");
             parametros.put("Logo", logoStream);
+            parametros.put("nombreMascota", nombreMascota);
+            parametros.put("especie", especie);
+            parametros.put("raza", raza);
+            parametros.put("sexo", sexo);
+            parametros.put("fechaNacimiento", fechaNac);
+            parametros.put("propietario", propietario);
+            parametros.put("dniPropietario", dniPropietario);
+
+
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporteStream, parametros, dataSource);
 
