@@ -168,6 +168,11 @@ public class MascotaRS {
                 return Response.status(Response.Status.NOT_FOUND).entity("Logo no encontrado en /REPORTES/").build();
             }
 
+            InputStream tituloStream = this.getClass().getResourceAsStream("/REPORTES/titulo_mimados.png");
+            if (tituloStream == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Imagen no encontrada en /REPORTES/").build();
+            }
+
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String nombreMascota = mascota.getNombre() != null ? mascota.getNombre() : "-";
             String especie = mascota.getEspecie() != null ? mascota.getEspecie().name() : "-";
@@ -177,6 +182,8 @@ public class MascotaRS {
 
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("MIMADOS", "Historial Clínico Veterinario");
+            parametros.put("TituloImg", tituloStream);
+
             parametros.put("Logo", logoStream);
             parametros.put("nombreMascota", nombreMascota);
             parametros.put("especie", especie);
