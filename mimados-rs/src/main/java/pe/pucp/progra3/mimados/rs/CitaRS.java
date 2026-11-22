@@ -8,6 +8,7 @@ import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.bo.impl.CitaBOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaReporteDTO;
 import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.entity.*;
 import pe.pucp.progra3.mimados.model.enums.Estado;
