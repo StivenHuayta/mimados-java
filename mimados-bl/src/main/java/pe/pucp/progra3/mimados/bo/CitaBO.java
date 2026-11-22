@@ -36,5 +36,5 @@ public interface CitaBO {
             int pageNumber, int recordsPerPage);
 
     List<CitaReporteDTO> listarCitasReporte(
-        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws NegocioException;
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado);
 }
