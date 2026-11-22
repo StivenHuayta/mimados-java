@@ -124,8 +124,15 @@ public class MascotaRS {
                 return Response.status(Response.Status.NOT_FOUND).entity("Plantilla Jasper no encontrada").build();
             }
 
+            InputStream logoStream = this.getClass().getResourceAsStream("/REPORTES/logo.png");
+            if (logoStream == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Logo no encontrado en /REPORTES/").build();
+            }
+
+
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("MIMADOS", "Historial Clínico Veterinario");
+            parametros.put("Logo", logoStream);
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporteStream, parametros, dataSource);
 
