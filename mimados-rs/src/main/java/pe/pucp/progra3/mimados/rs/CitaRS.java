@@ -344,4 +344,38 @@ public class CitaRS {
                     .build();
         }
     }
+
+    @GET
+@Path("reporte")
+public Response listarCitasReporte(
+        @QueryParam("fechaInicio") String fechaInicioStr,
+        @QueryParam("fechaFin") String fechaFinStr,
+        @QueryParam("estado") String estadoStr) {
+    try {
+        LocalDate fechaInicio = (fechaInicioStr != null && !fechaInicioStr.isBlank())
+                ? LocalDate.parse(fechaInicioStr.trim())
+                : null;
+        LocalDate fechaFin = (fechaFinStr != null && !fechaFinStr.isBlank())
+                ? LocalDate.parse(fechaFinStr.trim())
+                : null;
+        Estado estado = (estadoStr != null && !estadoStr.isBlank())
+                ? Estado.valueOf(estadoStr.trim().toUpperCase())
+                : null;
+
+        List<CitaReporteDTO> resultado = citaBO.listarCitasReporte(fechaInicio, fechaFin, estado);
+        return Response.ok(new ApiResponse(true, "Listado de citas para reporte", resultado)).build();
+    } catch (DateTimeParseException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new ApiResponse(false, "Formato de fecha inválido (use yyyy-MM-dd)", null))
+                .build();
+    } catch (IllegalArgumentException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new ApiResponse(false, "Estado de cita inválido", null))
+                .build();
+    } catch (NegocioException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity(new ApiResponse(false, e.getMessage(), null))
+                .build();
+    }
+}
 }
