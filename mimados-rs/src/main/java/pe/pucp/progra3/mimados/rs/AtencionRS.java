@@ -12,6 +12,7 @@ import pe.pucp.progra3.mimados.bo.impl.AtencionBOImpl;
 import pe.pucp.progra3.mimados.model.entity.Atencion;
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
 import pe.pucp.progra3.mimados.model.entity.Usuario;
 
 import java.io.Serializable;
@@ -26,7 +27,9 @@ public class AtencionRS {
 
     public static class AtencionRequest implements Serializable {
         private Integer citaId;
+        private Integer mascotaId;
         private Integer empleadoId;
+        private String motivo;
         private Double pesoActual;
         private Double temperatura;
         private String sintomas;
@@ -40,8 +43,14 @@ public class AtencionRS {
         public Integer getCitaId() { return citaId; }
         public void setCitaId(Integer citaId) { this.citaId = citaId; }
 
+        public Integer getMascotaId() { return mascotaId; }
+        public void setMascotaId(Integer mascotaId) { this.mascotaId = mascotaId; }
+
         public Integer getEmpleadoId() { return empleadoId; }
         public void setEmpleadoId(Integer empleadoId) { this.empleadoId = empleadoId; }
+
+        public String getMotivo() { return motivo; }
+        public void setMotivo(String motivo) { this.motivo = motivo; }
 
         public Double getPesoActual() { return pesoActual; }
         public void setPesoActual(Double pesoActual) { this.pesoActual = pesoActual; }
@@ -86,18 +95,29 @@ public class AtencionRS {
     @POST
     @Path("registrar")
     public Response registrarAtencion(AtencionRequest req) {
+        boolean tieneCita = req != null && req.getCitaId() != null && req.getCitaId() > 0;
+        boolean tieneMascota = req != null && req.getMascotaId() != null && req.getMascotaId() > 0;
+
         if (req == null ||
-                req.getCitaId() == null || req.getCitaId() <= 0 ||
+                (!tieneCita && !tieneMascota) ||
                 req.getEmpleadoId() == null || req.getEmpleadoId() <= 0 ||
                 req.getMontoTotal() == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ApiResponse(false, "Faltan datos obligatorios (cita, veterinario o monto)", null))
+                    .entity(new ApiResponse(false, "Faltan datos obligatorios (cita o mascota, veterinario y monto)", null))
                     .build();
         }
 
         try {
             Cita cita = new Cita();
-            cita.setId(req.getCitaId());
+            if (tieneCita) {
+                cita.setId(req.getCitaId());
+            } else {
+                cita.setId(0);
+                Mascota mascota = new Mascota();
+                mascota.setId(req.getMascotaId());
+                cita.setMascota(mascota);
+                cita.setMotivo(req.getMotivo());
+            }
 
             Usuario usuario = new Usuario();
             usuario.setId(req.getEmpleadoId());

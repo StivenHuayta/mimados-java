@@ -9,10 +9,12 @@ import pe.pucp.progra3.mimados.dao.impl.AtencionDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.CitaDAOImpl;
 import pe.pucp.progra3.mimados.model.entity.Atencion;
 import pe.pucp.progra3.mimados.model.entity.Cita;
+import pe.pucp.progra3.mimados.model.entity.Mascota;
 import pe.pucp.progra3.mimados.model.enums.Estado;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class AtencionBOImpl implements AtencionBO {
 
@@ -28,17 +30,29 @@ public class AtencionBOImpl implements AtencionBO {
     public void insertar(Atencion atencion) {
         validarAtencion(atencion);
         try {
-            Cita citaExistente = citaDAO.mostrarCita(atencion.getCita().getId());
-            if (citaExistente == null) {
-                throw new NegocioException("La cita asociada no existe.");
-            }
-            if (citaExistente.getEstado() != Estado.PROGRAMADA &&
-                    citaExistente.getEstado() != Estado.CONFIRMADA) {
-                throw new NegocioException(
-                        "La cita no puede atenderse en su estado actual (" + citaExistente.getEstado() + ").");
+            Cita cita = atencion.getCita();
+            if (cita.getId() > 0) {
+                Cita citaExistente = citaDAO.mostrarCita(cita.getId());
+                if (citaExistente == null) {
+                    throw new NegocioException("La cita asociada no existe.");
+                }
+                if (citaExistente.getEstado() != Estado.PROGRAMADA &&
+                        citaExistente.getEstado() != Estado.CONFIRMADA) {
+                    throw new NegocioException(
+                            "La cita no puede atenderse en su estado actual (" + citaExistente.getEstado() + ").");
+                }
+            } else {
+                LocalDateTime ahora = LocalDateTime.now();
+                cita.setEmpleado(atencion.getEmpleado());
+                cita.setFechaHoraInicio(ahora);
+                cita.setFechaHoraFin(ahora);
+                if (cita.getMotivo() == null || cita.getMotivo().trim().isEmpty()) {
+                    cita.setMotivo("Atención directa sin cita previa");
+                }
+                citaDAO.insertarCita(cita);
             }
             atencionDAO.insertarAtencion(atencion);
-            citaDAO.atenderCita(atencion.getCita().getId());
+            citaDAO.atenderCita(cita.getId());
             TransactionContext.commit();
         } catch (SQLException e) {
             TransactionContext.rollback();
@@ -81,9 +95,14 @@ public class AtencionBOImpl implements AtencionBO {
             throw new NegocioException("La atención no puede ser nula.");
         }
         if (atencion.getCita() == null) {
-            throw new NegocioException("La atención debe estar asociada a una cita.");
+            throw new NegocioException("La atención debe estar asociada a una cita o a una mascota.");
         }
-        validarId(atencion.getCita().getId());
+        if (atencion.getCita().getId() <= 0) {
+            Mascota mascota = atencion.getCita().getMascota();
+            if (mascota == null || mascota.getId() <= 0) {
+                throw new NegocioException("Debe especificar una cita previa o una mascota válida.");
+            }
+        }
         if (atencion.getEmpleado() == null || atencion.getEmpleado().getUsuario() == null) {
             throw new NegocioException("La atención debe tener un empleado.");
         }
