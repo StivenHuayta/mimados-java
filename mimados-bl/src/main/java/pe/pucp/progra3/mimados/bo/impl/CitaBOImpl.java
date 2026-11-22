@@ -9,6 +9,7 @@ import pe.pucp.progra3.mimados.dao.impl.CitaServicioDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaReporteDTO;
 import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
