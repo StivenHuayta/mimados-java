@@ -12,6 +12,7 @@ public class EmpleadoResponseDTO implements Serializable {
     private Integer sedeId;
     private String codigoCmvp;
     private Boolean esAdmin;
+    private Boolean esVeterinario;
     private Boolean activo;
 
     public EmpleadoResponseDTO() {}
@@ -42,6 +43,9 @@ public class EmpleadoResponseDTO implements Serializable {
 
     public Boolean getEsAdmin() { return esAdmin; }
     public void setEsAdmin(Boolean esAdmin) { this.esAdmin = esAdmin; }
+
+    public Boolean getEsVeterinario() { return esVeterinario; }
+    public void setEsVeterinario(Boolean esVeterinario) { this.esVeterinario = esVeterinario; }
 
     public Boolean getActivo() { return activo; }
     public void setActivo(Boolean activo) { this.activo = activo; }

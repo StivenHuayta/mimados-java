@@ -5,9 +5,11 @@ import pe.pucp.progra3.mimados.bo.UsuarioBO;
 import pe.pucp.progra3.mimados.bo.exception.NegocioException;
 import pe.pucp.progra3.mimados.dao.ClienteDAO;
 import pe.pucp.progra3.mimados.dao.EmpleadoDAO;
+import pe.pucp.progra3.mimados.dao.EmpleadoPuestoDAO;
 import pe.pucp.progra3.mimados.dao.UsuarioDAO;
 import pe.pucp.progra3.mimados.dao.impl.ClienteDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.EmpleadoDAOImpl;
+import pe.pucp.progra3.mimados.dao.impl.EmpleadoPuestoDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.UsuarioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.AuthResultado;
 import pe.pucp.progra3.mimados.model.entity.Cliente;
@@ -107,6 +109,18 @@ public class UsuarioBOImpl implements UsuarioBO {
     }
 
     @Override
+    public Usuario buscarPorDni(String dni) {
+        if (dni == null || dni.isBlank()) {
+            throw new NegocioException("El DNI no puede estar vacío.");
+        }
+        try {
+            return usuarioDAO.buscarPorDni(dni.trim());
+        } catch (SQLException e) {
+            throw new NegocioException("Error al buscar usuario por DNI.", e);
+        }
+    }
+
+    @Override
     public AuthResultado autenticar(String email, String password) {
         if (email == null || email.isBlank()) {
             throw new NegocioException("El correo o usuario es obligatorio.");
@@ -127,46 +141,45 @@ public class UsuarioBOImpl implements UsuarioBO {
 
             EmpleadoDAO empleadoDAO = new EmpleadoDAOImpl();
             Empleado emp = empleadoDAO.mostrarEmpleado(usuario.getId());
-            if (emp != null) {
-                // Regla 2: "el admin si es que hay un veterinario con ese correo, con atributo es admin 1 y es activo"
-                if (emp.getEsAdmin() && emp.getActivo()) {
-                    AuthResultado auth = new AuthResultado(
-                            usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
-                            usuario.getEmail(), "Admin", true, true
-                    );
-                    auth.setCodigoCmvp(emp.getCodigoCmvp());
-                    auth.setSedeId(emp.getSede() != null ? emp.getSede().getId() : null);
-                    return auth;
+            boolean esEmpActivo = emp != null && Boolean.TRUE.equals(emp.getActivo());
+            boolean esAdmin = esEmpActivo && Boolean.TRUE.equals(emp.getEsAdmin());
+            boolean esVeterinario = false;
+            if (esEmpActivo) {
+                EmpleadoPuestoDAO empleadoPuestoDAO = new EmpleadoPuestoDAOImpl();
+                boolean tienePuestoVet = empleadoPuestoDAO.tienePuestoVeterinarioActivo(usuario.getId());
+                if (esAdmin) {
+                    esVeterinario = tienePuestoVet;
+                } else {
+                    esVeterinario = tienePuestoVet || (emp.getCodigoCmvp() != null && !emp.getCodigoCmvp().isBlank());
                 }
-
-                // Regla 3: "y veterinario si hay un veterinario activo con ese correo"
-                if (emp.getActivo()) {
-                    AuthResultado auth = new AuthResultado(
-                            usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
-                            usuario.getEmail(), "Veterinario", false, true
-                    );
-                    auth.setCodigoCmvp(emp.getCodigoCmvp());
-                    auth.setSedeId(emp.getSede() != null ? emp.getSede().getId() : null);
-                    return auth;
-                }
-
-                throw new NegocioException("El veterinario asociado a este correo se encuentra inactivo.");
             }
 
             ClienteDAO clienteDAO = new ClienteDAOImpl();
             Cliente cli = clienteDAO.mostrarCliente(usuario.getId());
-            if (cli != null) {
-                // Regla 1: "el cliente puede entrar si en la bd hay ese cliente activo"
-                if (cli.getActivo()) {
-                    return new AuthResultado(
-                            usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
-                            usuario.getEmail(), "Cliente", false, true
-                    );
+            boolean esCliente = cli != null && Boolean.TRUE.equals(cli.getActivo());
+
+            if (!esAdmin && !esVeterinario && !esCliente) {
+                if (emp != null && !Boolean.TRUE.equals(emp.getActivo()) && cli == null) {
+                    throw new NegocioException("El veterinario asociado a este correo se encuentra inactivo.");
                 }
-                throw new NegocioException("La cuenta de cliente asociada a este correo se encuentra inactiva.");
+                if (cli != null && !Boolean.TRUE.equals(cli.getActivo()) && emp == null) {
+                    throw new NegocioException("La cuenta de cliente asociada a este correo se encuentra inactiva.");
+                }
+                throw new NegocioException("El usuario no tiene un rol activo asignado.");
             }
 
-            throw new NegocioException("El usuario no tiene un rol activo asignado.");
+            String rolPrincipal = esAdmin ? "Admin" : (esVeterinario ? "Veterinario" : "Cliente");
+            AuthResultado auth = new AuthResultado(
+                    usuario.getId(), usuario.getDni(), usuario.getNombres(), usuario.getApellidos(),
+                    usuario.getEmail(), rolPrincipal, esAdmin, true
+            );
+            auth.setEsVeterinario(esVeterinario);
+            auth.setEsCliente(esCliente);
+            if (esEmpActivo) {
+                auth.setCodigoCmvp(emp.getCodigoCmvp());
+                auth.setSedeId(emp.getSede() != null ? emp.getSede().getId() : null);
+            }
+            return auth;
         } catch (SQLException e) {
             throw new NegocioException("Error al autenticar al usuario.", e);
         }
@@ -197,29 +210,49 @@ public class UsuarioBOImpl implements UsuarioBO {
         }
 
         try {
+            ClienteDAO clienteDAO = new ClienteDAOImpl();
             Usuario usuarioExistente = usuarioDAO.buscarPorEmail(email.trim());
-            if (usuarioExistente != null) {
-                throw new NegocioException("Ya existe una cuenta registrada con este correo electrónico.");
-            }
 
-            Usuario usuario = new Usuario();
-            usuario.setDni(dni.trim());
-            usuario.setNombres(nombres.trim());
-            usuario.setApellidos(apellidos.trim());
-            usuario.setEmail(email.trim());
-            usuario.setPasswordHash(password.trim());
-            usuario.setTelefono(telefono.trim());
-
-            usuarioDAO.insertarUsuario(usuario);
-
-            if (usuario.getId() <= 0) {
-                Usuario uCreado = usuarioDAO.buscarPorEmail(email.trim());
-                if (uCreado != null) {
-                    usuario.setId(uCreado.getId());
+            if (usuarioExistente == null) {
+                Usuario porDni = usuarioDAO.buscarPorDni(dni.trim());
+                if (porDni != null) {
+                    throw new NegocioException("Ya existe una cuenta registrada con este DNI y otro correo electrónico.");
                 }
             }
 
-            ClienteDAO clienteDAO = new ClienteDAOImpl();
+            Usuario usuario;
+            if (usuarioExistente != null) {
+                Cliente clienteExistente = clienteDAO.mostrarCliente(usuarioExistente.getId());
+                if (clienteExistente != null) {
+                    throw new NegocioException("Ya existe una cuenta de cliente registrada con este correo electrónico.");
+                }
+                if (!dni.trim().equals(usuarioExistente.getDni())) {
+                    throw new NegocioException("El DNI no coincide con la cuenta existente para este correo.");
+                }
+                if (usuarioExistente.getPasswordHash() != null
+                        && !usuarioExistente.getPasswordHash().equals(password.trim())) {
+                    throw new NegocioException("Ya existe una cuenta con este correo; ingrese su contraseña actual para activar su perfil de cliente.");
+                }
+                usuario = usuarioExistente;
+            } else {
+                usuario = new Usuario();
+                usuario.setDni(dni.trim());
+                usuario.setNombres(nombres.trim());
+                usuario.setApellidos(apellidos.trim());
+                usuario.setEmail(email.trim());
+                usuario.setPasswordHash(password.trim());
+                usuario.setTelefono(telefono.trim());
+
+                usuarioDAO.insertarUsuario(usuario);
+
+                if (usuario.getId() <= 0) {
+                    Usuario uCreado = usuarioDAO.buscarPorEmail(email.trim());
+                    if (uCreado != null) {
+                        usuario.setId(uCreado.getId());
+                    }
+                }
+            }
+
             Cliente cliente = new Cliente(
                     usuario,
                     direccion != null ? direccion.trim() : "",
@@ -234,6 +267,46 @@ public class UsuarioBOImpl implements UsuarioBO {
             );
         } catch (SQLException e) {
             throw new NegocioException("Error al registrar el cliente.", e);
+        }
+    }
+
+    @Override
+    public boolean esClienteActivo(int idUsuario) {
+        validarId(idUsuario);
+        try {
+            ClienteDAO clienteDAO = new ClienteDAOImpl();
+            Cliente cli = clienteDAO.mostrarCliente(idUsuario);
+            return cli != null && Boolean.TRUE.equals(cli.getActivo());
+        } catch (SQLException e) {
+            throw new NegocioException("Error al verificar el perfil de cliente.", e);
+        }
+    }
+
+    @Override
+    public void activarPerfilCliente(int idUsuario, String direccion, String contactoEmergencia) {
+        validarId(idUsuario);
+        try {
+            Usuario usuario = usuarioDAO.mostrarUsuario(idUsuario);
+            if (usuario == null) {
+                throw new NegocioException("Usuario no encontrado.");
+            }
+            ClienteDAO clienteDAO = new ClienteDAOImpl();
+            Cliente existente = clienteDAO.mostrarCliente(idUsuario);
+            if (existente != null) {
+                if (Boolean.TRUE.equals(existente.getActivo())) {
+                    throw new NegocioException("Ya tienes un perfil de cliente activo.");
+                }
+                throw new NegocioException("Tu perfil de cliente ya existe pero se encuentra inactivo.");
+            }
+            Cliente cliente = new Cliente(
+                    usuario,
+                    direccion != null ? direccion.trim() : "",
+                    contactoEmergencia != null ? contactoEmergencia.trim() : "",
+                    true
+            );
+            clienteDAO.insertarCliente(cliente);
+        } catch (SQLException e) {
+            throw new NegocioException("Error al activar el perfil de cliente.", e);
         }
     }
 

@@ -160,6 +160,28 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         return null;
     }
 
+    @Override
+    public Usuario buscarPorDni(String dni) throws SQLException {
+        String sql = "SELECT usuario_id, dni, nombres, apellidos, email, telefono FROM usuario WHERE dni = ?";
+        try (Connection connection = DBManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Usuario(
+                            rs.getInt("usuario_id"),
+                            rs.getString("dni"),
+                            rs.getString("nombres"),
+                            rs.getString("apellidos"),
+                            rs.getString("email"),
+                            rs.getString("telefono")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
     //PARA PERFIL DE USUARIO
     @Override
     public UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws SQLException {

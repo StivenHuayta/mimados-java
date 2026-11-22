@@ -11,6 +11,8 @@ public class AuthResultado implements Serializable {
     private String email;
     private String rol; // "Admin", "Veterinario", "Cliente"
     private boolean esAdmin;
+    private boolean esVeterinario;
+    private boolean esCliente;
     private boolean activo;
     private String codigoCmvp;
     private Integer sedeId;
@@ -84,6 +86,22 @@ public class AuthResultado implements Serializable {
 
     public void setEsAdmin(boolean esAdmin) {
         this.esAdmin = esAdmin;
+    }
+
+    public boolean isEsVeterinario() {
+        return esVeterinario;
+    }
+
+    public void setEsVeterinario(boolean esVeterinario) {
+        this.esVeterinario = esVeterinario;
+    }
+
+    public boolean isEsCliente() {
+        return esCliente;
+    }
+
+    public void setEsCliente(boolean esCliente) {
+        this.esCliente = esCliente;
     }
 
     public boolean isActivo() {

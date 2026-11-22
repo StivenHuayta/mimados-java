@@ -10,5 +10,7 @@ public interface EmpleadoPuestoDAO {
     public void insertarEmpleadoPuesto(EmpleadoPuesto empleadoPuesto) throws SQLException;
     public void iniciarEmpleadoPuesto(int idEmpleadoPuesto) throws SQLException;
     public void eliminarEmpleadoPuesto(int idEmpleadoPuesto, LocalDate fechaFin) throws SQLException;
+    public boolean tienePuestoVeterinarioActivo(int empleadoId) throws SQLException;
+    public void sincronizarPuestosEmpleado(int empleadoId, boolean esAdmin, boolean esVeterinario) throws SQLException;
 
 }

@@ -10,6 +10,8 @@ public interface UsuarioBO {
 
     Usuario buscarPorEmail(String email);
 
+    Usuario buscarPorDni(String dni);
+
     void insertar(Usuario usuario);
 
     void modificar(Usuario usuario);
@@ -29,5 +31,9 @@ public interface UsuarioBO {
     UsuarioPerfilDTO obtenerPerfil(Integer idUsuario);
 
     boolean actualizarPerfil(UsuarioPerfilDTO perfil);
+
+    boolean esClienteActivo(int idUsuario);
+
+    void activarPerfilCliente(int idUsuario, String direccion, String contactoEmergencia);
 
 }

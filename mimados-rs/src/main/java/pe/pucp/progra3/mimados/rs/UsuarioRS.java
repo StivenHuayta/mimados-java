@@ -262,6 +262,52 @@ public class UsuarioRS {
         }
     }
 
+    @GET
+    @Path("es-cliente/{id}")
+    public Response esClienteActivo(@PathParam("id") Integer id) {
+        if (id == null || id <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "ID de usuario inválido", false)).build();
+        }
+        try {
+            boolean activo = usuarioBO.esClienteActivo(id);
+            return Response.ok(new ApiResponse(true, "Consulta exitosa", activo)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), false)).build();
+        }
+    }
+
+    @POST
+    @Path("activar-cliente")
+    public Response activarPerfilCliente(ActivarClienteRequest req) {
+        if (req == null || req.getUsuarioId() == null || req.getUsuarioId() <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, "ID de usuario inválido", null)).build();
+        }
+        try {
+            usuarioBO.activarPerfilCliente(req.getUsuarioId(), req.getDireccion(), req.getContactoEmergencia());
+            return Response.ok(new ApiResponse(true, "Perfil de cliente activado correctamente.", null)).build();
+        } catch (NegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ApiResponse(false, e.getMessage(), null)).build();
+        }
+    }
+
+    public static class ActivarClienteRequest implements Serializable {
+        private Integer usuarioId;
+        private String direccion;
+        private String contactoEmergencia;
+
+        public ActivarClienteRequest() {}
+        public Integer getUsuarioId() { return usuarioId; }
+        public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+        public String getDireccion() { return direccion; }
+        public void setDireccion(String direccion) { this.direccion = direccion; }
+        public String getContactoEmergencia() { return contactoEmergencia; }
+        public void setContactoEmergencia(String contactoEmergencia) { this.contactoEmergencia = contactoEmergencia; }
+    }
+
     public static class ClienteOpcion implements Serializable {
 
         private Integer id;

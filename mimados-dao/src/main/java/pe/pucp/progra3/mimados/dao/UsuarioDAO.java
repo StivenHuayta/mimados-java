@@ -13,6 +13,7 @@ public interface UsuarioDAO {
     public Usuario mostrarUsuario(int id) throws SQLException;
     public void actualizarTelefonoUsuario(int id, String telefono) throws SQLException;
     public Usuario buscarPorEmail(String email) throws SQLException;
+    public Usuario buscarPorDni(String dni) throws SQLException;
 
 
     UsuarioPerfilDTO obtenerPerfil(Integer idUsuario) throws SQLException;
