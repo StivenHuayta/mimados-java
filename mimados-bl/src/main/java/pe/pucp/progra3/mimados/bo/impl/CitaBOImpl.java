@@ -9,6 +9,7 @@ import pe.pucp.progra3.mimados.dao.impl.CitaServicioDAOImpl;
 import pe.pucp.progra3.mimados.dao.impl.SedeServicioDAOImpl;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaReporteDTO;
 import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.dto.response.SedeServicioDTO;
 import pe.pucp.progra3.mimados.model.entity.Cita;
@@ -327,4 +328,16 @@ public class CitaBOImpl implements CitaBO {
         }
     }
 
+    @Override
+    public List<CitaReporteDTO> listarCitasReporte(
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws NegocioException {
+    if (fechaInicio != null && fechaFin != null && fechaInicio.isAfter(fechaFin)) {
+        throw new NegocioException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+    }
+    try {
+        return citaDAO.listarCitasReporte(fechaInicio, fechaFin, estado);
+    } catch (SQLException e) {
+        throw new NegocioException("Error al obtener el listado de citas para el reporte: " + e.getMessage());
+    }
+}
 }
