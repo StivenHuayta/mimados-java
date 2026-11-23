@@ -5,6 +5,8 @@ import pe.pucp.progra3.mimados.DBManager.TransactionContext;
 import pe.pucp.progra3.mimados.dao.CitaDAO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
 import pe.pucp.progra3.mimados.model.dto.response.CitaVeterinarioDTO;
+import pe.pucp.progra3.mimados.model.dto.response.CitaReporteDTO;
+
 import pe.pucp.progra3.mimados.model.entity.Cita;
 import pe.pucp.progra3.mimados.model.entity.Empleado;
 import pe.pucp.progra3.mimados.model.entity.Mascota;
@@ -298,6 +300,53 @@ public class CitaDAOImpl implements CitaDAO {
         return citas;
     }
 
+    @Override
+public List<CitaReporteDTO> listarCitasReporte(
+        LocalDate fechaInicio, LocalDate fechaFin, Estado estado) throws SQLException {
+    List<CitaReporteDTO> lista = new ArrayList<>();
+    String sql = "{CALL sp_listar_citas_reporte(?, ?, ?)}";
+
+    try (Connection connection = DBManager.getInstance().getConnection();
+         CallableStatement cs = connection.prepareCall(sql)) {
+
+        if (fechaInicio != null) {
+            cs.setDate(1, java.sql.Date.valueOf(fechaInicio));
+        } else {
+            cs.setNull(1, Types.DATE);
+        }
+
+        if (fechaFin != null) {
+            cs.setDate(2, java.sql.Date.valueOf(fechaFin));
+        } else {
+            cs.setNull(2, Types.DATE);
+        }
+
+        if (estado != null) {
+            cs.setString(3, estado.name());
+        } else {
+            cs.setNull(3, Types.VARCHAR);
+        }
+
+        try (ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                CitaReporteDTO dto = new CitaReporteDTO();
+                dto.setCitaId(rs.getInt("cita_id"));
+                LocalDateTime inicio = rs.getObject("fecha_hora_inicio", LocalDateTime.class);
+                LocalDateTime fin = rs.getObject("fecha_hora_fin", LocalDateTime.class);
+                dto.setFechaHoraInicio(inicio != null ? inicio.toString() : null);
+                dto.setFechaHoraFin(fin != null ? fin.toString() : null);
+                dto.setNombreSede(rs.getString("nombre_sede"));
+                dto.setNombreMascota(rs.getString("nombre_mascota"));
+                dto.setNombreVeterinario(rs.getString("nombre_veterinario"));
+                dto.setNombreCliente(rs.getString("nombre_cliente"));
+                dto.setMotivo(rs.getString("motivo"));
+                dto.setEstado(rs.getString("estado"));
+                lista.add(dto);
+            }
+        }
+    }
+    return lista;
+}
 
 
 }
