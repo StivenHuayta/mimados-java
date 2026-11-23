@@ -13,6 +13,16 @@ import pe.pucp.progra3.mimados.model.dto.response.PageResultDTO;
 import pe.pucp.progra3.mimados.model.entity.*;
 import pe.pucp.progra3.mimados.model.enums.Estado;
 
+import java.io.InputStream;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -376,6 +386,75 @@ public Response listarCitasReporte(
     } catch (NegocioException e) {
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new ApiResponse(false, e.getMessage(), null))
+                .build();
+    }
+}
+    @GET
+@Path("reporte/pdf")
+@Produces("application/pdf")
+public Response exportarReporteCitasPdf(
+        @QueryParam("fechaInicio") String fechaInicioStr,
+        @QueryParam("fechaFin") String fechaFinStr,
+        @QueryParam("estado") String estadoStr) {
+    try {
+        LocalDate fechaInicio = (fechaInicioStr != null && !fechaInicioStr.isBlank())
+                ? LocalDate.parse(fechaInicioStr.trim())
+                : null;
+        LocalDate fechaFin = (fechaFinStr != null && !fechaFinStr.isBlank())
+                ? LocalDate.parse(fechaFinStr.trim())
+                : null;
+        Estado estado = (estadoStr != null && !estadoStr.isBlank())
+                ? Estado.valueOf(estadoStr.trim().toUpperCase())
+                : null;
+
+        List<CitaReporteDTO> citas = citaBO.listarCitasReporte(fechaInicio, fechaFin, estado);
+
+        try (InputStream jasperStream = getClass().getClassLoader()
+                .getResourceAsStream("reportes/ReporteCitas.jasper")) {
+
+            if (jasperStream == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity(new ApiResponse(false, "No se encontró el archivo reportes/ReporteCitas.jasper", null))
+                        .build();
+            }
+
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("fechaInicio", fechaInicio != null ? fechaInicio.format(fmt) : "Todas");
+            parametros.put("fechaFin", fechaFin != null ? fechaFin.format(fmt) : "Todas");
+            parametros.put("estadoFiltro", estado != null ? estado.name() : "Todos");
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(
+                    citas != null ? citas : Collections.emptyList());
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperStream, parametros, dataSource);
+            byte[] pdfBytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            return Response.ok(pdfBytes)
+                    .header("Content-Disposition", "inline; filename=ReporteCitas.pdf")
+                    .build();
+        }
+    } catch (DateTimeParseException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ApiResponse(false, "Formato de fecha inválido (use yyyy-MM-dd)", null))
+                .build();
+    } catch (IllegalArgumentException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ApiResponse(false, "Estado de cita inválido", null))
+                .build();
+    } catch (NegocioException e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ApiResponse(false, e.getMessage(), null))
+                .build();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new ApiResponse(false, "Error al generar el PDF: " + e.getMessage(), null))
                 .build();
     }
 }
