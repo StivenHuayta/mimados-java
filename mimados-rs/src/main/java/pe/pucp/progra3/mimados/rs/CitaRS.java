@@ -410,7 +410,7 @@ public Response exportarReporteCitasPdf(
         List<CitaReporteDTO> citas = citaBO.listarCitasReporte(fechaInicio, fechaFin, estado);
 
         try (InputStream jasperStream = getClass().getClassLoader()
-                .getResourceAsStream("reportes/ReporteCitas.jasper")) {
+                .getResourceAsStream("REPORTES/ReporteCitas.jasper")) {
 
             if (jasperStream == null) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
