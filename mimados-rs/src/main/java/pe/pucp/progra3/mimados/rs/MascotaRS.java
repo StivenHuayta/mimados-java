@@ -200,6 +200,7 @@ public class MascotaRS {
             byte[] pdfBytes = JasperExportManager.exportReportToPdf(jasperPrint);
 
             return Response.ok(pdfBytes)
+                    .header("Content-Length", pdfBytes.length)
                     .header("Content-Disposition", "attachment; filename=\"Historial_Mascota_" + mascotaId + ".pdf\"")
                     .build();
 
