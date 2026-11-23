@@ -1,3 +1,4 @@
+
 package pe.pucp.progra3.mimados.bo;
 
 import pe.pucp.progra3.mimados.model.dto.response.CitaListadoEmpleadoDTO;
@@ -15,11 +16,7 @@ public interface CitaBO {
 
     List<Cita> listarPorMascota(int idMascota);
 
-
-
     List<CitaListadoEmpleadoDTO> listarTodas();
-
-
 
     Cita obtenerPorId(int id);
 
@@ -30,7 +27,13 @@ public interface CitaBO {
     void modificar(Cita cita);
 
     void insertarConServicio(Cita cita, int idSede, int idSedeServicio);
+
     PageResultDTO<CitaVeterinarioDTO> listarPorVeterinarioPaginado(
-            int empleadoId, String searchText, LocalDate fecha, Estado estado,
-            int pageNumber, int recordsPerPage);
+            int empleadoId,
+            String searchText,
+            LocalDate fecha,
+            Estado estado,
+            int pageNumber,
+            int recordsPerPage
+    );
 }
